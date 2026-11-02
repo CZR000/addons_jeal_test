@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="crm_case_kanban_view_leads_inherit_revenue_usd" model="ir.ui.view">
+            <field name="name">crm.lead.kanban.inherit.revenue.usd</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_currency']" position="after">
+                    <field name="expected_revenue_usd"/>
+                    <field name="usd_currency_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <div t-if="record.expected_revenue_usd.raw_value" class="text-muted small mb-1">
+                        <span class="fw-bold text-success">USD: </span>
+                        <field name="expected_revenue_usd" widget="monetary" options="{'currency_field': 'usd_currency_id'}"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

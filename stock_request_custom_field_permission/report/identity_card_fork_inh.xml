@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <template id="identity_card_comment_template" name="Identity Card with Comment Field" inherit_id="fork_custom.identity_card_fork">
+            <xpath expr="//table[@name='listado']/thead/tr" position="replace">
+                <tr>
+                    <th colspan="100" style="font-family:'Helvetica'; font-size:20px; padding:5px; text-align:center;">
+                        ITEMS
+                    </th>
+                </tr>
+            </xpath>
+
+
+            <!-- Agregar la cabecera "Comentario" en la última posición de la fila de encabezado -->
+            <xpath expr="//table[@name='listado']/tr/td[last()]" position="after">
+                <th align="center" style="padding:5px">
+                    <strong>Comentario</strong>
+                </th>
+            </xpath>
+
+            <!-- Agregar la columna de comentarios en la última posición de cada fila -->
+            <xpath expr="//table[@name='listado']//t[@t-foreach='fork.stock_request_ids']/tr/td[last()]" position="after">
+                <td style="font-family: 'Helvetica'; padding-right:5px;" align="center">
+                    <span t-field="line.comment_editable"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

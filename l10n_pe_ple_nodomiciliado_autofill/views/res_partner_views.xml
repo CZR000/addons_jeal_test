@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Proveedor del exterior (empresa o contacto principal con país distinto
+         de Perú): convenio, tipo de renta e identificación obligatorios. -->
+    <record id="res_partner_view_form_nodom_required" model="ir.ui.view">
+        <field name="name">res.partner.form.view.nodom.required</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="rent_4ta.res_partner_view_form_inherit_rent_4ta"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='double_taxation']" position="attributes">
+                <attribute name="groups">hr.group_hr_user,account.group_account_invoice</attribute>
+                <attribute name="required">not parent_id and country_code and country_code != 'PE'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='double_taxation']" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="nodom_type_rent_id"
+                       options="{'no_create': True}"
+                       invisible="not country_code or country_code == 'PE'"
+                       required="not parent_id and country_code and country_code != 'PE'"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="required">not parent_id and country_code and country_code != 'PE'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

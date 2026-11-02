@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================
+         Vista Lista
+         ================================================================ -->
+    <record id="ple_report_inv_bal_view_list" model="ir.ui.view">
+        <field name="name">ple.report.inv.bal.book.list</field>
+        <field name="model">ple.report.inv.bal.book</field>
+        <field name="arch" type="xml">
+            <list string="Libro Inventarios y Balances">
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="company_id"/>
+                <field name="date_generated"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Vista Formulario
+         ================================================================ -->
+    <record id="ple_report_inv_bal_view_form" model="ir.ui.view">
+        <field name="name">ple.report.inv.bal.book.form</field>
+        <field name="model">ple.report.inv.bal.book</field>
+        <field name="arch" type="xml">
+            <form string="Libro Inventarios y Balances">
+                <header>
+                    <button name="action_generate_all_xls"
+                            string="Generar Excel"
+                            type="object" class="btn-primary"/>
+                    <button name="action_generate_all_pdf"
+                            string="Generar PDF"
+                            type="object" class="btn-primary"/>
+                    <button name="action_reset_to_draft"
+                            string="Regresar a Borrador"
+                            type="object"
+                            invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <group string="Libro de Inventarios y Balances (Formatos 3.1 a 3.20)"
+                           name="inv_bal_header">
+                        <group>
+                            <field name="company_id" readonly="state != 'draft'"/>
+                            <field name="date_start" readonly="state != 'draft'"/>
+                            <field name="date_end" readonly="state != 'draft'"/>
+                            <!-- Se detectan solos; visibles solo en modo desarrollador -->
+                            <field name="closing_journal_ids" widget="many2many_tags"
+                                   readonly="state != 'draft'" groups="base.group_no_one"/>
+                            <field name="opening_journal_ids" widget="many2many_tags"
+                                   readonly="state != 'draft'" groups="base.group_no_one"/>
+                            <field name="date_generated"/>
+                            <field name="show_by_format"/>
+                        </group>
+                        <group string="Libro Completo (3.1 a 3.20)" name="inv_bal_all"
+                               invisible="not xls_binary_all and not pdf_binary_all">
+                            <field name="xls_filename_all" invisible="1"/>
+                            <field name="xls_binary_all" filename="xls_filename_all"
+                                   string="Libro Excel" readonly="1"
+                                   invisible="not xls_binary_all"/>
+                            <field name="pdf_filename_all" invisible="1"/>
+                            <field name="pdf_binary_all" filename="pdf_filename_all"
+                                   string="Libro PDF" readonly="1"
+                                   invisible="not pdf_binary_all"/>
+                        </group>
+                    </group>
+                    <group name="inv_bal_sections" invisible="not show_by_format">
+                        <group string="Reporte 3.1 - Balance General" name="sec_01">
+                            <button name="action_generate_01" string="Generar Reporte 3.1"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_01" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_01"/>
+                            <field name="xls_binary_01" filename="xls_filename_01" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_01" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_01"/>
+                            <field name="pdf_binary_01" filename="pdf_filename_01" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.2 - Efectivo y Equivalente al Efectivo (Cuenta 10)" name="sec_02">
+                            <button name="action_generate_02" string="Generar Reporte 3.2"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_02" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_02"/>
+                            <field name="xls_binary_02" filename="xls_filename_02" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_02" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_02"/>
+                            <field name="pdf_binary_02" filename="pdf_filename_02" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.3 - Clientes (Cuenta 12)" name="sec_03">
+                            <button name="action_generate_03" string="Generar Reporte 3.3"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_03" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_03"/>
+                            <field name="xls_binary_03" filename="xls_filename_03" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_03" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_03"/>
+                            <field name="pdf_binary_03" filename="pdf_filename_03" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.4 - Cuentas por Cobrar a Accionistas (Socios) y Personal (Cuenta 14)" name="sec_04">
+                            <button name="action_generate_04" string="Generar Reporte 3.4"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_04" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_04"/>
+                            <field name="xls_binary_04" filename="xls_filename_04" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_04" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_04"/>
+                            <field name="pdf_binary_04" filename="pdf_filename_04" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.5 - Cuentas por Cobrar Diversas (Cuenta 16)" name="sec_05">
+                            <button name="action_generate_05" string="Generar Reporte 3.5"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_05" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_05"/>
+                            <field name="xls_binary_05" filename="xls_filename_05" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_05" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_05"/>
+                            <field name="pdf_binary_05" filename="pdf_filename_05" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.6 - Estimacion de Cuentas de Cobranza Dudosa (Cuenta 19)" name="sec_06">
+                            <button name="action_generate_06" string="Generar Reporte 3.6"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_06" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_06"/>
+                            <field name="xls_binary_06" filename="xls_filename_06" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_06" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_06"/>
+                            <field name="pdf_binary_06" filename="pdf_filename_06" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.7 - Mercaderias y Productos Terminados (Cuentas 20 y 21)" name="sec_07">
+                            <button name="action_generate_07" string="Generar Reporte 3.7"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_07" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_07"/>
+                            <field name="xls_binary_07" filename="xls_filename_07" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_07" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_07"/>
+                            <field name="pdf_binary_07" filename="pdf_filename_07" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.8 - Inversiones mobiliarias (Cuenta 30)" name="sec_08">
+                            <button name="action_generate_08" string="Generar Reporte 3.8"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_08" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_08"/>
+                            <field name="xls_binary_08" filename="xls_filename_08" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_08" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_08"/>
+                            <field name="pdf_binary_08" filename="pdf_filename_08" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.9 - Intangibles (Cuenta 34)" name="sec_09">
+                            <button name="action_generate_09" string="Generar Reporte 3.9"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_09" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_09"/>
+                            <field name="xls_binary_09" filename="xls_filename_09" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_09" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_09"/>
+                            <field name="pdf_binary_09" filename="pdf_filename_09" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.10 - Tributos por Pagar (Cuenta 40)" name="sec_10">
+                            <button name="action_generate_10" string="Generar Reporte 3.10"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_10" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_10"/>
+                            <field name="xls_binary_10" filename="xls_filename_10" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_10" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_10"/>
+                            <field name="pdf_binary_10" filename="pdf_filename_10" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.11 - Remuneraciones y Participaciones por Pagar (Cuenta 41)" name="sec_11">
+                            <button name="action_generate_11" string="Generar Reporte 3.11"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_11" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_11"/>
+                            <field name="xls_binary_11" filename="xls_filename_11" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_11" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_11"/>
+                            <field name="pdf_binary_11" filename="pdf_filename_11" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.12 - Proveedores (Cuenta 42)" name="sec_12">
+                            <button name="action_generate_12" string="Generar Reporte 3.12"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_12" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_12"/>
+                            <field name="xls_binary_12" filename="xls_filename_12" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_12" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_12"/>
+                            <field name="pdf_binary_12" filename="pdf_filename_12" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.13 - Cuentas por Pagar Diversas - Terceros y Relacionadas (Cuentas 46 y 47)" name="sec_13">
+                            <button name="action_generate_13" string="Generar Reporte 3.13"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_13" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_13"/>
+                            <field name="xls_binary_13" filename="xls_filename_13" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_13" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_13"/>
+                            <field name="pdf_binary_13" filename="pdf_filename_13" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.14 - Beneficios Sociales de los Trabajadores (Cuenta 47)" name="sec_14">
+                            <button name="action_generate_14" string="Generar Reporte 3.14"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_14" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_14"/>
+                            <field name="xls_binary_14" filename="xls_filename_14" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_14" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_14"/>
+                            <field name="pdf_binary_14" filename="pdf_filename_14" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.15 - Ganancias Diferidas (Cuenta 49)" name="sec_15">
+                            <button name="action_generate_15" string="Generar Reporte 3.15"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_15" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_15"/>
+                            <field name="xls_binary_15" filename="xls_filename_15" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_15" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_15"/>
+                            <field name="pdf_binary_15" filename="pdf_filename_15" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.17 - Balance de Comprobacion (Anexo 1)" name="sec_17">
+                            <button name="action_generate_17" string="Generar Reporte 3.17"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_17" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_17"/>
+                            <field name="xls_binary_17" filename="xls_filename_17" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_17" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_17"/>
+                            <field name="pdf_binary_17" filename="pdf_filename_17" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.18 - Estado de Flujos de Efectivo" name="sec_18">
+                            <button name="action_generate_18" string="Generar Reporte 3.18"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_18" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_18"/>
+                            <field name="xls_binary_18" filename="xls_filename_18" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_18" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_18"/>
+                            <field name="pdf_binary_18" filename="pdf_filename_18" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.19 - Estado de Cambios en el Patrimonio Neto" name="sec_19">
+                            <button name="action_generate_19" string="Generar Reporte 3.19"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_19" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_19"/>
+                            <field name="xls_binary_19" filename="xls_filename_19" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_19" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_19"/>
+                            <field name="pdf_binary_19" filename="pdf_filename_19" readonly="1" nolabel="1"/>
+                        </group>
+                        <group string="Reporte 3.20 - Estado de Ganancias y Perdidas por Funcion" name="sec_20">
+                            <button name="action_generate_20" string="Generar Reporte 3.20"
+                                    type="object" class="btn-primary oe_highlight"
+                                    colspan="2"/>
+                            <field name="xls_filename_20" invisible="1"/>
+                            <label string="Reporte Excel" for="xls_binary_20"/>
+                            <field name="xls_binary_20" filename="xls_filename_20" readonly="1" nolabel="1"/>
+                            <field name="pdf_filename_20" invisible="1"/>
+                            <label string="Reporte PDF" for="pdf_binary_20"/>
+                            <field name="pdf_binary_20" filename="pdf_filename_20" readonly="1" nolabel="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Accion + Menu
+         ================================================================ -->
+    <record id="ple_report_inv_bal_action" model="ir.actions.act_window">
+        <field name="name">Libro Inventarios y Balances</field>
+        <field name="res_model">ple.report.inv.bal.book</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Genere un nuevo Libro de Inventarios y Balances (Formatos 3.1 a 3.20)
+            </p>
+            <p>
+                Seleccione la compania y el rango de fechas (inicio y fin), y use los botones
+                "Generar Excel" o "Generar PDF" para obtener el libro completo. Marque
+                "Generar por formato" para generar cada formato 3.X por separado.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ple_inv_bal_3x"
+              name="Libro Inventarios y Balances"
+              parent="ple_sale_book.menu_ple_physical_books"
+              action="ple_report_inv_bal_action"
+              sequence="30"/>
+
+</odoo>

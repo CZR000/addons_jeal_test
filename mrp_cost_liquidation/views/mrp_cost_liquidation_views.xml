@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Odoo 18: `attrs` eliminado → atributos directos. -->
+
+    <record id="action_cost_liquidation_mrp_production" model="ir.actions.report">
+        <field name="name">Liquidación de costos</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">mrp_cost_liquidation.mrp_cost_liquidation</field>
+        <field name="report_file">mrp_cost_liquidation.mrp_cost_liquidation</field>
+        <field name="print_report_name">'Liquidación de costos - %s' % object.name</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="mrp_production_form_inherit_liquidation_button" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.liquidation.button</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="%(mrp_cost_liquidation.action_cost_liquidation_mrp_production)d"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-dollar"
+                    string="Liquidación de costos"
+                    invisible="state != 'done'"/>
+            </div>
+        </field>
+    </record>
+</odoo>

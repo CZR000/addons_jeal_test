@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         Diario: agregar campo allow_receivable_accounts y ampliar
+         dominio de payment_account_id en los métodos de pago
+         ============================================================ -->
+    <record id="view_account_journal_form_cust" model="ir.ui.view">
+        <field name="name">account.journal.form.cust</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Agregar checkbox en la pestaña de Ajustes Avanzados
+                 (antes de group_alias_ro que es el primer grupo nombrado
+                  tras Control-Access; @string no es válido como selector en Odoo 16) -->
+            <xpath expr="//page[@name='advanced_settings']//group[@name='group_alias_ro']" position="before">
+                <group string="Registro de compras">
+                    <field name="allow_receivable_accounts"
+                           invisible="type not in ('cash', 'bank')"/>
+                </group>
+            </xpath>
+
+            <!-- Ampliar dominio de payment_account_id en pagos entrantes
+                 para permitir cuentas por cobrar/pagar cuando el diario lo habilita -->
+            <xpath expr="//page[@id='inbound_payment_settings']//field[@name='inbound_payment_method_line_ids']//field[@name='payment_account_id']" position="attributes">
+                <attribute name="placeholder">Dejar vacío para usar la cuenta de cobros pendientes por defecto</attribute>
+                <attribute name="domain">[('deprecated', '=', False)]</attribute>
+                <attribute name="optional">hide</attribute>
+                <attribute name="options">{'no_quick_create': True}</attribute>
+                <attribute name="groups">account.group_account_readonly</attribute>
+            </xpath>
+
+            <!-- Ampliar dominio de payment_account_id en pagos salientes -->
+            <xpath expr="//page[@id='outbound_payment_settings']//field[@name='outbound_payment_method_line_ids']//field[@name='payment_account_id']" position="attributes">
+                <attribute name="placeholder">Dejar vacío para usar la cuenta de pagos pendientes por defecto</attribute>
+                <attribute name="domain">[('deprecated', '=', False)]</attribute>
+                <attribute name="optional">hide</attribute>
+                <attribute name="options">{'no_quick_create': True}</attribute>
+                <attribute name="groups">account.group_account_readonly</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

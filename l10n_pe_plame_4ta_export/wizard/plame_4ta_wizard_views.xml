@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_pe_plame_4ta_wizard_form" model="ir.ui.view">
+        <field name="name">l10n.pe.plame.4ta.wizard.form</field>
+        <field name="model">l10n.pe.plame.4ta.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Exportar PLAME 4ta Categoria">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Exportacion PLAME - 4ta Categoria</h2>
+                    </div>
+                    <group>
+                        <group string="Filtros">
+                            <field name="period_month"/>
+                            <field name="period_year"/>
+                            <field name="document_type" widget="radio"/>
+                            <field name="partner_id"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group string="Archivo Generado"
+                               invisible="not file_data">
+                            <field name="file_name" readonly="1"/>
+                            <field name="file_data"
+                                   filename="file_name"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate"
+                            type="object"
+                            string="Generar"
+                            class="btn-primary"/>
+                    <button string="Cerrar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_pe_plame_4ta_wizard" model="ir.actions.act_window">
+        <field name="name">Exportar PLAME 4ta Categoria</field>
+        <field name="res_model">l10n.pe.plame.4ta.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

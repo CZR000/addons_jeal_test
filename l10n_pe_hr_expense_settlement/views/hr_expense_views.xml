@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_expense_view_form" model="ir.ui.view">
+        <field name="name">hr.expense.form.l10n_pe_settlement</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Nativo solo para "Pagado por: Compañía"; en la rendición el
+                 proveedor real también se pide al empleado. -->
+            <!-- Con "Va al Registro de Compras" (gasto rendido por el empleado) el
+                 proveedor y el comprobante son obligatorios; sin él, opcionales. -->
+            <field name="vendor_id" position="attributes">
+                <attribute name="invisible">l10n_pe_is_advance_refund</attribute>
+                <attribute name="readonly">not is_editable</attribute>
+                <attribute name="required">payment_mode == 'own_account' and l10n_pe_in_purchase_register and not l10n_pe_is_advance_refund</attribute>
+                <attribute name="options">{'no_quick_create': True}</attribute>
+            </field>
+            <field name="vendor_id" position="before">
+                <field name="l10n_pe_in_purchase_register"
+                       invisible="payment_mode != 'own_account' or l10n_pe_is_advance_refund"
+                       readonly="not is_editable"/>
+            </field>
+            <field name="vendor_id" position="after">
+                <field name="l10n_pe_available_document_type_ids" invisible="1"/>
+                <field name="l10n_pe_document_type_id"
+                       invisible="payment_mode != 'own_account' or l10n_pe_is_advance_refund or not (vendor_id or l10n_pe_in_purchase_register)"
+                       required="payment_mode == 'own_account' and l10n_pe_in_purchase_register and not l10n_pe_is_advance_refund"
+                       readonly="not is_editable"
+                       options="{'no_create': True}"/>
+                <label for="l10n_pe_document_series" string="Serie - Número"
+                       invisible="payment_mode != 'own_account' or l10n_pe_is_advance_refund or not (vendor_id or l10n_pe_in_purchase_register)"/>
+                <div class="d-flex align-items-baseline gap-2"
+                     invisible="payment_mode != 'own_account' or l10n_pe_is_advance_refund or not (vendor_id or l10n_pe_in_purchase_register)">
+                    <field name="l10n_pe_document_series" placeholder="F001" readonly="not is_editable" class="w-25"
+                           required="payment_mode == 'own_account' and l10n_pe_in_purchase_register and not l10n_pe_is_advance_refund"/>
+                    <span>-</span>
+                    <field name="l10n_pe_document_number" placeholder="00001234" readonly="not is_editable" class="w-50"
+                           required="payment_mode == 'own_account' and l10n_pe_in_purchase_register and not l10n_pe_is_advance_refund"/>
+                </div>
+                <field name="l10n_pe_receipt_total_amount" invisible="not l10n_pe_receipt_total_amount"/>
+                <field name="l10n_pe_is_advance_refund" invisible="1"/>
+                <field name="l10n_pe_refund_journal_id"
+                       invisible="not l10n_pe_is_advance_refund"
+                       required="l10n_pe_is_advance_refund"
+                       readonly="not is_editable"
+                       options="{'no_create': True}"/>
+                <field name="l10n_pe_refund_payment_id" invisible="not l10n_pe_refund_payment_id"/>
+            </field>
+            <xpath expr="//label[@for='tax_ids']" position="attributes">
+                <attribute name="invisible">l10n_pe_is_advance_refund</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_ids']/.." position="attributes">
+                <attribute name="invisible">l10n_pe_is_advance_refund</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="l10n_pe_looks_like_refund" invisible="1"/>
+                <div class="alert alert-warning mb-0" role="alert" invisible="not l10n_pe_looks_like_refund">
+                    ¿Es dinero que el empleado devuelve? Use la categoría <strong>Devolución de entrega a rendir</strong>:
+                    con una categoría de gasto se registra como una factura de compra y no como un cobro en el banco o la caja.
+                </div>
+            </xpath>
+            <div id="payment_mode" position="after">
+                <div colspan="2" class="text-muted" invisible="payment_mode != 'company_account'">
+                    Con "Compañía" no se piden los datos del comprobante ni se liquida contra la cuenta 14.
+                    Para rendir un anticipo use "Empleado".
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="hr_expense_view_expenses_analysis_tree" model="ir.ui.view">
+        <field name="name">hr.expense.list.l10n_pe_settlement</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree"/>
+        <field name="arch" type="xml">
+            <field name="payment_mode" position="after">
+                <field name="vendor_id" optional="hide" readonly="not is_editable"/>
+                <field name="l10n_pe_document_reference" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_hr_expense_sheet_form" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.l10n_pe_settlement</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <!-- Pagar el informe pagaría con banco a los proveedores de los
+                 comprobantes: se liquidan desde cada factura. -->
+            <button name="action_register_payment" position="attributes">
+                <attribute name="invisible">payment_mode == 'company_account' or state not in ('post', 'done') or payment_state in ('paid', 'in_payment') or l10n_pe_has_vendor_receipts</attribute>
+            </button>
+            <button name="action_register_payment" position="after">
+                <button name="action_l10n_pe_settle_balance" string="Liquidar saldo" type="object"
+                        class="oe_highlight"
+                        invisible="state not in ('post', 'done') or not l10n_pe_balance_to_settle"
+                        groups="account.group_account_invoice"/>
+                <button name="action_l10n_pe_replenish_fund" string="Reponer fondo" type="object"
+                        invisible="not l10n_pe_is_petty_cash or state not in ('post', 'done') or l10n_pe_replenish_request_ids"
+                        groups="account.group_account_invoice"/>
+            </button>
+            <div name="button_box" position="inside">
+                <button name="action_l10n_pe_open_replenish_request" type="object" class="oe_stat_button"
+                        icon="fa-refresh" invisible="not l10n_pe_replenish_request_ids">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Reposición</span>
+                        <span class="o_stat_value"><field name="l10n_pe_replenish_request_label"/></span>
+                    </div>
+                </button>
+            </div>
+            <field name="payment_mode" position="after">
+                <field name="l10n_pe_has_vendor_receipts" invisible="1"/>
+                <field name="l10n_pe_is_petty_cash" invisible="1"/>
+                <field name="l10n_pe_replenish_request_ids" invisible="1"/>
+                <field name="l10n_pe_available_advance_line_ids" invisible="1"/>
+                <field name="l10n_pe_advance_line_id"
+                       invisible="payment_mode != 'own_account'"
+                       readonly="state not in ('draft', 'submit')"
+                       placeholder="Automático: anticipos de la moneda del comprobante"
+                       context="{'l10n_pe_advance_display': True}"
+                       options="{'no_create': True}"/>
+                <field name="l10n_pe_advance_currency_warning" invisible="1"/>
+                <div colspan="2" class="text-warning" invisible="not l10n_pe_advance_currency_warning">
+                    <i class="fa fa-exclamation-triangle" title="Moneda distinta"/>
+                    <field name="l10n_pe_advance_currency_warning" class="d-inline" nolabel="1"/>
+                </div>
+            </field>
+            <field name="amount_residual" position="after">
+                <field name="l10n_pe_petty_cash_balance" invisible="not l10n_pe_is_petty_cash"
+                       groups="account.group_account_invoice"/>
+                <field name="l10n_pe_balance_to_settle" invisible="not l10n_pe_balance_to_settle"/>
+                <div colspan="2" class="text-end text-muted" invisible="not l10n_pe_balance_to_settle">
+                    <span invisible="l10n_pe_balance_to_settle &lt; 0">A favor de la empresa (el empleado devuelve)</span>
+                    <span invisible="l10n_pe_balance_to_settle &gt; 0">A favor del empleado (se le reembolsa)</span>
+                </div>
+            </field>
+            <xpath expr="//field[@name='expense_line_ids']" position="before">
+                <field name="l10n_pe_has_refund_hints" invisible="1"/>
+                <div class="text-muted mb-2" invisible="payment_mode != 'own_account' or state not in ('draft', 'submit')">
+                    Para registrar el dinero que el empleado devuelve use la categoría
+                    <strong>Devolución de entrega a rendir</strong> (genera el cobro, no una factura).
+                </div>
+                <div class="alert alert-warning mb-2" role="alert" invisible="not l10n_pe_has_refund_hints">
+                    Hay líneas que parecen una devolución pero tienen una categoría de gasto (resaltadas):
+                    se registrarían como facturas de compra. Cámbielas a <strong>Devolución de entrega a rendir</strong>.
+                </div>
+            </xpath>
+            <!-- Cada comprobante se registra en su formulario (proveedor, tipo de
+                 documento, serie y número obligatorios), no en la línea. -->
+            <xpath expr="//field[@name='expense_line_ids']/list" position="attributes">
+                <attribute name="editable"/>
+                <attribute name="decoration-warning">l10n_pe_looks_like_refund</attribute>
+            </xpath>
+            <xpath expr="//field[@name='expense_line_ids']/list/field[@name='vendor_id']" position="attributes">
+                <attribute name="column_invisible"/>
+            </xpath>
+            <xpath expr="//field[@name='expense_line_ids']/list/field[@name='vendor_id']" position="after">
+                <field name="l10n_pe_document_reference" optional="show"
+                       column_invisible="parent.payment_mode != 'own_account'"/>
+                <field name="l10n_pe_looks_like_refund" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_view_search" model="ir.ui.view">
+        <field name="name">hr.expense.search.l10n_pe_settlement</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_search"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="after">
+                <field name="vendor_id"/>
+                <field name="l10n_pe_document_reference"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_expense_form_view" model="ir.ui.view">
+        <field name="name">product.product.expense.form.l10n_pe_settlement</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/>
+        <field name="arch" type="xml">
+            <field name="supplier_taxes_id" position="after">
+                <field name="l10n_pe_is_advance_refund"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

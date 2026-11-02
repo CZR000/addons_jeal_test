@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_account_group_form" model="ir.ui.view">
+            <field name="name">account.group.form.inherit.l10n_pe_destination_account</field>
+            <field name="model">account.group</field>
+            <field name="inherit_id" ref="account.view_account_group_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="has_destination_account" string="Usar Distribución Contable" widget="boolean_toggle"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

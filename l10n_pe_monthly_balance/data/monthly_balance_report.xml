@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Report definition -->
+        <record id="monthly_balance_report" model="account.report">
+            <field name="name">Balance Mensualizado</field>
+
+            <!-- Filters (match Trial Balance as much as possible) -->
+            <field name="filter_journals" eval="True"/>
+            <field name="filter_analytic" eval="True"/>
+            <field name="filter_growth_comparison" eval="False"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_hierarchy">by_default</field>
+            <field name="default_opening_date_filter">this_year</field>
+            <field name="search_bar" eval="True"/>
+
+            <field name="custom_handler_model_id" ref="model_l10n_pe_monthly_balance_report_handler"/>
+
+            <field name="column_ids">
+                <record id="monthly_balance_report_balance" model="account.report.column">
+                    <field name="name">Saldo</field>
+                    <field name="expression_label">balance</field>
+                    <field name="figure_type">monetary</field>
+                </record>
+            </field>
+        </record>
+
+        <!-- Client action -->
+        <record id="action_account_report_monthly_balance" model="ir.actions.client">
+            <field name="name">Balance Mensualizado</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('l10n_pe_monthly_balance.monthly_balance_report')}"/>
+        </record>
+
+        <!-- Menu item under Accounting > Reports > Audit Reports, below Trial Balance -->
+        <menuitem
+            id="menu_action_account_report_monthly_balance"
+            name="Balance Mensualizado"
+            parent="account_reports.account_reports_audit_reports_menu"
+            action="action_account_report_monthly_balance"
+            groups="account.group_account_readonly"
+            sequence="21"
+        />
+
+        <!-- Make menu ordering deterministic: GL (10) -> Trial Balance (20) -> Monthly Balance (21) -> Journal (30) -->
+        <record id="account_reports.menu_action_account_report_coa" model="ir.ui.menu">
+            <field name="sequence">20</field>
+        </record>
+        <record id="account_reports.menu_action_account_report_general_ledger" model="ir.ui.menu">
+            <field name="sequence">10</field>
+        </record>
+        <record id="account_reports.menu_action_account_report_ja" model="ir.ui.menu">
+            <field name="sequence">30</field>
+        </record>
+
+    </data>
+</odoo>

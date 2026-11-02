@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.compensation</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='default_accounts']" position="after">
+                <block title="Compensación de Cuentas" id="compensation_settings"
+                       groups="l10n_pe_account_compensation.group_compensation_user">
+                    <setting id="compensation_accounts_setting"
+                             string="Cuentas de compensación"
+                             help="Diario y cuentas de diferencia de cambio usados al aplicar compensación entre facturas de cliente y proveedor del mismo socio. Las cuentas por cobrar y por pagar se toman automáticamente de cada factura.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="compensation_journal_id" class="col-lg-4 o_light_label"/>
+                                <field name="compensation_journal_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="compensation_exchange_gain_account_id" class="col-lg-4 o_light_label"/>
+                                <field name="compensation_exchange_gain_account_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="compensation_exchange_loss_account_id" class="col-lg-4 o_light_label"/>
+                                <field name="compensation_exchange_loss_account_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

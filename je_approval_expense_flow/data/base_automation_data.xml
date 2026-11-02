@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 1. Al enviar la solicitud (request_status -> pending): notificar aprobadores -->
+        <record id="automation_approval_request_submitted" model="base.automation">
+            <field name="name">Aprobaciones: notificar solicitud enviada</field>
+            <field name="model_id" ref="approvals.model_approval_request"/>
+            <field name="trigger">on_write</field>
+            <field name="filter_pre_domain">[('request_status', '!=', 'pending')]</field>
+            <field name="filter_domain">[('request_status', '=', 'pending')]</field>
+        </record>
+        <record id="action_server_approval_request_submitted" model="ir.actions.server">
+            <field name="name">Enviar correo: solicitud enviada</field>
+            <field name="base_automation_id" ref="automation_approval_request_submitted"/>
+            <field name="model_id" ref="approvals.model_approval_request"/>
+            <field name="usage">base_automation</field>
+            <field name="state">mail_post</field>
+            <field name="mail_post_method">email</field>
+            <field name="template_id" ref="mail_template_request_submitted"/>
+        </record>
+
+        <!-- 2. Al enviar un Informe de Gastos (approval_state -> submit): notificar al responsable.
+             Ojo: se filtra por approval_state (campo plano que escribe _do_submit()), no por el
+             campo "state" (computado y almacenado a partir de approval_state) - filtrar por un
+             campo computado hace que la automatización se dispare dos veces (una al escribir
+             approval_state, otra al recomputarse state) y se manden correos duplicados. -->
+        <record id="automation_expense_sheet_submitted" model="base.automation">
+            <field name="name">Aprobaciones: notificar informe de gastos enviado</field>
+            <field name="model_id" ref="hr_expense.model_hr_expense_sheet"/>
+            <field name="trigger">on_write</field>
+            <field name="filter_pre_domain">[('approval_state', '!=', 'submit')]</field>
+            <field name="filter_domain">[('approval_state', '=', 'submit')]</field>
+        </record>
+        <record id="action_server_expense_sheet_submitted" model="ir.actions.server">
+            <field name="name">Enviar correo: informe de gastos enviado</field>
+            <field name="base_automation_id" ref="automation_expense_sheet_submitted"/>
+            <field name="model_id" ref="hr_expense.model_hr_expense_sheet"/>
+            <field name="usage">base_automation</field>
+            <field name="state">mail_post</field>
+            <field name="mail_post_method">email</field>
+            <field name="template_id" ref="mail_template_expense_sheet_submitted"/>
+        </record>
+
+        <!-- 3. Al confirmar el pago vinculado a una solicitud: notificar al solicitante.
+             Ojo: NO se usa base.automation aquí (a diferencia de 1 y 2). account.payment.state
+             es un campo computado y almacenado sin un campo plano equivalente que se pueda
+             usar como disparador confiable (a diferencia de approval_state en el punto 2) -
+             cualquier filtro sobre "state" duplica el envío. En su lugar, esta ir.actions.server
+             se dispara explícitamente desde account_payment.py:action_post(), una sola vez,
+             con un flag para evitar reenvíos si action_post se llama de nuevo. -->
+        <record id="action_server_approval_payment_approved" model="ir.actions.server">
+            <field name="name">Enviar correo: pago confirmado</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="state">mail_post</field>
+            <field name="mail_post_method">email</field>
+            <field name="template_id" ref="mail_template_payment_approved"/>
+        </record>
+
+    </data>
+</odoo>

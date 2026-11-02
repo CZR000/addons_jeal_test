@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_expense_ic_product_view_list" model="ir.ui.view">
+        <field name="name">hr.expense.ic.product.list</field>
+        <field name="model">hr.expense.ic.product</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="origin_product_id" options="{'no_create': True}"/>
+                <field name="origin_company_id" optional="show"/>
+                <field name="product_id" options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_expense_ic_product_view_search" model="ir.ui.view">
+        <field name="name">hr.expense.ic.product.search</field>
+        <field name="model">hr.expense.ic.product</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="origin_product_id"/>
+                <field name="product_id"/>
+                <filter name="group_company" string="Empresa" context="{'group_by': 'company_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_expense_ic_product" model="ir.actions.act_window">
+        <field name="name">Equivalencias de gastos de otras empresas</field>
+        <field name="res_model">hr.expense.ic.product</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Defina el producto de esta empresa para cada categoría de gasto de otra.</p>
+            <p>Se usa en la factura en borrador de un gasto rendido en otra empresa del grupo cuando su categoría no
+               existe aquí (ni compartida ni con el mismo código). El producto da la cuenta de gasto, los impuestos y
+               el tipo de operación de detracción.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_expense_ic_product"
+              name="Equivalencias de gastos de otras empresas"
+              parent="account.account_management_menu"
+              action="action_hr_expense_ic_product"
+              groups="account.group_account_manager"
+              sequence="90"/>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_credit" model="ir.ui.view">
+        <field name="name">res.partner.form.sca.credit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Crédito" name="sca_credit"
+                      invisible="parent_id and not is_company">
+                    <field name="sca_company_currency_id" invisible="1"/>
+                    <group>
+                        <group string="Línea de crédito">
+                            <label for="sca_credit_limit"/>
+                            <div class="o_row">
+                                <field name="sca_credit_limit" readonly="1"/>
+                                <field name="is_sca_credit_manager" invisible="1"/>
+                                <button name="action_sca_change_limit" type="object"
+                                        string="Cambiar límite" class="btn-link"
+                                        invisible="not is_sca_credit_manager"/>
+                            </div>
+                            <field name="sca_debt_total"/>
+                            <field name="sca_debt_overdue"/>
+                            <field name="sca_credit_available"/>
+                            <field name="sca_credit_usage" widget="percentage"/>
+                        </group>
+                    </group>
+                    <separator string="Historial de límite"/>
+                    <field name="sca_limit_history_ids" readonly="1">
+                        <list>
+                            <field name="change_date"/>
+                            <field name="user_id"/>
+                            <field name="previous_limit"/>
+                            <field name="new_limit"/>
+                            <field name="reason"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

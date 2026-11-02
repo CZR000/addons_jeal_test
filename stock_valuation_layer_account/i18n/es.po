@@ -1,0 +1,42 @@
+# Spanish translation for stock_valuation_layer_account
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+
+#. module: stock_valuation_layer_account
+#: model:ir.model.fields,field_description:stock_valuation_layer_account.field_stock_valuation_layer__valuation_account_id
+#: model_terms:ir.ui.view,arch_db:stock_valuation_layer_account.view_inventory_valuation_search_inherit_valuation_account
+msgid "Valuation Account"
+msgstr "Cuenta de valoración"
+
+#. module: stock_valuation_layer_account
+#: model:ir.model.fields,help:stock_valuation_layer_account.field_stock_valuation_layer__valuation_account_id
+msgid ""
+"Stock valuation account of the product category, read for the company of "
+"the layer. Empty when the category uses manual (periodic) valuation. "
+"Reflects the current category configuration, not the account used in the "
+"journal entry."
+msgstr ""
+"Cuenta de valoración de stock de la categoría del producto, según la empresa "
+"de la capa. Vacía cuando la categoría usa valoración manual (periódica). "
+"Refleja la configuración actual de la categoría, no la cuenta usada en el "
+"asiento contable."
+
+#. module: stock_valuation_layer_account
+#: model_terms:ir.ui.view,arch_db:stock_valuation_layer_account.view_inventory_valuation_search_inherit_valuation_account
+msgid "With Valuation Account"
+msgstr "Con cuenta de valoración"
+
+#. module: stock_valuation_layer_account
+#: model_terms:ir.ui.view,arch_db:stock_valuation_layer_account.view_inventory_valuation_search_inherit_valuation_account
+msgid "Without Valuation Account"
+msgstr "Sin cuenta de valoración"
+
+#. module: stock_valuation_layer_account
+#: model:ir.actions.server,name:stock_valuation_layer_account.action_recompute_valuation_account
+msgid "Recompute Valuation Account"
+msgstr "Recalcular cuenta de valoración"

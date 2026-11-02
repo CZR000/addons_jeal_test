@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <menuitem 
+            id          = "menu_hr_contract_renew_in_employees" 
+            name        = "Renovar Contratos" 
+            action      = "hr_contract_renew.action_view_hr_contract_renew" 
+            parent      = "hr.menu_hr_employee_payroll" 
+            sequence    = "5" />
+
+        <menuitem
+            id          = "menu_hr_contract_renew_in_payroll"
+            name        = "Renovar Contratos"
+            action      = "hr_contract_renew.action_view_hr_contract_renew"
+            parent      = "hr_payroll.menu_hr_payroll_employees_root"
+            sequence    = "32"/>
+    </data>
+</odoo>

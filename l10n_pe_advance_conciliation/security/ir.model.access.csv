@@ -1,0 +1,20 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_advance_user,advance user,model_l10n_pe_advance,group_advance_user,1,0,0,0
+access_advance_manager,advance manager,model_l10n_pe_advance,group_advance_manager,1,1,1,1
+access_advance_application_user,advance application user,model_l10n_pe_advance_application,group_advance_user,1,0,0,0
+access_advance_application_manager,advance application manager,model_l10n_pe_advance_application,group_advance_manager,1,1,1,1
+access_advance_config_manager,advance config manager,model_l10n_pe_advance_config,group_advance_manager,1,1,1,1
+access_advance_config_user,advance config user,model_l10n_pe_advance_config,group_advance_user,1,0,0,0
+access_advance_reconcile_report,advance reconcile report,model_l10n_pe_advance_reconcile_report,group_advance_user,1,0,0,0
+access_apply_wizard,apply wizard,model_l10n_pe_advance_apply_wizard,group_advance_user,1,1,1,1
+access_apply_wizard_line,apply wizard line,model_l10n_pe_advance_apply_wizard_line,group_advance_user,1,1,1,1
+access_revolving_wizard,revolving wizard,model_l10n_pe_advance_revolving_wizard,group_advance_user,1,1,1,1
+access_revolving_wizard_line,revolving wizard line,model_l10n_pe_advance_revolving_wizard_line,group_advance_user,1,1,1,1
+access_close_wizard,close wizard,model_l10n_pe_advance_close_wizard,group_advance_manager,1,1,1,1
+access_migration_wizard,migration wizard,model_l10n_pe_advance_migration_wizard,group_advance_manager,1,1,1,1
+access_migration_wizard_line,migration wizard line,model_l10n_pe_advance_migration_wizard_line,group_advance_manager,1,1,1,1
+access_advance_acc_invoice,advance read billing,model_l10n_pe_advance,account.group_account_invoice,1,0,0,0
+access_advance_acc_user,advance read accountant,model_l10n_pe_advance,account.group_account_user,1,0,0,0
+access_advance_app_acc_invoice,advance app read billing,model_l10n_pe_advance_application,account.group_account_invoice,1,0,0,0
+access_advance_app_acc_user,advance app read accountant,model_l10n_pe_advance_application,account.group_account_user,1,0,0,0
+access_statement_wizard,statement wizard,model_l10n_pe_advance_statement_wizard,group_advance_user,1,1,1,1

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_asset_form_required_invoice" model="ir.ui.view">
+        <field name="name">account.asset.form.required.invoice</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <!--
+                Ubicamos la pestaña que contiene el campo original_move_line_ids
+                (pestaña "Facturas") vía ancestor::page y le agregamos un
+                asterisco para indicar visualmente que es obligatoria.
+            -->
+            <xpath expr="//field[@name='original_move_line_ids']/ancestor::page[1]"
+                   position="attributes">
+                <attribute name="string">Facturas *</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

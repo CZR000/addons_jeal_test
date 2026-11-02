@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Odoo 18:
+          * El atributo ``attrs={'invisible': [...]}`` se eliminó en v17.
+            Ahora son atributos directos con expresiones Python:
+            ``invisible="state == 'done'"``.
+          * El tag ``<tree>`` se renombró a ``<list>`` en v17.
+    -->
+
+    <!-- Vista Form del Wizard -->
+    <record id="expense_report_wizard_form_view" model="ir.ui.view">
+        <field name="name">expense.report.wizard.form</field>
+        <field name="model">expense.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reporte de Gastos Excel">
+                <sheet>
+                    <!-- Estado borrador - Configuración -->
+                    <group invisible="state == 'done'">
+                        <group>
+                            <field name="name" placeholder="Nombre del archivo..."/>
+                        </group>
+                    </group>
+
+                    <separator string="Origen de Datos" invisible="state == 'done'"/>
+
+                    <group invisible="state == 'done'">
+                        <group>
+                            <field name="selection_mode" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="line_count" string="Registros seleccionados"
+                                   invisible="selection_mode != 'selected'"/>
+                        </group>
+                    </group>
+
+                    <!-- Filtro por fechas (solo visible cuando el modo es date_range) -->
+                    <group invisible="state == 'done' or selection_mode != 'date_range'">
+                        <group>
+                            <field name="date_from" required="1"/>
+                            <field name="date_to" required="1"/>
+                        </group>
+                        <group>
+                            <field name="filtered_line_count" string="Registros encontrados"/>
+                        </group>
+                    </group>
+
+                    <separator string="Campos Adicionales (Columnas Extra)" invisible="state == 'done'"/>
+
+                    <group invisible="state == 'done'">
+                        <field name="extra_field_ids" nolabel="1" colspan="2">
+                            <list editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="field_key" string="Campo"/>
+                                <field name="field_label" string="Etiqueta en Excel"/>
+                            </list>
+                        </field>
+                    </group>
+
+                    <!-- Estado generado - Descargar -->
+                    <group invisible="state != 'done'">
+                        <field name="file_name" readonly="1"/>
+                        <field name="file_data" filename="file_name" readonly="1"/>
+                    </group>
+
+                    <field name="state" invisible="1"/>
+                    <field name="selected_line_ids" invisible="1"/>
+                </sheet>
+
+                <footer>
+                    <!-- Botones estado borrador -->
+                    <button name="action_generate_report"
+                            string="Generar Excel"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state == 'done'"/>
+
+                    <!-- Botones estado generado -->
+                    <button name="action_download"
+                            string="Descargar"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'done'"/>
+                    <button name="action_reset"
+                            string="Generar Otro"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'done'"/>
+
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--
+        Acción para el binding (desde la lista de apuntes contables).
+        v18: `binding_view_types` sigue válido (default 'list,form'). El valor
+        'list' es correcto en v18 (verificado en account/wizard/*_views.xml).
+    -->
+    <record id="action_expense_report_wizard" model="ir.actions.act_window">
+        <field name="name">Reporte de gastos excel</field>
+        <field name="res_model">expense.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move_line"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

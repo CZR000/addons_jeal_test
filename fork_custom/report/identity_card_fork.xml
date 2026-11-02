@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="identity_card_fork">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="height: 1px;">
+                        <div class="oe_structure"/>
+                        <t t-foreach="o" t-as="fork">
+                            <table CELLPADDING="0" CELLSPACING="0" width="100%" name="encabezado" class="table table-sm">
+
+                                <thead>
+                                    <tr>
+                                        <th colspan='4' style="font-family: 'Helvetica';font-size: 20px;padding-left:5px;">FICHA DE PEDIDOS DE EXISTENCIAS</th>
+                                    </tr>
+                                </thead>
+
+                                <tr>
+                                    <td style="font-family: 'Helvetica';padding-left:5px;">
+                                        <strong>MOVIMIENTO</strong>
+                                    </td>
+                                    <td style="font-family: 'Helvetica';padding-left:5px;">
+                                        <span t-field="fork.name"/>
+                                    </td>
+
+                                    <td style="font-family: 'Helvetica';padding-left:5px;">
+                                        <strong>FECHA</strong>
+                                    </td>
+                                    <td style="font-family: 'Helvetica';padding-left:5px;" align="left">
+                                        <span t-field="fork.expected_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}' />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="font-family: 'Helvetica';padding-left:5px;">
+                                        <strong>MODO DE ENVIO</strong>
+                                    </td>
+                                    <td style="font-family: 'Helvetica';padding-left:5px;">
+                                        <span t-field="fork.picking_policy"/>
+                                    </td>
+
+                                    <td style="font-family: 'Helvetica';padding-left:5px;">
+                                        <strong>EMPRESA</strong>
+                                    </td>
+                                    <td style="font-family: 'Helvetica';padding-left:5px;" align="left">
+                                        <span t-field="fork.company_id" />
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <table CELLPADDING="0" CELLSPACING="0" width="100%" name="listado" style="border: 1px solid black; font-size:13px; font-family:Arial;">
+
+                                <thead>
+                                    <tr>
+                                        <th colspan='10' style="font-family:'Helvetica'; font-size:20px; padding:5px;">ITEMS</th>
+                                    </tr>
+                                </thead>
+
+                                <tr>
+                                    <td align="center" style="padding:5px">
+                                        <strong>Item</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Nombre</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Producto</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Marca</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>UdM</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Cantidad</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Área</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Estado</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Cant. a mano</strong>
+                                    </td>
+
+                                    <td align="center" style="padding:5px">
+                                        <strong>Observación</strong>
+                                    </td>
+                                </tr>
+
+                                <t t-set="i" t-value="1"/>
+                                <t t-foreach="fork.stock_request_ids" t-as="line">
+
+                                    <tr>
+                                        <td align="right" style="font-family: 'Helvetica';padding-right:5px;">
+                                            <span t-esc="i"/>
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-left:5px;" align="left">
+                                            <span t-field="line.name" />
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;" align="right">
+                                            <span t-field="line.product_id" />
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;font-color:green;" align="center">
+                                            <span t-field="line.marca"/>
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;font-color:red;" align="center">
+                                            <span t-field="line.product_uom_id"/>
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;font-color:red;" align="center">
+                                            <span t-field="line.product_uom_qty"/>
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;font-color:red;" align="center">
+                                            <span t-field="line.x_studio_rea_1"/>
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;font-color:red;" align="center">
+                                            <span t-field="line.x_studio_estado"/>
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;font-color:red;" align="center">
+                                            <span t-field="line.x_studio_cantidad_a_mano"/>
+                                        </td>
+
+                                        <td style="font-family: 'Helvetica';padding-right:5px;font-color:red;" align="center">
+                                            <span t-field="line.x_studio_observaciones"/>
+                                        </td>
+                                    </tr>
+
+                                    <t t-set="i" t-value="i+1"/>
+                                </t>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista lista editable inline -->
+    <record id="view_product_conversion_list" model="ir.ui.view">
+        <field name="name">jeal.product.conversion.list</field>
+        <field name="model">jeal.product.conversion</field>
+        <field name="arch" type="xml">
+            <list string="Conversión de Productos" editable="bottom">
+                <field name="product_source_id"/>
+                <field name="product_target_id"/>
+                <field name="factor"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista form (respaldo) -->
+    <record id="view_product_conversion_form" model="ir.ui.view">
+        <field name="name">jeal.product.conversion.form</field>
+        <field name="model">jeal.product.conversion</field>
+        <field name="arch" type="xml">
+            <form string="Conversión de Producto">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_source_id"/>
+                            <field name="product_target_id"/>
+                        </group>
+                        <group>
+                            <field name="factor"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista búsqueda -->
+    <record id="view_product_conversion_search" model="ir.ui.view">
+        <field name="name">jeal.product.conversion.search</field>
+        <field name="model">jeal.product.conversion</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_source_id"/>
+                <field name="product_target_id"/>
+                <filter name="filter_active" string="Activas"
+                        domain="[('active','=',True)]"/>
+                <filter name="filter_inactive" string="Archivadas"
+                        domain="[('active','=',False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_target" string="Producto de OC"
+                            context="{'group_by':'product_target_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="action_product_conversion" model="ir.actions.act_window">
+        <field name="name">Conversión de Productos</field>
+        <field name="res_model">jeal.product.conversion</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_product_conversion_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cree su primera regla de conversión
+            </p>
+            <p>
+                Cuando se seleccione una recepción como Guía de Transporte en una OC,
+                los productos recibidos se reemplazarán por sus productos convertidos.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú bajo Compras → Configuración -->
+    <menuitem id="menu_product_conversion"
+              name="Conversión de Productos"
+              parent="purchase.menu_purchase_config"
+              action="action_product_conversion"
+              sequence="80"/>
+</odoo>

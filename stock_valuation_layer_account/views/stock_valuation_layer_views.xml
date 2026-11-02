@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- List: Inventory > Reporting > Stock Valuation -->
+    <record id="stock_valuation_layer_tree_inherit_valuation_account" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.list.valuation.account</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_account.stock_valuation_layer_tree"/>
+        <field name="arch" type="xml">
+            <field name="reference" position="before">
+                <field name="valuation_account_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="stock_valuation_layer_form_inherit_valuation_account" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.form.valuation.account</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_account.stock_valuation_layer_form"/>
+        <field name="arch" type="xml">
+            <field name="account_move_id" position="before">
+                <field name="valuation_account_id"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Search: field, filters and group by -->
+    <record id="view_inventory_valuation_search_inherit_valuation_account" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.search.valuation.account</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_account.view_inventory_valuation_search"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="valuation_account_id"/>
+            </field>
+            <filter name="has_remaining_qty" position="after">
+                <separator/>
+                <filter string="With Valuation Account" name="with_valuation_account"
+                        domain="[('valuation_account_id', '!=', False)]"/>
+                <filter string="Without Valuation Account" name="without_valuation_account"
+                        domain="[('valuation_account_id', '=', False)]"/>
+            </filter>
+            <filter name="group_by_categ_id" position="after">
+                <filter string="Valuation Account" name="group_by_valuation_account_id"
+                        context="{'group_by': 'valuation_account_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_kardex_ple" model="report.paperformat">
+        <field name="name">Libros 12.1 / 13.1 (A4 horizontal)</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">6</field>
+        <field name="margin_right">6</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_kardex_ple" model="ir.actions.report">
+        <field name="name">Libro 12.1 / 13.1 del kardex</field>
+        <field name="model">stock.kardex.adjustment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock_kardex_adjustment_jeal.report_kardex_ple</field>
+        <field name="report_file">stock_kardex_adjustment_jeal.report_kardex_ple</field>
+        <field name="paperformat_id" ref="paperformat_kardex_ple"/>
+    </record>
+
+    <template id="report_kardex_ple">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <t t-set="is_131" t-value="book == '131'"/>
+                    <div class="page" style="font-size: 8px;">
+                        <style>
+                            .ple th, .ple td { border: 1px solid #000; padding: 1px 3px; }
+                            .ple th { text-align: center; vertical-align: middle; font-weight: bold; }
+                            .ple td.n { text-align: right; white-space: nowrap; }
+                            .ple td.c { text-align: center; }
+                            .ple tr.adj td { background-color: #E2EFDA; }
+                            .ple tr.man td { background-color: #DDEBF7; }
+                            .ple tr.tot td { font-weight: bold; }
+                            .ple td.g { background-color: #BFBFBF; }
+                            .ple-head td { padding: 0 6px 0 0; border: none; }
+                            .ple-section { page-break-inside: auto; margin-bottom: 14px; }
+                            .ple-section thead { display: table-header-group; }
+                            .ple-section tr { page-break-inside: avoid; }
+                        </style>
+                        <div style="font-size: 10px; font-weight: bold;" t-out="title"/>
+                        <table class="ple-head" style="margin: 6px 0;">
+                            <tr><td><b>PERÍODO:</b></td><td t-out="doc.date_from.strftime('%m/%Y')"/></tr>
+                            <tr><td><b>RUC:</b></td><td t-out="doc.company_id.vat"/></tr>
+                            <tr><td><b>APELLIDOS Y NOMBRES, DENOMINACIÓN O RAZÓN SOCIAL:</b></td><td t-out="doc.company_id.name"/></tr>
+                        </table>
+                        <t t-if="not sections">
+                            <p>Sin existencias en el período.</p>
+                        </t>
+                        <div t-foreach="sections" t-as="s" class="ple-section">
+                            <table class="ple-head">
+                                <tr><td><b>ESTABLECIMIENTO (1):</b></td><td t-out="s['establishment']"/></tr>
+                                <tr><td><b>CÓDIGO DE LA EXISTENCIA:</b></td><td t-out="s['code']"/></tr>
+                                <tr><td><b>TIPO (TABLA 5):</b></td><td t-out="s['stock_type']"/></tr>
+                                <tr><td><b>DESCRIPCIÓN:</b></td><td t-out="s['description']"/></tr>
+                                <tr><td><b>CÓDIGO DE LA UNIDAD DE MEDIDA (TABLA 6):</b></td><td t-out="s['uom']"/></tr>
+                                <tr t-if="is_131"><td><b>MÉTODO DE VALUACIÓN:</b></td><td t-out="method_name"/></tr>
+                            </table>
+                            <table class="ple" style="width: 100%; border-collapse: collapse; margin-top: 3px;">
+                                <thead>
+                                    <tr>
+                                        <th colspan="4">DOCUMENTO DE TRASLADO, COMPROBANTE DE PAGO, DOCUMENTO INTERNO O SIMILAR</th>
+                                        <th rowspan="2">TIPO DE OPERACIÓN (TABLA 12)</th>
+                                        <t t-if="is_131">
+                                            <th colspan="3">ENTRADAS</th>
+                                            <th colspan="3">SALIDAS</th>
+                                            <th colspan="3">SALDO FINAL</th>
+                                        </t>
+                                        <t t-else="">
+                                            <th rowspan="2">ENTRADAS</th>
+                                            <th rowspan="2">SALIDAS</th>
+                                            <th rowspan="2">SALDO FINAL</th>
+                                        </t>
+                                    </tr>
+                                    <tr>
+                                        <th>FECHA</th><th>TIPO (TABLA 10)</th><th>SERIE</th><th>NÚMERO</th>
+                                        <t t-if="is_131">
+                                            <t t-foreach="range(3)" t-as="_i">
+                                                <th>CANTIDAD</th><th>COSTO UNITARIO</th><th>COSTO TOTAL</th>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="s['lines']" t-as="l"
+                                        t-att-class="'adj' if l['is_adjustment'] else ('man' if l['kind'] == 'manual' else '')">
+                                        <t t-if="l['kind'] == 'opening'">
+                                            <td/><td/><td/><td class="c">SALDO INICIAL</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="c" t-out="l['doc_date'].strftime('%d/%m/%Y')"/>
+                                            <td class="c" t-out="l['doc_type']"/>
+                                            <td class="c" t-out="l['serie']"/>
+                                            <td class="c" t-out="l['number']"/>
+                                        </t>
+                                        <td class="c" t-out="l['operation']"/>
+                                        <t t-if="is_131">
+                                            <td class="n" t-out="'{:,.2f}'.format(l['in_qty'])"/>
+                                            <td class="n" t-out="'{:,.4f}'.format(l['in_unit'])"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(l['in_total'])"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(l['out_qty'])"/>
+                                            <td class="n" t-out="'{:,.4f}'.format(l['out_unit'])"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(l['out_total'])"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(l['bal_qty'])"/>
+                                            <td class="n" t-out="'{:,.4f}'.format(l['bal_unit'])"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(l['bal_total'])"/>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="n" t-out="'{:,.2f}'.format(0.0 if l['kind'] == 'opening' else l['in_qty'])"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(0.0 if l['kind'] == 'opening' else l['out_qty'])"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(l['bal_qty'])"/>
+                                        </t>
+                                    </tr>
+                                    <tr class="tot">
+                                        <td colspan="5" style="text-align: right;">TOTALES</td>
+                                        <t t-if="is_131">
+                                            <td class="n" t-out="'{:,.2f}'.format(s['totals'].get('in_qty', 0.0))"/>
+                                            <td class="g"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(s['totals'].get('in_total', 0.0))"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(s['totals'].get('out_qty', 0.0))"/>
+                                            <td class="g"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(s['totals'].get('out_total', 0.0))"/>
+                                            <td class="g"/><td class="g"/><td class="g"/>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="n" t-out="'{:,.2f}'.format(s['totals'].get('in_qty', 0.0))"/>
+                                            <td class="n" t-out="'{:,.2f}'.format(s['totals'].get('out_qty', 0.0))"/>
+                                            <td class="g"/>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="margin-top: 6px;">(1) Dirección del Establecimiento o Código según el Registro Único de Contribuyentes.</p>
+                        <p t-if="is_131">Filas sombreadas en verde: ajustes del kardex (cantidad 0, importe en costo total). En celeste: asientos manuales incluidos.</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

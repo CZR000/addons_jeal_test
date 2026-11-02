@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>    
+    <!-- ========================================================= -->
+    <!-- VISTA FORMULARIO: SALE ORDER (ODOO 18 READY)              -->
+    <!-- ========================================================= -->
+    <record id="view_order_form_custom_warranty" model="ir.ui.view">
+        <field name="name">sale.order.form.custom.warranty</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">            
+            
+            <!-- 1. Descuento Fijo (V18 utiliza <list>) -->
+            <xpath expr="//field[@name='order_line']//list/field[@name='discount']" position="before">
+                <field name="discount_fixed" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show"/>
+            </xpath>
+
+            <!-- Renombrar Descuento Porcentual -->
+            <xpath expr="//field[@name='order_line']//list/field[@name='discount']" position="attributes">
+                <attribute name="string">Desc. (%)</attribute>
+            </xpath>
+
+            <!-- 2. Empleado Comercial (Mejora visual con Avatar) -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="report_employee_id" widget="many2one_avatar_user"/>
+            </xpath>
+                                
+            <!-- ========================================================= -->
+            <!-- PESTAÑA: TÉRMINOS Y GARANTÍA -->
+            <!-- ========================================================= -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Términos y Garantía (PDF)" name="custom_warranty_terms_page">
+                    
+                    <!-- Cabecera UI Nativa (Flexbox Odoo 18) -->
+                    <div class="d-flex justify-content-between align-items-start mt-2 mb-3">
+                        <div class="text-muted small w-75">
+                            Modifique los términos específicos para esta cotización.<br/>
+                            Si agrega nuevos productos, presione <b>"Sincronizar Faltantes"</b>.
+                        </div>
+                        <div class="d-flex gap-2">
+                            <!-- Botón Smart Append (No destructivo) -->
+                            <button name="action_sync_missing_terms" 
+                                    type="object" 
+                                    class="btn btn-secondary btn-sm" 
+                                    string="Sincronizar" 
+                                    icon="fa-plus"
+                                    help="Agrega los términos de productos nuevos al final, sin borrar sus ediciones manuales."/>
+                                    
+                            <!-- Botón Hard Reset (Destructivo con advertencia) -->
+                            <button name="action_reset_warranty_terms" 
+                                    type="object" 
+                                    class="btn btn-danger btn-sm" 
+                                    string="Restablecer" 
+                                    icon="fa-exclamation-triangle"
+                                    confirm="¿Está seguro? Esto borrará todas sus ediciones manuales y reconstruirá los términos desde cero tomando los productos de las líneas."
+                                    help="Borra todo y vuelve a cargar los términos originales de los productos."/>
+                        </div>
+                    </div>
+            
+                    <field name="custom_warranty_terms" 
+                           widget="html" 
+                           nolabel="1"
+                           placeholder="Escriba aquí las condiciones de garantía específicas para esta cotización..."
+                           options="{'collaborative': true}"/>
+                </page>
+            </xpath>
+                
+            <!-- ========================================================= -->
+            <!-- GRUPO: TIPO DE CAMBIO (Integración completa con Mixin)    -->
+            <!-- ========================================================= -->
+            <xpath expr="//group[@name='sale_header']" position="inside">          
+                <!-- 1. Campos técnicos del Mixin en memoria (Invisibles) -->
+                <field name="exchange_rate_case" invisible="True"/>
+                
+                <!-- 2. Grupo principal: Solo visible si hay monedas distintas -->
+                <group name="exchange_rate_group" 
+                       string="Tipo de Cambio" 
+                       invisible="exchange_rate_case == 'none'">
+                    
+                    <!-- 3. Selección de Compra / Venta (Sugerido por el Mixin) -->
+                    <field name="exchange_rate_type" 
+                           readonly="state in ['sale', 'cancel']" 
+                           widget="radio" 
+                           options="{'horizontal': True}"/>
+                    
+                    <field name="exchange_rate_date" 
+                           readonly="state in ['sale', 'cancel']"/>
+                    
+                    <!-- 4. La tasa resultante final (Solo lectura) -->
+                    <field name="exchange_rate" 
+                           readonly="True" 
+                           digits="[12,6]"/>
+                    
+                    <!-- 5. El ingreso manual de la tasa -->
+                    <field name="forced_exchange_rate" 
+                           digits="[12,12]" 
+                           readonly="state in ['sale', 'cancel']"/>
+                           
+                </group>
+            </xpath>
+            
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- ACCIÓN MASIVA (SERVER ACTION) PARA ACTUALIZAR REGISTROS -->
+    <!-- ========================================================= -->
+    <record id="action_mass_reset_warranty_terms" model="ir.actions.server">
+        <field name="name">Restablecer Términos de Productos</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <!-- V18 Update: binding_view_types requiere 'list' en lugar de 'tree' -->
+        <field name="binding_view_types">list</field> 
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    records.action_reset_warranty_terms()
+        </field>
+    </record>
+
+</odoo>

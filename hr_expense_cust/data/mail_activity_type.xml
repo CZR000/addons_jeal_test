@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_act_disbursement_approval" model="mail.activity.type">
+        <field name="name">Aprobación de solicitud de desembolso</field>
+        <field name="summary">Aprobar solicitud de desembolso</field>
+        <field name="sequence" eval="20"/>
+        <field name="delay_count" eval="0"/>
+        <field name="delay_unit">days</field>
+        <field name="icon">fa-money</field>
+        <field name="decoration_type">warning</field>
+        <field name="res_model">account.payment</field>
+        <field name="category">default</field>
+    </record>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Agregar opciones "Agrupar por Cuenta Analítica" y "Agrupar por Cuenta Destino"
+         en la vista búsqueda de Apuntes Contables -->
+    <record id="view_account_move_line_filter_analytic_groupby" model="ir.ui.view">
+        <field name="name">account.move.line.search.analytic.groupby</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+        <field name="arch" type="xml">
+            <filter name="group_by_matching" position="after">
+                <filter
+                    string="Cuenta Analítica"
+                    name="group_by_analytic_account"
+                    domain="[]"
+                    context="{'group_by': 'analytic_account_id'}"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <filter
+                    string="Cuenta Destino"
+                    name="group_by_destination_account"
+                    domain="[]"
+                    context="{'group_by': 'destination_account_id'}"
+                />
+            </filter>
+        </field>
+    </record>
+
+
+    <!-- Extensiones al formulario principal de account.move:
+         1. Columna Producto en la pestaña "Apuntes contables" (aml_tab).
+            El tab aml_tab no incluye product_id, por eso no aparece en el AED.
+         2. Columna "Cuenta Destino" en la pestaña "Líneas de factura" (invoice_tab).
+            Muestra las cuentas destino que se generarán en el AED para las líneas
+            cuya cuenta origen + cuenta analítica tienen configuración de destino.
+            Las líneas sin configuración quedan en blanco. -->
+    <record id="view_move_form_custom_extensions" model="ir.ui.view">
+        <field name="name">account.move.form.custom.extensions</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='aml_tab']//list//field[@name='name']" position="before">
+                <field name="product_id" readonly="1" optional="show"/>
+            </xpath>
+            <xpath expr="//page[@id='invoice_tab']//list//field[@name='account_id']" position="after">
+                <field
+                    name="destination_account_ids"
+                    string="Cuenta Destino"
+                    widget="many2many_tags"
+                    readonly="1"
+                    optional="show"
+                    groups="account.group_account_readonly"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

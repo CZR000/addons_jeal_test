@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Tipo de intangible (Tabla 7 SUNAT, formato 3.9) y actividad del
+         flujo de efectivo (formato 3.18) en la cuenta contable. -->
+    <record id="view_account_form_inherit_ple_inv_bal" model="ir.ui.view">
+        <field name="name">account.account.form.inherit.ple.inv.bal</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allowed_journal_ids']" position="after">
+                <field name="l10n_pe_intangible_type"
+                       invisible="account_type != 'asset_non_current'"/>
+                <field name="l10n_pe_cash_flow_activity"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

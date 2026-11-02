@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_stock_request_order_inh_form" model="ir.ui.view">
+            <field name="name">view.stock.request.order.inh.form</field>
+            <field name="model">stock.request.order</field>
+            <field name="inherit_id" ref="stock_request.stock_request_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="get_excel_report" string="Imprimir XLSX" type="object" class="btn-secondary" data-hotkey="q" icon="fa-file-excel-o"/>
+                </xpath>
+
+                <xpath expr="//field[@name='stock_request_ids']/list/field[@name='product_id']" position="after">
+                    <field name="categ_name" string="Categoría" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

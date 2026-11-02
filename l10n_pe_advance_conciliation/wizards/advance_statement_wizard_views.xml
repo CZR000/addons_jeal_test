@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_advance_statement_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.statement.wizard.form</field>
+        <field name="model">l10n_pe.advance.statement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Estado de cuenta por socio">
+                <group>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="advance_type"/>
+                        <field name="currency_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="only_with_balance"/>
+                    </group>
+                </group>
+                <p class="text-muted">
+                    Agrupa todos los documentos del socio (anticipos o
+                    depositos de revolvente) con su saldo inicial, cada
+                    movimiento con su asiento y factura aplicada, y el saldo
+                    acumulado. El saldo final debe coincidir con el reporte de
+                    saldos y con el mayor de la cuenta de control.
+                </p>
+                <footer>
+                    <button name="action_print" type="object"
+                            string="Imprimir PDF" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_advance_statement_wizard" model="ir.actions.act_window">
+        <field name="name">Estado de cuenta por socio</field>
+        <field name="res_model">l10n_pe.advance.statement.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

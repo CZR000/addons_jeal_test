@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.l10n_pe_settlement_ic</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_pe_hr_expense_settlement.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="l10n_pe_hr_expense_settlement_setting_container" position="inside">
+                <setting company_dependent="1" string="Gastos de otras empresas del grupo"
+                         help="Comprobantes emitidos a otra empresa del grupo que rinde un empleado de esta: cuenta por cobrar a esa empresa. Y los que rinden empleados de otras empresas con comprobantes de esta: factura en borrador y cuenta por pagar.">
+                    <field name="hr_expense_ic_receive"/>
+                    <div class="content-group">
+                        <div class="row mt8" invisible="not hr_expense_ic_receive">
+                            <label for="hr_expense_ic_journal_id" string="Diario" class="col-lg-4 o_light_label"/>
+                            <field name="hr_expense_ic_journal_id" options="{'no_create': True}" placeholder="Diario de gastos"/>
+                        </div>
+                        <div class="row mt8" invisible="not hr_expense_ic_receive">
+                            <label for="hr_expense_ic_default_product_id" string="Producto por defecto" class="col-lg-4 o_light_label"/>
+                            <field name="hr_expense_ic_default_product_id" options="{'no_create': True}"/>
+                        </div>
+                        <div class="mt8" invisible="not hr_expense_ic_receive">
+                            <button name="%(action_hr_expense_ic_product)d" type="action" icon="oi-arrow-right"
+                                    string="Equivalencias por categoría de gasto" class="btn-link"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="hr_expense_ic_receivable_account_id" string="Por cobrar M.N. / M.E." class="col-lg-4 o_light_label"/>
+                            <field name="hr_expense_ic_receivable_account_id" options="{'no_create': True}" placeholder="1699000"/>
+                            <field name="hr_expense_ic_receivable_foreign_account_id" options="{'no_create': True}" placeholder="1699001"/>
+                        </div>
+                        <div class="row">
+                            <label for="hr_expense_ic_payable_account_id" string="Por pagar M.N. / M.E." class="col-lg-4 o_light_label"/>
+                            <field name="hr_expense_ic_payable_account_id" options="{'no_create': True}" placeholder="4699000"/>
+                            <field name="hr_expense_ic_payable_foreign_account_id" options="{'no_create': True}" placeholder="4699001"/>
+                        </div>
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+
+</odoo>

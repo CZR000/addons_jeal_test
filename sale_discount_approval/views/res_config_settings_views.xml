@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_sale_discount" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.sale.discount.approval</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Insert after the Pricing section container -->
+            <xpath expr="//block[@id='pricing_setting_container']" position="after">
+
+                <block title="Aprobación de Descuentos" id="discount_approval_setting_container">
+
+                    <!-- Descuento Porcentual -->
+                    <setting string="Límites de Descuento Porcentual (%)"
+                             help="Define el rango de descuento porcentual permitido en cotizaciones. Descuentos por encima del máximo sin autorización requerirán aprobación del Gerente de Ventas.">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="sale_discount_max_pct_no_approval"
+                                       class="col-lg-8 o_light_label"
+                                       string="Máximo sin autorización (%)"/>
+                                <field name="sale_discount_max_pct_no_approval" class="col-lg-4"/>
+                            </div>
+                            <div class="row mt4">
+                                <label for="sale_discount_max_pct_with_approval"
+                                       class="col-lg-8 o_light_label"
+                                       string="Máximo con autorización (%)"/>
+                                <field name="sale_discount_max_pct_with_approval" class="col-lg-4"/>
+                            </div>
+                            <div class="text-muted mt4" style="font-size:0.85em;">
+                                Usar 0 en "con autorización" para no limitar el monto aprobable.
+                            </div>
+                        </div>
+                    </setting>
+
+                    <!-- Descuento Fijo -->
+                    <setting string="Límites de Descuento Fijo ($)"
+                             help="Define el rango de descuento fijo por línea permitido. Usar 0 en ambos campos para desactivar la validación de descuento fijo.">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="sale_discount_max_fixed_no_approval"
+                                       class="col-lg-8 o_light_label"
+                                       string="Máximo sin autorización ($)"/>
+                                <field name="sale_discount_max_fixed_no_approval" class="col-lg-4"/>
+                            </div>
+                            <div class="row mt4">
+                                <label for="sale_discount_max_fixed_with_approval"
+                                       class="col-lg-8 o_light_label"
+                                       string="Máximo con autorización ($)"/>
+                                <field name="sale_discount_max_fixed_with_approval" class="col-lg-4"/>
+                            </div>
+                            <div class="text-muted mt4" style="font-size:0.85em;">
+                                Usar 0 en "con autorización" para no limitar el monto aprobable.
+                            </div>
+                        </div>
+                    </setting>
+
+                </block>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

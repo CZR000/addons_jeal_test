@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== FORM VIEW: Add payment_state + amount_paid to the 3 tabs ===== -->
+    <record id="account_liquidation_view_form_ext" model="ir.ui.view">
+        <field name="name">report.liquidation.form.ext</field>
+        <field name="model">report.liquidation</field>
+        <field name="inherit_id" ref="account_liquidation.account_liquidation_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- TRANSPORT TAB: add columns + filter domain -->
+            <xpath expr="//page[@name='transport']//field[@name='transport_ids']//list//field[@name='move_id']" position="attributes">
+                <attribute name="domain">[
+                    ('state', '=', 'posted'),
+                    ('move_type', '=', 'in_invoice'),
+                    ('liquidation_name', 'in', [False, ''])
+                ]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='transport']//field[@name='transport_ids']//list//field[@name='subtotal']" position="after">
+                <field name="usd_currency_id" column_invisible="1"/>
+                <field name="total_usd" string="Total USD" aggregator="sum" optional="show"/>
+            </xpath>
+            <xpath expr="//page[@name='transport']//field[@name='transport_ids']//list//field[@name='total_company']" position="after">
+                <field name="payment_state" widget="badge"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-warning="payment_state == 'partial'"
+                       decoration-danger="payment_state == 'not_paid'"
+                       decoration-info="payment_state == 'in_payment'"
+                       optional="show"/>
+                <field name="amount_paid" optional="show"/>
+            </xpath>
+
+            <!-- PROCESS TAB: add columns + filter domain -->
+            <xpath expr="//page[@name='process_cost']//field[@name='process_ids']//list//field[@name='move_id']" position="attributes">
+                <attribute name="domain">[
+                    ('state', '=', 'posted'),
+                    ('move_type', '=', 'in_invoice'),
+                    ('liquidation_name', 'in', [False, ''])
+                ]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='process_cost']//field[@name='process_ids']//list//field[@name='subtotal']" position="after">
+                <field name="usd_currency_id" column_invisible="1"/>
+                <field name="total_usd" string="Total USD" aggregator="sum" optional="show"/>
+            </xpath>
+            <xpath expr="//page[@name='process_cost']//field[@name='process_ids']//list//field[@name='total_company']" position="after">
+                <field name="payment_state" widget="badge"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-warning="payment_state == 'partial'"
+                       decoration-danger="payment_state == 'not_paid'"
+                       decoration-info="payment_state == 'in_payment'"
+                       optional="show"/>
+                <field name="amount_paid" optional="show"/>
+            </xpath>
+
+            <!-- INVOICED TAB: add columns + filter domain -->
+            <xpath expr="//page[@name='invoiced']//field[@name='invoiced_ids']//list//field[@name='move_id']" position="attributes">
+                <attribute name="domain">[
+                    ('state', '=', 'posted'),
+                    ('move_type', '=', 'out_invoice'),
+                    ('partner_id', '=', parent.partner_id),
+                    ('liquidation_name', 'in', [False, ''])
+                ]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='invoiced']//field[@name='invoiced_ids']//list//field[@name='subtotal']" position="after">
+                <field name="usd_currency_id" column_invisible="1"/>
+                <field name="total_usd" string="Total USD" aggregator="sum" optional="show"/>
+            </xpath>
+            <xpath expr="//page[@name='invoiced']//field[@name='invoiced_ids']//list//field[@name='total_company']" position="after">
+                <field name="payment_state" widget="badge"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-warning="payment_state == 'partial'"
+                       decoration-danger="payment_state == 'not_paid'"
+                       decoration-info="payment_state == 'in_payment'"
+                       optional="show"/>
+                <field name="amount_paid" optional="show"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ===== LIST VIEW: Add balance_to_settle column ===== -->
+    <record id="report_liquidation_view_tree_ext" model="ir.ui.view">
+        <field name="name">report.liquidation.tree.ext</field>
+        <field name="model">report.liquidation</field>
+        <field name="inherit_id" ref="account_liquidation.report_liquidation_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="balance_to_settle"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

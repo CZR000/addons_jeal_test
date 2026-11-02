@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_workcenter_view_form_woec_consumables" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form.woec.consumables</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Consumibles" name="woec_consumables">
+                    <field name="wo_consumable_line_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="product_id"/>
+                            <field name="qty_per_unit"/>
+                            <field name="qty_fixed"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
+                        </list>
+                    </field>
+                    <div class="text-muted">
+                        Al terminar cada orden de trabajo en este centro se consume:
+                        cantidad producida × cantidad por unidad + cantidad fija.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_credit_config_settings" model="ir.ui.view">
+        <field name="name">res.config.settings.sca.credit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <block title="Aprobación de crédito" id="sca_credit_block">
+                    <setting string="Aprobador de crédito"
+                             help="Recibe por correo las solicitudes y decide con un clic.">
+                        <field name="sca_credit_approver_id"
+                               options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="Vigencia del enlace"
+                             help="Tiempo que tiene el aprobador para responder antes de que la solicitud venza.">
+                        <field name="sca_link_validity"/>
+                    </setting>
+                    <setting string="¿Cuándo pedir aprobación?"
+                             help="Solo aplica a las ventas marcadas como Crédito.">
+                        <div class="content-group mt-2">
+                            <div class="text-muted">
+                                <i class="fa fa-check me-1" title="Siempre activo"/>
+                                Cuando la venta supera la línea de crédito del cliente (siempre).
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap mt-2">
+                                <field name="sca_require_approval_overdue" nolabel="1"
+                                       class="w-auto me-2"/>
+                                <span>Cuando el cliente tiene facturas vencidas hace más de</span>
+                                <field name="sca_overdue_grace_days" nolabel="1"
+                                       class="mx-2 text-center" style="width: 3.5rem;"
+                                       readonly="not sca_require_approval_overdue"/>
+                                <span>días</span>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="¿Qué cuenta como deuda del cliente?"
+                             help="Los anticipos y notas de crédito sin aplicar siempre se restan.">
+                        <field name="sca_debt_scope" widget="radio" class="mt-2"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

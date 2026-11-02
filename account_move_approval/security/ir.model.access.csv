@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_move_reject_wizard_approver,account.move.reject.wizard.approver,model_account_move_reject_wizard,group_account_journal_approver,1,1,1,1
+access_account_move_reject_wizard_manager,account.move.reject.wizard.manager,model_account_move_reject_wizard,account.group_account_manager,1,1,1,1

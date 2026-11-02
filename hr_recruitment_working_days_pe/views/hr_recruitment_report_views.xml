@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Agrega "Duración (días hábiles PE)" como medida disponible en la vista pivot -->
+    <record id="recruitment_report_view_pivot_working_days" model="ir.ui.view">
+        <field name="name">hr.recruitment.report.pivot.working.days.pe</field>
+        <field name="model">hr.recruitment.report</field>
+        <field name="inherit_id" ref="hr_recruitment_reports.recruitment_report_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="working_days_duration" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

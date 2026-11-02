@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="account_reports.AccountReportHeaderCustomizable"
+       t-inherit-mode="extension" owl="1">
+        <!--
+            Reemplazamos el foreach de columnHeaders para intercalar las
+            filas de plan raíz y subplan entre el nivel 0 (fecha) y los
+            niveles siguientes (cuentas analíticas).
+        -->
+        <xpath expr="//t[@t-foreach='columnHeaders']" position="replace">
+            <!-- Nivel 0: fecha -->
+            <tr data-id="column_headers_row">
+                <th>
+                    <t t-if="controller.options.companies.length > 1">
+                        <span class="companies_header"
+                              t-out="controller.options.companies.map(company => company.name).join(', ')"/>
+                    </t>
+                </th>
+                <t t-foreach="columnHeaders[0]" t-as="header" t-key="header_index">
+                    <th class="column_header"
+                        t-att-colspan="this.columnHeadersColspan(0, header)">
+                        <t t-out="header.name"/>
+                    </th>
+                </t>
+                <t t-if="controller.needsColumnPercentComparison">
+                    <th class="column_percent_comparison_header">
+                        <i class="fa fa-percent"/>
+                    </th>
+                </t>
+                <t t-if="controller.hasDebugColumn">
+                    <th class="debug_header"><i class="fa fa-bug"/></th>
+                </t>
+            </tr>
+            <!-- Fila extra: plan raíz -->
+            <tr t-if="controller.data?.column_headers_render_data?.root_plan_row?.length"
+                data-id="root_plan_row"
+                class="root_plan_header">
+                <th/>
+                <t t-foreach="controller.data.column_headers_render_data.root_plan_row"
+                   t-as="cell" t-key="cell_index">
+                    <th class="column_header text-center fw-bold"
+                        t-att-colspan="cell.colspan"
+                        style="background-color: #f0f4f8; border-top: 1px solid #ccc;">
+                        <t t-out="cell.name"/>
+                    </th>
+                </t>
+            </tr>
+            <!-- Fila extra: subplan -->
+            <tr t-if="controller.data?.column_headers_render_data?.subplan_row?.length"
+                data-id="subplan_row"
+                class="subplan_header">
+                <th/>
+                <t t-foreach="controller.data.column_headers_render_data.subplan_row"
+                   t-as="cell" t-key="cell_index">
+                    <th class="column_header text-center"
+                        t-att-colspan="cell.colspan"
+                        style="background-color: #f7f9fc; font-weight: 600;">
+                        <t t-out="cell.name"/>
+                    </th>
+                </t>
+            </tr>
+            <!-- Niveles restantes (cuentas analíticas, etc.) -->
+            <t t-foreach="columnHeaders.slice(1)" t-as="columnHeader" t-key="columnHeader_index">
+                <tr data-id="column_headers_row">
+                    <th/>
+                    <t t-foreach="columnHeader" t-as="header" t-key="header_index">
+                        <th class="column_header"
+                            t-att-colspan="this.columnHeadersColspan(columnHeader_index + 1, header)">
+                            <t t-out="header.name"/>
+                        </th>
+                    </t>
+                    <t t-if="controller.options.show_horizontal_group_total">
+                        <th class="column_header">
+                            <t t-out="controller.options.available_horizontal_groups.find(group => group.id === controller.options.selected_horizontal_group_id)?.name"/>
+                        </th>
+                    </t>
+                    <t t-if="controller.needsAnalyticCoverageColumn and columnHeader_index + 1 == 1">
+                        <th><t>Analytic coverage</t></th>
+                    </t>
+                </tr>
+            </t>
+        </xpath>
+    </t>
+</templates>

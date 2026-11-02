@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_trial_balance_custom.TrialBalanceCustomFilterExtraOptions"
+       t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <xpath expr="//DropdownItem[contains(@class, 'filter_show_all_hook')]" position="after">
+            <DropdownItem
+                t-if="controller.options.show_filter_exclude_prefixes"
+                class="{ 'selected': controller.options.filter_exclude_prefixes }"
+                onSelected="() => this.filterClicked({ optionKey: 'filter_exclude_prefixes', reload: true})"
+                closingMode="'none'"
+            >
+                Excluir ctas. configuradas
+            </DropdownItem>
+            <DropdownItem
+                t-if="controller.options.show_filter_exclude_no_group"
+                class="{ 'selected': controller.options.filter_exclude_no_group }"
+                onSelected="() => this.filterClicked({ optionKey: 'filter_exclude_no_group', reload: true})"
+                closingMode="'none'"
+            >
+                Excluir sin grupo
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_asset_form_location" model="ir.ui.view">
+        <field name="name">account.asset.form.location.pe</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='main_page']" position="after">
+                <page string="Ubicación del activo" name="l10n_pe_asset_location">
+                    <group>
+                        <group string="Ubicación">
+                            <field name="l10n_pe_asset_province_id"
+                                   options="{'no_open': True, 'no_quick_create': True}"/>
+                            <field name="l10n_pe_asset_district_id"
+                                   domain="[('city_id', '=', l10n_pe_asset_province_id)]"
+                                   options="{'no_open': True, 'no_quick_create': True}"/>
+                            <field name="l10n_pe_asset_city"/>
+                        </group>
+                        <group string="Dirección">
+                            <field name="l10n_pe_asset_address" nolabel="1"
+                                   placeholder="Dirección donde se encuentra el activo..."/>
+                        </group>
+                    </group>
+                    <group>
+                        <separator string="Casilla de comentarios para el activo de alta"/>
+                        <field name="l10n_pe_asset_registration_note" nolabel="1"
+                               placeholder="Comentarios para dar de alta el activo..."/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

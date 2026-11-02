@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_trial_balance_custom" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.trial.balance.custom</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="account_reports_settings" position="after">
+                <block title="Balance de Comprobación Personalizado"
+                       id="trial_balance_custom_settings">
+
+                    <setting string="Diario de Apertura"
+                             help="Sus movimientos se mostrarán como Saldo Inicial en el Balance de Comprobación Personalizado, en lugar del acumulado histórico.">
+                        <field name="custom_opening_journal_id"
+                               options="{'no_create': True}"/>
+                    </setting>
+
+                    <setting string="Prefijos de cuenta a excluir"
+                             help="Códigos de cuenta (o raíces) separados por comas que los usuarios podrán ocultar usando el filtro 'Excluir ctas. configuradas'. Ejemplo: 89, 90, 791">
+                        <field name="custom_tb_exclude_prefixes"
+                               placeholder="Ej: 89, 90, 791"/>
+                    </setting>
+
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

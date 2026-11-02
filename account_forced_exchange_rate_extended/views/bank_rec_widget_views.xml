@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_bank_statement_line_kanban_bank_rec_widget_inherit_forced_rate" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.kanban.forced.exchange.rate</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account_accountant.view_bank_statement_line_kanban_bank_rec_widget"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="forced_exchange_rate" groups="base.group_multi_currency"/>
+                <field name="exchange_rate" groups="base.group_multi_currency"/>
+                <field name="exchange_rate_type" groups="base.group_multi_currency"/>
+            </xpath>
+
+            <!-- Ancla por nombre de campo, no por clase CSS: las clases de
+                 Bootstrap del estándar cambian entre versiones menores. -->
+            <xpath expr="//t[@t-name='card']//field[@name='payment_ref']" position="after">
+                <span t-if="record.exchange_rate.raw_value and record.exchange_rate.raw_value != 1"
+                      groups="base.group_multi_currency"
+                      class="badge fw-normal ms-1 me-1 text-nowrap align-self-center"
+                      t-attf-class="{{ record.forced_exchange_rate.raw_value ? 'text-bg-warning' : 'text-bg-light' }}"
+                      t-att-title="record.forced_exchange_rate.raw_value ? 'Tipo de cambio forzado' : 'Tipo de cambio de la fecha'">
+                    T.C. <t t-esc="record.exchange_rate.value"/>
+                    <t t-if="record.exchange_rate_type.value"> · <t t-esc="record.exchange_rate_type.value"/></t>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bank_statement_line_form_bank_rec_widget_inherit_forced_rate" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.form.forced.exchange.rate</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account_accountant.view_bank_statement_line_form_bank_rec_widget"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="exchange_rate_case" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//group/group/field[@name='amount']" position="after">
+                <field name="currency_id"
+                       string="Moneda"
+                       groups="base.group_multi_currency"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="exchange_rate_type"
+                       groups="base.group_multi_currency"
+                       invisible="exchange_rate_case == 'none'"
+                       readonly="is_reconciled"/>
+                <field name="exchange_rate"
+                       digits="[12, 6]"
+                       groups="base.group_multi_currency"
+                       invisible="exchange_rate_case != 'liquidity'"/>
+                <field name="amount_company_currency"
+                       groups="base.group_multi_currency"
+                       invisible="exchange_rate_case != 'liquidity'"/>
+                <field name="forced_exchange_rate"
+                       digits="[12, 6]"
+                       groups="base.group_multi_currency"
+                       invisible="exchange_rate_case == 'none'"
+                       readonly="is_reconciled"
+                       placeholder="T.C. de la fecha"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bank_statement_line_quick_create_form_inherit_forced_rate" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.quick.create.forced.exchange.rate</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account_accountant.view_bank_statement_line_quick_create_form_bank_rec_widget"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="exchange_rate_case" invisible="1"/>
+                <field name="is_reconciled" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_ref']" position="before">
+                <div class="d-flex flex-wrap align-items-end column-gap-3 row-gap-1 mb-2 w-100"
+                     groups="base.group_multi_currency"
+                     invisible="exchange_rate_case == 'none'">
+                    <div class="d-flex flex-column flex-grow-1"
+                         style="min-width: 7rem;"
+                         invisible="exchange_rate_case != 'liquidity'">
+                        <label for="amount_company_currency"
+                               string="Equivale a"
+                               class="o_form_label small text-muted mb-0 text-nowrap"/>
+                        <field name="amount_company_currency"
+                               nolabel="1"
+                               class="fw-bolder text-nowrap"/>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1" style="min-width: 7rem;">
+                        <label for="exchange_rate_type"
+                               string="T.C. SBS"
+                               class="o_form_label small text-muted mb-0 text-nowrap"/>
+                        <field name="exchange_rate_type"
+                               nolabel="1"
+                               readonly="is_reconciled"/>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1"
+                         style="min-width: 7rem;"
+                         invisible="exchange_rate_case != 'liquidity'">
+                        <label for="exchange_rate"
+                               string="T.C. de la fecha"
+                               class="o_form_label small text-muted mb-0 text-nowrap"/>
+                        <field name="exchange_rate"
+                               nolabel="1"
+                               digits="[12, 6]"
+                               class="fw-bolder text-nowrap"/>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1" style="min-width: 7rem;">
+                        <label for="forced_exchange_rate"
+                               string="Forzar T.C."
+                               class="o_form_label small text-muted mb-0 text-nowrap"/>
+                        <field name="forced_exchange_rate"
+                               nolabel="1"
+                               digits="[12, 6]"
+                               readonly="is_reconciled"
+                               placeholder="T.C. de la fecha"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bank_statement_line_tree_bank_rec_widget_inherit_forced_rate" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.list.forced.exchange.rate</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account_accountant.view_bank_statement_line_tree_bank_rec_widget"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="amount_company_currency"
+                       optional="hidden"
+                       groups="base.group_multi_currency"/>
+                <field name="exchange_rate_type"
+                       optional="hidden"
+                       groups="base.group_multi_currency"
+                       readonly="is_reconciled"/>
+                <field name="exchange_rate"
+                       digits="[12, 6]"
+                       optional="hidden"
+                       groups="base.group_multi_currency"/>
+                <field name="forced_exchange_rate"
+                       digits="[12, 6]"
+                       optional="hidden"
+                       groups="base.group_multi_currency"
+                       readonly="is_reconciled"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Lista de apuntes candidatos a conciliar: con qué T.C. se contabilizó
+         cada uno, para compararlo con el del banco. -->
+    <record id="view_account_move_line_list_bank_rec_widget_inherit_forced_rate" model="ir.ui.view">
+        <field name="name">account.move.line.list.bank_rec.exchange.rate</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_accountant.view_account_move_line_list_bank_rec_widget"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="exchange_rate"
+                       digits="[12, 6]"
+                       optional="show"
+                       groups="base.group_multi_currency"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bank_statement_line_search_bank_rec_widget_inherit_forced_rate" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.search.forced.exchange.rate</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account_accountant.view_bank_statement_line_search_bank_rec_widget"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_forced_exchange_rate"
+                        string="Con T.C. forzado"
+                        domain="[('forced_exchange_rate', '&gt;', 0)]"/>
+                <filter name="filter_exchange_rate_purchase"
+                        string="T.C. compra"
+                        domain="[('exchange_rate_type', '=', 'purchase')]"/>
+                <filter name="filter_exchange_rate_sale"
+                        string="T.C. venta"
+                        domain="[('exchange_rate_type', '=', 'sale')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

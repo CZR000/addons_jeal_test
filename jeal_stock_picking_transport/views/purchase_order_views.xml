@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_transport" model="ir.ui.view">
+        <field name="name">purchase.order.form.transport</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Campos en la cabecera: antes de date_order (columna derecha) -->
+            <xpath expr="//field[@name='date_order']" position="before">
+                <field name="guia_picking_id" options="{'no_create': True}"/>
+                <field name="ticket_pesaje"
+                       invisible="not guia_picking_id"/>
+            </xpath>
+
+            <!-- Nueva pestaña con los datos de transporte -->
+            <xpath expr="//notebook/page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Guía de transportista" name="guia_transportista">
+                    <group>
+                        <group>
+                            <field name="ticket_pesaje"
+                                   invisible="not guia_picking_id"/>
+                            <field name="guias_gtr"
+                                   invisible="not guia_picking_id"/>
+                            <field name="guias_grr"
+                                   invisible="not guia_picking_id"/>
+                        </group>
+                        <group>
+                            <field name="placa"
+                                   invisible="not guia_picking_id"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+    
+    <record id="report_purchaseorder_document_transport" model="ir.ui.view">
+        <field name="name">purchase.report_purchaseorder_document.transport</field>
+        <field name="inherit_id" ref="purchase.report_purchaseorder_document"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='informations']" position="after">
+                <div id="informations_transport" class="row mb-4"
+                     t-if="o.ticket_pesaje or o.guias_gtr">
+                    <div t-if="o.ticket_pesaje" class="col-6">
+                        <strong>Ticket de pesaje:</strong>
+                        <p t-field="o.ticket_pesaje" class="m-0"/>
+                    </div>
+                    <div t-if="o.guias_gtr" class="col-6">
+                        <strong>Guías GTR:</strong>
+                        <p t-field="o.guias_gtr" class="m-0"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_filter_ticket_pesaje" model="ir.ui.view">
+        <field name="name">purchase.order.search.ticket.pesaje</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+
+            <!-- Agregar el campo de búsqueda después de 'origin' -->
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="ticket_pesaje"/>
+            </xpath>
+
+            <!-- Agregar opción de agrupar por Ticket Pesaje -->
+            <xpath expr="//filter[@name='order_date']" position="after">
+                <filter string="Ticket Pesaje" name="group_ticket_pesaje" domain="[]" context="{'group_by': 'ticket_pesaje'}"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

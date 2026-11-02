@@ -1,0 +1,37 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_product_cost_change_log
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-18 01:49+0000\n"
+"PO-Revision-Date: 2026-01-18 01:49+0000\n"
+"Last-Translator: Leo Daniel Flores Sánchez <leo.flores@drayerconsulting.com>, 2025\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_product_cost_change_log
+#: model:ir.model.fields,field_description:stock_product_cost_change_log.field_stock_valuation_layer__standard_price
+msgid "Cost"
+msgstr "Costo"
+
+#. module: stock_product_cost_change_log
+#: model:ir.model,name:stock_product_cost_change_log.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "Capa de valoración de existencias"
+
+#. module: stock_product_cost_change_log
+#: model:ir.model.fields,field_description:stock_product_cost_change_log.field_stock_valuation_layer__kardex_cost_correction
+msgid "Kardex Cost Correction"
+msgstr "Corrección de costo del Kardex"
+
+#. module: stock_product_cost_change_log
+#: model:ir.model.fields,help:stock_product_cost_change_log.field_stock_valuation_layer__kardex_cost_correction
+msgid "Technical flag set on the manual layers created by the Kardex Cost Audit to align the recorded valuation with the chronological weighted average cost. These layers are part of the recorded valuation (and the inventory accounting) but are excluded from any WAC recomputation -- the cost audit and the legal valued kardex (SUNAT 13.1) -- so they do not double-count the very gap they close."
+msgstr "Indicador técnico marcado en las capas manuales creadas por la Auditoría de Costos del Kardex para alinear la valoración registrada con el costo promedio ponderado cronológico. Estas capas forman parte de la valoración registrada (y de la contabilidad de inventario) pero se excluyen de todo recálculo WAC -- la auditoría de costos y el kardex valorizado legal (SUNAT 13.1) -- para que no cuenten dos veces la misma diferencia que cierran."
+

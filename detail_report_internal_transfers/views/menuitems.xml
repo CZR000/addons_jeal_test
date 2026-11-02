@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <menuitem id="menu_detailed_report"
+              name      = "Reporte Detallado"
+              parent    = "stock.menu_warehouse_report"
+              sequence  = "13"/>
+
+        <menuitem id="menu_report_internal_transfers"
+            name        = "Transferencias"
+            action      = "action_report_internal_transfers"
+            parent      = "menu_detailed_report"
+            sequence    = "20"/>
+    </data>
+</odoo>

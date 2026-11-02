@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ic_reconciliation_config_form" model="ir.ui.view">
+        <field name="name">ic.reconciliation.config.form</field>
+        <field name="model">ic.reconciliation.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuración de la conciliación intercompany" create="0" delete="0">
+                <sheet>
+                    <div class="oe_title"><h1>Conciliación intercompany</h1></div>
+                    <group string="1. Empresas del grupo">
+                        <field name="company_ids" widget="many2many_tags" nolabel="1" colspan="2" placeholder="Todas las empresas con RUC"/>
+                        <div class="text-muted" colspan="2">Cada empresa se reconoce como socio por su RUC: sus direcciones y almacenes con el mismo RUC cuentan como la misma empresa.</div>
+                    </group>
+                    <group string="2. Cuentas (prefijos separados por comas)">
+                        <group>
+                            <field name="receivable_prefixes"/>
+                            <field name="payable_prefixes"/>
+                        </group>
+                        <div class="text-muted" colspan="2">Cada par A↔B tiene dos bloques según quién cobra: "A por cobrar / B por pagar" y "B por cobrar / A por pagar". Una 12 contra una 46 o una 16 contra una 42 se emparejan en el mismo bloque y la línea queda conciliada con la observación "cuenta distinta".</div>
+                    </group>
+                    <group string="3. Reglas y tolerancias">
+                        <group>
+                            <field name="amount_tolerance"/>
+                            <field name="rounding_tolerance"/>
+                            <field name="other_currency_percent"/>
+                            <field name="other_currency_minimum"/>
+                            <field name="rate_diff_percent"/>
+                            <field name="rate_diff_minimum"/>
+                            <field name="combination_tolerance"/>
+                        </group>
+                        <group>
+                            <field name="number_days"/>
+                            <field name="payment_days"/>
+                            <field name="grouped_days"/>
+                            <field name="triangular_days"/>
+                            <field name="suggestion_percent"/>
+                            <field name="suggestion_days"/>
+                        </group>
+                        <field name="fx_journal_ids" widget="many2many_tags" colspan="2"/>
+                        <field name="company_keywords" colspan="2" placeholder="20612507083: Equipamiento, EQ"/>
+                    </group>
+                    <group string="4. Ejecución automática (diaria)">
+                        <group>
+                            <field name="cron_period"/>
+                            <field name="cron_months" invisible="cron_period != 'months'" required="cron_period == 'months'"/>
+                            <field name="cron_date_from" invisible="cron_period != 'fixed'" required="cron_period == 'fixed'"/>
+                        </group>
+                        <group>
+                            <field name="responsible_user_id"/>
+                            <field name="keep_runs"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ic_reconciliation_config" model="ir.actions.server">
+        <field name="name">Conciliación intercompany</field>
+        <field name="model_id" ref="model_ic_reconciliation_config"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open()</field>
+        <field name="groups_id" eval="[(4, ref('group_ic_reconciliation_manager'))]"/>
+    </record>
+
+</odoo>

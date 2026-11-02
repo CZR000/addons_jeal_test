@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_l10n_pe_plame_root"
+              name="Plame"
+              parent="account.menu_finance_reports"
+              sequence="90"/>
+    <menuitem id="menu_l10n_pe_plame_4ta_export"
+              name="Exportar 4ta Categoría"
+              parent="menu_l10n_pe_plame_root"
+              action="action_l10n_pe_plame_4ta_wizard"
+              sequence="10"/>
+</odoo>

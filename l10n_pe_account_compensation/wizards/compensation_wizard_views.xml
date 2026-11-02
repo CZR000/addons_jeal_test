@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_compensation_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_pe.compensation.wizard.form</field>
+        <field name="model">l10n_pe.compensation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Aplicar Compensación">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Aplicar Compensación</h1>
+                        <div class="text-muted">
+                            Origen: <field name="move_id" readonly="1" nolabel="1"
+                                          options="{'no_open': True}" class="oe_inline"/>
+                            · Socio: <field name="partner_id" readonly="1" nolabel="1"
+                                            options="{'no_open': True}" class="oe_inline"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="journal_id"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="date"/>
+                            <field name="currency_rate"/>
+                        </group>
+                        <group>
+                            <field name="origin_type" readonly="1"/>
+                            <field name="currency_id" readonly="1"
+                                   options="{'no_open': True}"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="move_residual_currency" readonly="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+
+                    <separator string="Facturas del socio disponibles para compensar"/>
+                    <field name="line_ids" nolabel="1">
+                        <list editable="bottom" create="false" delete="false">
+                            <field name="selected"/>
+                            <field name="invoice_id" readonly="1"
+                                   options="{'no_open': True}"
+                                   force_save="1"/>
+                            <field name="invoice_date" readonly="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="invoice_rate" readonly="1"
+                                   optional="hide"/>
+                            <field name="amount_residual" readonly="1"
+                                   string="Monto original"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_to_compensate"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </list>
+                    </field>
+
+                    <group class="oe_subtotal_footer">
+                        <field name="show_exchange_diff" invisible="1"/>
+                        <field name="pending_is_negative" invisible="1"/>
+                        <field name="has_amount_gap" invisible="1"/>
+                        <field name="is_full_compensation" invisible="1"/>
+                        <field name="total_currency" widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                        <field name="pending_to_compensate" widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               decoration-danger="pending_is_negative"/>
+                        <field name="exchange_diff" widget="monetary"
+                               options="{'currency_field': 'company_currency_id'}"
+                               invisible="not show_exchange_diff"/>
+                        <field name="amount_gap_local" widget="monetary"
+                               options="{'currency_field': 'company_currency_id'}"
+                               invisible="imbalance_treatment != 'exchange_diff' or not has_amount_gap"/>
+                    </group>
+
+                    <group invisible="not show_imbalance_treatment">
+                        <field name="is_full_compensation" invisible="1"/>
+                        <field name="gap_exceeds_threshold" invisible="1"/>
+                        <field name="gap_threshold_warning" invisible="1"/>
+                        <label for="imbalance_treatment" string="Tratamiento del desbalance"/>
+                        <div>
+                            <!-- Cuando el gap supera el umbral, forzamos leave_pending
+                                 como única opción y ocultamos exchange_diff -->
+                            <field name="imbalance_treatment"
+                                   widget="radio"
+                                   nolabel="1"
+                                   required="show_imbalance_treatment and not gap_exceeds_threshold"
+                                   invisible="gap_exceeds_threshold"/>
+                            <div invisible="not gap_exceeds_threshold"
+                                 class="text-warning mt-1"
+                                 style="font-size: 0.9em;">
+                                <i class="fa fa-info-circle me-1" title="Información"/>
+                                <field name="gap_threshold_warning"
+                                       nolabel="1" readonly="1"
+                                       class="oe_inline"/>
+                            </div>
+                            <div invisible="imbalance_treatment != 'exchange_diff'"
+                                 class="mt-2">
+                                <label for="exchange_account_id"
+                                       string="Cuenta de ajuste:"
+                                       class="me-2"/>
+                                <field name="exchange_account_id"
+                                       nolabel="1"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       required="imbalance_treatment == 'exchange_diff'"
+                                       placeholder="Seleccione la cuenta..."
+                                       class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Generar asiento" class="btn-primary"/>
+                    <button special="cancel" string="Cancelar" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_compensation_wizard" model="ir.actions.act_window">
+        <field name="name">Aplicar Compensación</field>
+        <field name="res_model">l10n_pe.compensation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+</odoo>

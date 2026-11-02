@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_advance_partner">
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="docs[:1]"/>
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>
+                        Estado de cuenta · <span t-out="type_label"/> ·
+                        <span t-out="partner.display_name"/>
+                    </h2>
+                    <p>
+                        <t t-if="date_from">
+                            Del <span t-out="date_from" t-options='{"widget": "date"}'/>
+                        </t>
+                        al <span t-out="date_to" t-options='{"widget": "date"}'/>
+                    </p>
+
+                    <t t-foreach="blocks" t-as="block">
+                        <t t-set="doc" t-value="block['doc']"/>
+                        <t t-set="st" t-value="block['st']"/>
+                        <h5 class="mt-4 mb-0">
+                            <span t-field="doc.name"/> ·
+                            <t t-if="doc.advance_type == 'revolving'">Deposito</t>
+                            <t t-else="">Origen</t>
+                            <span t-out="doc.origin_move_id.name or ''"/>
+                            · <span t-field="doc.currency_id"/>
+                        </h5>
+                        <t t-call="l10n_pe_advance_conciliation.report_advance_statement_table"/>
+                    </t>
+
+                    <p t-if="not blocks" class="mt-4">
+                        No hay movimientos ni saldos en el rango indicado.
+                    </p>
+
+                    <table t-if="blocks" class="table table-sm mt-4">
+                        <thead>
+                            <tr>
+                                <th>Resumen por moneda</th>
+                                <th class="text-end">Saldo inicial</th>
+                                <th class="text-end">Ingresos</th>
+                                <th class="text-end">Aplicaciones</th>
+                                <th class="text-end">Saldo disponible al corte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="totals" t-as="tot">
+                                <td><span t-out="tot['currency'].name"/></td>
+                                <td class="text-end">
+                                    <span t-out="tot['opening']"
+                                          t-options='{"widget": "monetary", "display_currency": tot["currency"]}'/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-out="tot['income']"
+                                          t-options='{"widget": "monetary", "display_currency": tot["currency"]}'/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-out="tot['applied']"
+                                          t-options='{"widget": "monetary", "display_currency": tot["currency"]}'/>
+                                </td>
+                                <td class="text-end">
+                                    <strong t-out="tot['closing']"
+                                            t-options='{"widget": "monetary", "display_currency": tot["currency"]}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

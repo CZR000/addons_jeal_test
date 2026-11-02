@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ple_report_daily_book_simplified_user,ple.report.daily.book.simplified.user,model_ple_report_daily_book_simplified,account.group_account_user,1,1,1,1
+access_ple_report_daily_book_simplified_manager,ple.report.daily.book.simplified.manager,model_ple_report_daily_book_simplified,account.group_account_manager,1,1,1,1

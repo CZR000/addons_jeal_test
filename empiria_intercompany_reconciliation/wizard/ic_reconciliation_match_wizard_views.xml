@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ic_reconciliation_match_wizard_form" model="ir.ui.view">
+        <field name="name">ic.reconciliation.match.wizard.form</field>
+        <field name="model">ic.reconciliation.match.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Emparejar a mano">
+                <field name="currency_id" invisible="1"/>
+                <field name="line_ids" invisible="1"/>
+                <field name="detail_ids" readonly="1">
+                    <list>
+                        <field name="currency_id" column_invisible="1"/>
+                        <field name="line_currency_id" column_invisible="1"/>
+                        <field name="company_id"/>
+                        <field name="move_name"/>
+                        <field name="date"/>
+                        <field name="account_code"/>
+                        <field name="label"/>
+                        <field name="amount_currency"/>
+                        <field name="amount_pen" sum="Diferencia"/>
+                    </list>
+                </field>
+                <group>
+                    <group>
+                        <field name="difference_pen" class="fw-bold"/>
+                        <field name="difference_currency_name" invisible="1"/>
+                        <field name="difference_currency" invisible="not difference_currency_name"/>
+                    </group>
+                    <group>
+                        <field name="reason"/>
+                        <field name="reason_note" placeholder="Por qué los movimientos difieren (obligatorio si hay diferencia)"/>
+                    </group>
+                </group>
+                <div class="text-muted">
+                    Las líneas pasan a Conciliado manual. La diferencia queda como diferencia aceptada del par. No
+                    crea asientos ni concilia apuntes en Odoo. Se puede deshacer.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object" string="Emparejar" class="btn-primary"/>
+                    <button special="cancel" string="Cancelar"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

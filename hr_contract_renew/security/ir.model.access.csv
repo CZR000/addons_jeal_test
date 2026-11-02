@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_contract_renew_user,Renovación de Contratos,model_hr_contract_renew,base.group_user,1,1,1,1
+access_hr_contract_renew_line_user,Línea de Renovación de Contrato,model_hr_contract_renew_line,base.group_user,1,1,1,1

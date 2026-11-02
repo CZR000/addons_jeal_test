@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============ LIST ============ -->
+    <record id="view_advance_list" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.list</field>
+        <field name="model">l10n_pe.advance</field>
+        <field name="arch" type="xml">
+            <list string="Anticipos / Revolventes"
+                  decoration-muted="state == 'applied'"
+                  decoration-info="state == 'partial'">
+                <field name="name"/>
+                <field name="advance_type"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="contract_ref" optional="show"/>
+                <field name="currency_id"/>
+                <field name="amount_base"/>
+                <field name="amount_applied"/>
+                <field name="amount_residual" sum="Saldo"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'applied'"
+                       decoration-info="state == 'partial'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============ FORM ============ -->
+    <record id="view_advance_form" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.form</field>
+        <field name="model">l10n_pe.advance</field>
+        <field name="arch" type="xml">
+            <form string="Anticipo / Revolvente">
+                <header>
+                    <button name="action_open_statement" type="object"
+                            string="Estado de cuenta" class="btn-secondary"/>
+                    <button name="action_close_balance" type="object"
+                            string="Cerrar saldo" class="btn-secondary"
+                            groups="l10n_pe_advance_conciliation.group_advance_manager"
+                            invisible="state == 'applied'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="open,partial,applied"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_applications" type="object"
+                                class="oe_stat_button" icon="fa-list">
+                            <field name="application_count" widget="statinfo"
+                                   string="Aplicaciones"/>
+                        </button>
+                        <button name="action_open_origin_move" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not origin_move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Factura/asiento</span>
+                                <span class="o_stat_text">origen</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="advance_type"/>
+                            <field name="partner_id"/>
+                            <field name="date"
+                                   invisible="advance_type == 'revolving'"/>
+                            <field name="date" string="Fecha del deposito"
+                                   invisible="advance_type != 'revolving'"/>
+                            <field name="contract_ref"
+                                   invisible="advance_type == 'revolving'"/>
+                        </group>
+                        <group>
+                            <field name="currency_id"/>
+                            <field name="control_account_id"/>
+                            <field name="origin_move_id"
+                                   invisible="advance_type == 'revolving'"/>
+                            <field name="origin_move_id" string="Asiento de deposito"
+                                   invisible="advance_type != 'revolving'"/>
+                            <field name="origin_line_id" readonly="1"
+                                   invisible="advance_type != 'revolving'"
+                                   groups="base.group_no_one"/>
+                            <field name="config_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <!-- Anticipos: base / IGV / total -->
+                    <group string="Importes" invisible="advance_type == 'revolving'">
+                        <group>
+                            <field name="amount_base"/>
+                            <field name="amount_tax"/>
+                            <field name="amount_total"/>
+                        </group>
+                        <group>
+                            <field name="amount_applied"/>
+                            <field name="amount_residual"/>
+                            <field name="amount_total_residual"/>
+                        </group>
+                    </group>
+                    <!-- Revolvente: deposito / aplicado / saldo disponible -->
+                    <group string="Importes" invisible="advance_type != 'revolving'">
+                        <group>
+                            <field name="amount_base" string="Deposito"/>
+                        </group>
+                        <group>
+                            <field name="amount_applied" string="Aplicado"/>
+                            <field name="amount_residual" string="Saldo disponible"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Aplicaciones" name="applications">
+                            <field name="application_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="application_type"/>
+                                    <field name="move_id"/>
+                                    <field name="invoice_id"/>
+                                    <field name="amount_base"/>
+                                    <field name="amount_total"
+                                           column_invisible="parent.advance_type == 'revolving'"/>
+                                    <field name="amount_company_currency" optional="show"/>
+                                    <field name="reconcile_state"/>
+                                    <field name="move_state"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="company_currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============ SEARCH ============ -->
+    <record id="view_advance_search" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.search</field>
+        <field name="model">l10n_pe.advance</field>
+        <field name="arch" type="xml">
+            <search string="Anticipos / Revolventes">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="contract_ref"/>
+                <field name="origin_move_id"/>
+                <filter name="open" string="Abierto"
+                        domain="[('state', '=', 'open')]"/>
+                <filter name="partial" string="Parcial"
+                        domain="[('state', '=', 'partial')]"/>
+                <filter name="open_partial" string="Con saldo"
+                        domain="['|', ('state', '=', 'open'), ('state', '=', 'partial')]"/>
+                <filter name="applied" string="Aplicado"
+                        domain="[('state', '=', 'applied')]"/>
+                <separator/>
+                <filter name="customer" string="Anticipo de cliente"
+                        domain="[('advance_type', '=', 'customer')]"/>
+                <filter name="supplier" string="Anticipo a proveedor"
+                        domain="[('advance_type', '=', 'supplier')]"/>
+                <filter name="revolving" string="Revolvente"
+                        domain="[('advance_type', '=', 'revolving')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_partner" string="Socio"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_type" string="Tipo"
+                            context="{'group_by': 'advance_type'}"/>
+                    <filter name="group_currency" string="Moneda"
+                            context="{'group_by': 'currency_id'}"/>
+                    <filter name="group_state" string="Estado"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============ PIVOT & GRAPH ============ -->
+    <record id="view_advance_pivot" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.pivot</field>
+        <field name="model">l10n_pe.advance</field>
+        <field name="arch" type="xml">
+            <pivot string="Saldos">
+                <field name="partner_id" type="row"/>
+                <field name="advance_type" type="col"/>
+                <field name="amount_residual" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_advance_graph" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.graph</field>
+        <field name="model">l10n_pe.advance</field>
+        <field name="arch" type="xml">
+            <graph string="Saldos" type="bar">
+                <field name="partner_id"/>
+                <field name="amount_residual" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ============ APLICACIONES ============ -->
+    <record id="view_advance_application_list" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.application.list</field>
+        <field name="model">l10n_pe.advance.application</field>
+        <field name="arch" type="xml">
+            <list string="Detalle de aplicaciones" create="false"
+                  decoration-muted="not active">
+                <field name="date"/>
+                <field name="advance_id"/>
+                <field name="advance_type"/>
+                <field name="partner_id"/>
+                <field name="application_type"/>
+                <field name="move_id"/>
+                <field name="invoice_id"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="amount_base" sum="Total"/>
+                <field name="amount_total" optional="show"/>
+                <field name="amount_company_currency" optional="show" sum="Total S/"/>
+                <field name="reconcile_state"/>
+                <field name="move_state" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_advance_application_search" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.application.search</field>
+        <field name="model">l10n_pe.advance.application</field>
+        <field name="arch" type="xml">
+            <search string="Aplicaciones">
+                <field name="advance_id"/>
+                <field name="partner_id"/>
+                <field name="invoice_id"/>
+                <field name="move_id"/>
+                <filter name="revolving" string="Revolvente"
+                        domain="[('advance_type', '=', 'revolving')]"/>
+                <filter name="advances" string="Anticipos"
+                        domain="[('advance_type', 'in', ('customer', 'supplier'))]"/>
+                <separator/>
+                <filter name="inactive" string="Anuladas"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_partner" string="Socio"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_advance" string="Documento"
+                            context="{'group_by': 'advance_id'}"/>
+                    <filter name="group_type" string="Tipo de movimiento"
+                            context="{'group_by': 'application_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============ ACTIONS ============ -->
+    <record id="action_advance_customer" model="ir.actions.act_window">
+        <field name="name">Anticipos de clientes</field>
+        <field name="res_model">l10n_pe.advance</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="domain">[('advance_type', '=', 'customer')]</field>
+        <field name="context">{'search_default_open_partial': 1}</field>
+        <field name="search_view_id" ref="view_advance_search"/>
+    </record>
+
+    <record id="action_advance_supplier" model="ir.actions.act_window">
+        <field name="name">Anticipos a proveedores</field>
+        <field name="res_model">l10n_pe.advance</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="domain">[('advance_type', '=', 'supplier')]</field>
+        <field name="context">{'search_default_open_partial': 1}</field>
+        <field name="search_view_id" ref="view_advance_search"/>
+    </record>
+
+    <record id="action_advance_revolving" model="ir.actions.act_window">
+        <field name="name">Revolventes</field>
+        <field name="res_model">l10n_pe.advance</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="domain">[('advance_type', '=', 'revolving')]</field>
+        <field name="context">{'search_default_open_partial': 1}</field>
+        <field name="search_view_id" ref="view_advance_search"/>
+    </record>
+</odoo>

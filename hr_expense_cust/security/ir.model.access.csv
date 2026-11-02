@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_disbursement_reject_wizard_user,expense.disbursement.reject.wizard.user,model_expense_disbursement_reject_wizard,base.group_user,1,1,1,1
+access_hr_expense_line_user,hr.expense.line.user,model_hr_expense_line,base.group_user,1,1,1,1

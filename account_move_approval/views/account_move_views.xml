@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- FORM VIEW                                                     -->
+    <!-- ============================================================ -->
+    <!--
+        Odoo 18:
+          * Eliminado el atributo ``attrs`` en vistas. Los modificadores
+            invisible/readonly/required ahora son atributos directos con
+            expresiones Python.
+          * En el form de account.move existen DOS <field name="state"> de
+            statusbar (uno para usuarios `!account.group_account_secured` y
+            otro para `account.group_account_secured`). Hay que actualizar
+            statusbar_visible en ambos.
+          * El botón action_post[1] ya viene en v18 con
+            invisible="hide_post_button or move_type != 'entry'", por lo que
+            usamos position="attributes" para anteponer show_approval_button.
+    -->
+    <record id="account_move_view_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.approval</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <!--
+                Ocultar el botón Publicar original cuando se debe mostrar
+                el botón Solicitar Aprobación (solo para no-aprobadores en
+                diarios que requieren aprobación).
+            -->
+            <xpath expr="//header/button[@name='action_post'][1]" position="attributes">
+                <attribute name="invisible">show_approval_button or hide_post_button or move_type != 'entry'</attribute>
+            </xpath>
+
+            <xpath expr="//header/button[@name='action_post'][1]" position="after">
+                <!--
+                    Botón Solicitar Aprobación:
+                    Solo visible para usuarios NO aprobadores cuando el diario
+                    requiere aprobación y el asiento está en borrador.
+                -->
+                <button
+                    name="action_request_approval"
+                    string="Solicitar Aprobación"
+                    type="object"
+                    class="oe_highlight"
+                    data-hotkey="v"
+                    invisible="not show_approval_button"
+                    groups="account.group_account_invoice"/>
+
+                <!--
+                    Botón Aprobar:
+                    Solo visible cuando el asiento está pendiente de aprobación.
+                    La validación de permisos se hace en el método Python.
+                -->
+                <button
+                    name="action_approve"
+                    string="Aprobar y Publicar"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="not can_approve"
+                    groups="account_move_approval.group_account_journal_approver,account.group_account_manager"/>
+
+                <!--
+                    Botón Rechazar:
+                    Solo visible cuando el asiento está pendiente de aprobación.
+                -->
+                <button
+                    name="action_reject"
+                    string="Rechazar"
+                    type="object"
+                    class="btn-secondary"
+                    invisible="not can_reject"
+                    groups="account_move_approval.group_account_journal_approver,account.group_account_manager"/>
+            </xpath>
+
+            <!--
+                Barra de estado: mostrar el paso to_approve.
+                v18: dos statusbars condicionados por grupo de seguridad.
+            -->
+            <xpath expr="//header/field[@name='state'][@widget='statusbar']" position="attributes">
+                <attribute name="statusbar_visible">draft,to_approve,posted</attribute>
+            </xpath>
+            <xpath expr="//header/field[@name='state'][@widget='account_move_statusbar_secured']" position="attributes">
+                <attribute name="statusbar_visible">draft,to_approve,posted</attribute>
+            </xpath>
+
+            <!--
+                Sección de Información de Aprobación en la pestaña "Otra Información"
+            -->
+            <xpath expr="//page[@id='other_tab_entry']" position="inside">
+                <group name="approval_info"
+                       string="Información de Aprobación"
+                       invisible="not approval_state">
+                    <group>
+                        <field name="approval_state" readonly="1"/>
+                        <field name="requester_user_id" readonly="1"
+                               invisible="not requester_user_id"/>
+                        <field name="approval_user_id" readonly="1"
+                               invisible="not approval_user_id"/>
+                        <field name="approval_date" readonly="1"
+                               invisible="not approval_date"/>
+                    </group>
+                    <group>
+                        <field name="rejection_user_id" readonly="1"
+                               invisible="not rejection_user_id"/>
+                        <field name="rejection_date" readonly="1"
+                               invisible="not rejection_date"/>
+                        <field name="rejection_reason" readonly="1"
+                               invisible="not rejection_reason"
+                               colspan="2"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <!--
+                Campos computados invisibles (necesarios para las expresiones
+                ``invisible="..."`` de los botones y secciones de arriba).
+            -->
+            <xpath expr="//sheet" position="before">
+                <field name="can_approve" invisible="1"/>
+                <field name="can_reject" invisible="1"/>
+                <field name="show_approval_button" invisible="1"/>
+                <field name="needs_approval" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- LIST VIEW (v18: el tag <tree> se renombró a <list> en v17)    -->
+    <!-- ============================================================ -->
+    <record id="account_move_view_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.list.inherit.approval</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="approval_state" column_invisible="True"/>
+            </xpath>
+
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-warning">state == 'to_approve'</attribute>
+                <attribute name="decoration-danger">approval_state == 'rejected'</attribute>
+                <attribute name="decoration-success">approval_state == 'approved'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- SEARCH VIEW                                                   -->
+    <!-- ============================================================ -->
+    <record id="account_move_view_search_inherit" model="ir.ui.view">
+        <field name="name">account.move.search.inherit.approval</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='posted']" position="after">
+                <separator/>
+                <filter
+                    name="to_approve"
+                    string="Pendientes de Aprobación"
+                    domain="[('state', '=', 'to_approve')]"
+                    help="Asientos pendientes de aprobación"/>
+                <filter
+                    name="approved"
+                    string="Asientos Aprobados"
+                    domain="[('approval_state', '=', 'approved')]"
+                    help="Asientos aprobados"/>
+                <filter
+                    name="rejected"
+                    string="Asientos Rechazados"
+                    domain="[('approval_state', '=', 'rejected')]"
+                    help="Asientos rechazados"/>
+            </xpath>
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter
+                    name="group_by_approval_state"
+                    string="Estado de Aprobación"
+                    domain="[]"
+                    context="{'group_by': 'approval_state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

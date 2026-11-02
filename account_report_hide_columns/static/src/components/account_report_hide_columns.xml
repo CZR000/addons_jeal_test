@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="account_report_hide_columns.AccountReportFilterExtraOptions"
+       t-inherit="account_reports.AccountReportFilterExtraOptions"
+       t-inherit-mode="extension">
+
+        <xpath expr="//t[@t-if=&quot;controller.filters.show_hide_0_lines !== 'never'&quot;]" position="after">
+            <t t-if="controller.filters.show_hide_0_columns and controller.filters.show_hide_0_columns !== 'never'">
+                <DropdownItem
+                    class="{ 'selected': controller.options.hide_0_columns }"
+                    onSelected="() => this.filterClicked({ optionKey: 'hide_0_columns', reload: true })"
+                    closingMode="'none'"
+                >
+                    Ocultar columnas en 0
+                </DropdownItem>
+            </t>
+        </xpath>
+
+    </t>
+
+</templates>

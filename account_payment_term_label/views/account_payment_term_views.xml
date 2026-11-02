@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Columna Nombre en el list embebido de líneas del término (solo lectura,
+         el usuario edita desde el form heredado abajo). -->
+    <record id="view_payment_term_form_label" model="ir.ui.view">
+        <field name="name">account.payment.term.form.label</field>
+        <field name="model">account.payment.term</field>
+        <field name="inherit_id" ref="account.view_payment_term_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='line_ids']/list/field[@name='value']" position="before">
+                <field name="name" optional="show" string="Etiqueta"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Form del payment.term.line: agregamos el campo Nombre para que el usuario pueda editarlo al
+         abrir la línea desde la lista embebida del término de pago. -->
+    <record id="view_payment_term_line_form_label" model="ir.ui.view">
+        <field name="name">account.payment.term.line.form.label</field>
+        <field name="model">account.payment.term.line</field>
+        <field name="inherit_id" ref="payment_term_lines.account_payment_term_line_form_view_inherit_payment_term_lines"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='value_amount']" position="after">
+                <field name="name" string="Etiqueta"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

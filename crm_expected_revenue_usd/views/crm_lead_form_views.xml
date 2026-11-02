@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="crm_lead_view_form_inherit_revenue_usd" model="ir.ui.view">
+            <field name="name">crm.lead.view.form.inherit.revenue.usd</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='expected_revenue']/.." position="after">
+                    <field name="usd_currency_id" invisible="1"/>
+
+                    <div class="col-auto pb-2 pb-md-0 w-100 w-sm-auto ps-3 border-start" invisible="type == 'lead'">
+                        <label for="expected_revenue_usd" string="Ingresos (USD)" class="oe_edit_only text-muted"/>
+                        <div class="d-flex flex-wrap align-items-baseline">
+                            <field name="expected_revenue_usd" class="o_input_13ch fw-bold text-success" widget="monetary" options="{'currency_field': 'usd_currency_id'}"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

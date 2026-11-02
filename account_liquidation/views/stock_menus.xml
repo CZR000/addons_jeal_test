@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="account_liquidation_menu_action"
+        action="account_liquidation.account_liquidation_action"
+        parent="stock.menu_stock_warehouse_mgmt"
+        sequence="10000"
+    />
+
+</odoo>

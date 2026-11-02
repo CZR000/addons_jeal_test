@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="group_ver_sueldo" model="res.groups">
+            <field name="name">Ver Sueldo de Empleados</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">Los usuarios con este grupo pueden ver el campo Sueldo en los contratos.</field>
+        </record>
+    </data>
+</odoo>

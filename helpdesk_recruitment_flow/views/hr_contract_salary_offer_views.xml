@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_contract_salary_offer_view_form_recruitment_ext" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.form.recruitment.ext</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_form"/>
+        <field name="arch" type="xml">
+
+            <field name="state" position="before">
+                <field name="x_applicant_stage_is_carta_oferta" invisible="1"/>
+            </field>
+
+            <!-- El botón de envío solo se habilita cuando el candidato está en la etapa Carta Oferta -->
+            <xpath expr="//button[@name='action_send_by_email']" position="attributes">
+                <attribute name="invisible">not id or state in ['refused', 'expired'] or (applicant_id and not x_applicant_stage_is_carta_oferta)</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

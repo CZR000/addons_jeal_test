@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_revaluation_closing_rate_user,access.account.revaluation.closing.rate.user,model_account_revaluation_closing_rate,account.group_account_user,1,1,1,0
+access_account_revaluation_closing_rate_manager,access.account.revaluation.closing.rate.manager,model_account_revaluation_closing_rate,account.group_account_manager,1,1,1,1

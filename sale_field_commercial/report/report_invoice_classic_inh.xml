@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <template id="report_invoice_commercial_partner" name="Reporte Factura - Comercial" inherit_id="classic_format_invoice.report_invoice_classic">
+            <xpath expr="//t/div[hasclass('page')]/div[hasclass('client_data')]/div[hasclass('client_data_2')]/div[@name='another_document_type']" position="after">
+                <div class="row" name="commercial_partner">
+                    <div class="label">
+                        <strong>COMERCIAL</strong>
+                    </div>
+
+                    <div class="separator">
+                        <strong style="font-weight: 800;">:</strong>
+                    </div>
+
+                    <div class="data">
+                        <!-- Si la compañía permite comerciales externos y existe uno asignado -->
+                        <t t-if="o.enable_external_commercial and o.external_commercial_id">
+                            <span t-esc="o.external_commercial_id.name"/>
+                        </t>
+                        <!-- Si no, mostrar el usuario asignado -->
+                        <t t-elif="o.user_id">
+                            <span t-esc="o.user_id.name"/>
+                        </t>
+                        <!-- En caso de no existir ninguno -->
+                        <t t-else="">
+                            <span>-</span>
+                        </t>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_hr_contract_form_wage" model="ir.ui.view">
+            <field name="name">hr.contract.form.wage.restriction</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='information']" position="attributes">
+                    <attribute name="groups">hr_contract_wage_restriction.group_ver_sueldo</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_contract_history_list_wage" model="ir.ui.view">
+            <field name="name">hr.contract.history.list.wage.restriction</field>
+            <field name="model">hr.contract.history</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_history_view_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='wage']" position="attributes">
+                    <attribute name="groups">hr_contract_wage_restriction.group_ver_sueldo</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_contract_history_form_wage" model="ir.ui.view">
+            <field name="name">hr.contract.history.form.wage.restriction</field>
+            <field name="model">hr.contract.history</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_history_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group//field[@name='wage']" position="attributes">
+                    <attribute name="groups">hr_contract_wage_restriction.group_ver_sueldo</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='contract_ids']/list/field[@name='wage']" position="attributes">
+                    <attribute name="groups">hr_contract_wage_restriction.group_ver_sueldo</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

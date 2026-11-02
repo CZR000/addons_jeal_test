@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Manual recompute, only for administrators (Action menu in the list) -->
+    <record id="action_recompute_valuation_account" model="ir.actions.server">
+        <field name="name">Recompute Valuation Account</field>
+        <field name="model_id" ref="stock_account.model_stock_valuation_layer"/>
+        <field name="binding_model_id" ref="stock_account.model_stock_valuation_layer"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        <field name="state">code</field>
+        <field name="code">records._recompute_valuation_account()</field>
+    </record>
+</odoo>

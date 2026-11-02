@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_ic_reconciliation_root" name="Conciliación intercompany"
+              parent="account.menu_finance_reports" sequence="90"
+              groups="empiria_intercompany_reconciliation.group_ic_reconciliation_user"/>
+    <menuitem id="menu_ic_reconciliation_generate" name="Generar conciliación" sequence="10"
+              parent="menu_ic_reconciliation_root" action="action_ic_reconciliation_generate"/>
+    <menuitem id="menu_ic_reconciliation_run" name="Ejecuciones" sequence="20"
+              parent="menu_ic_reconciliation_root" action="action_ic_reconciliation_run"/>
+    <menuitem id="menu_ic_reconciliation_pair" name="Resumen por par" sequence="30"
+              parent="menu_ic_reconciliation_root" action="action_ic_reconciliation_pair"/>
+    <menuitem id="menu_ic_reconciliation_line" name="Detalle de diferencias" sequence="40"
+              parent="menu_ic_reconciliation_root" action="action_ic_reconciliation_line"/>
+    <menuitem id="menu_ic_reconciliation_config" name="Conciliación intercompany" sequence="90"
+              parent="account.menu_finance_configuration" action="action_ic_reconciliation_config"
+              groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+
+</odoo>

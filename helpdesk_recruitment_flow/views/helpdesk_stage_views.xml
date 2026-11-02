@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_stage_form_ext" model="ir.ui.view">
+        <field name="name">helpdesk.stage.form.recruitment.ext</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Configuración de Aprobación y Reclutamiento">
+                    <group>
+                        <field name="x_require_approval"/>
+                        <field name="x_is_approved_stage"/>
+                        <field name="x_is_refused_stage"/>
+                    </group>
+                    <group>
+                        <field name="x_is_in_progress_stage"/>
+                        <field name="x_is_cancel_stage"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

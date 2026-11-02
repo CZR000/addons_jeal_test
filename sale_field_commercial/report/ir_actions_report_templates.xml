@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <template id="report_saleorder_commercial_partner" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@id='informations']/div[@t-if='doc.user_id.name']" position="replace">
+                <div t-if="doc.external_commercial_id or doc.user_id.name" class="col" name="commercial">
+                    <strong>Comercial:</strong>
+
+                    <div t-if="doc.enable_external_commercial and doc.external_commercial_id" t-field="doc.external_commercial_id" class="m-0"/>
+
+                    <div t-elif="doc.user_id.name" t-field="doc.user_id" class="m-0"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

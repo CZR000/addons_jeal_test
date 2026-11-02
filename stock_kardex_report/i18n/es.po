@@ -1,0 +1,1340 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_kardex_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-10 06:01+0000\n"
+"PO-Revision-Date: 2026-06-10 06:01+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "%s correction entry(ies) created in draft."
+msgstr "%s asiento(s) de corrección creado(s) en borrador."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid ""
+"%s does not use the average cost method; its valuation cannot be recomputed "
+"from the weighted-average kardex."
+msgstr ""
+"%s no usa el método de costo promedio; su valoración no puede recalcularse "
+"desde el kardex de promedio ponderado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "%s has no amount to regularize."
+msgstr "%s no tiene importe que regularizar."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "%s has no value difference to correct."
+msgstr "%s no tiene diferencia de valor que corregir."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "%s has not been revalued yet."
+msgstr "%s aún no ha sido revaluado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid ""
+"%s is valued per lot/serial; correct it from the lot-level kardex, not from "
+"this product-level audit."
+msgstr ""
+"%s se valoriza por lote/serie; corríjalo desde el kardex por lote, no desde "
+"esta auditoría a nivel de producto."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "%s product(s) revalued."
+msgstr "%s producto(s) revaluado(s)."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid ""
+"%s uses a manual inventory valuation; there are no automated entries to "
+"regularize."
+msgstr ""
+"%s usa una valoración de inventario manual; no hay asientos automáticos que "
+"regularizar."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit__date_basis__accounting
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_search
+msgid "Accounting Date"
+msgstr "Fecha contable"
+
+#. module: stock_kardex_report
+#: model:ir.model,name:stock_kardex_report.model_account_report
+msgid "Accounting Report"
+msgstr "Reporte contable"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__correction_date
+msgid ""
+"Accounting date used for the revaluation layers and the correction journal "
+"entries. Defaults to the end of the period."
+msgstr ""
+"Fecha contable usada para las capas de revaluación y los asientos de "
+"corrección. Por defecto, el fin del período."
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "All differences have been revalued and regularized."
+msgstr "Todas las diferencias han sido revaluadas y regularizadas."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__audit_id
+msgid "Audit"
+msgstr "Auditoría"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_list
+msgid "Audited"
+msgstr "Auditados"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__line_count
+msgid "Audited Products"
+msgstr "Productos auditados"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__value_difference
+msgid "Balance Difference"
+msgstr "Diferencia de saldo"
+
+#. module: stock_kardex_report
+#. odoo-javascript
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/static/src/xml/stock_kardex_report.xml:0
+msgid "Categories"
+msgstr "Categorías"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__company_id
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__company_id
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_search
+msgid "Company"
+msgstr "Empresa"
+
+#. module: stock_kardex_report
+#: model_terms:ir.actions.act_window,help:stock_kardex_report.action_stock_kardex_cost_audit
+msgid ""
+"Compare the cost of goods sold posted by Odoo against the weighted\n"
+"                average cost recomputed chronologically, then recompute the\n"
+"                valuation and regularize the accounting entries."
+msgstr ""
+"Compara el costo de ventas registrado por Odoo contra el costo promedio "
+"ponderado recalculado cronológicamente, luego recalcula la valoración y "
+"regulariza los asientos contables."
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid ""
+"Compares the cost of goods sold posted by Odoo against the weighted average "
+"cost recomputed chronologically."
+msgstr ""
+"Compara el costo de ventas registrado por Odoo contra el costo promedio "
+"ponderado recalculado cronológicamente."
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Compute"
+msgstr "Calcular"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__computed
+msgid "Computed"
+msgstr "Calculado"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__correction_state
+msgid "Correction"
+msgstr "Corrección"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__correction_date
+msgid "Correction Date"
+msgstr "Fecha de corrección"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__correction_move_id
+msgid "Correction Entry"
+msgstr "Asiento de corrección"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Correction Entry: %s"
+msgstr "Asiento de corrección: %s"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__journal_id
+msgid "Correction Journal"
+msgstr "Diario de corrección"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit_line__cogs_recorded
+msgid ""
+"Cost of goods sold actually posted by Odoo for the outgoing layers within "
+"the period."
+msgstr ""
+"Costo de ventas realmente registrado por Odoo para las capas de salida "
+"dentro del período."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit_line__cogs_wac
+msgid ""
+"Cost of goods sold recomputed with the chronological weighted average cost."
+msgstr ""
+"Costo de ventas recalculado con el costo promedio ponderado cronológico."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__counterpart_account_id
+msgid "Counterpart Account"
+msgstr "Cuenta contrapartida"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__counterpart_account_id
+msgid ""
+"Counterpart account for the difference. Leave empty to use the expense "
+"(COGS) account of each product."
+msgstr ""
+"Cuenta contrapartida para la diferencia. Déjela vacía para usar la cuenta de"
+" gasto (COGS) de cada producto."
+
+#. module: stock_kardex_report
+#: model_terms:ir.actions.act_window,help:stock_kardex_report.action_stock_kardex_cost_audit
+msgid "Create a new Kardex cost audit"
+msgstr "Crear una nueva auditoría de costos del Kardex"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__create_uid
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__create_date
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit__date_basis__creation
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_search
+msgid "Creation Date"
+msgstr "Fecha de creación"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__currency_id
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_date
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_date
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_date
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__date_basis
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_search
+msgid "Date Basis"
+msgstr "Base de fecha"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__date_basis
+msgid ""
+"Date used to order layers when recomputing the weighted average cost. Use "
+"the accounting date to match the valued inventory ledger."
+msgstr ""
+"Fecha usada para ordenar las capas al recalcular el costo promedio "
+"ponderado. Use la fecha contable para coincidir con el libro de inventario "
+"valorizado."
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_list
+msgid "Differences"
+msgstr "Diferencias"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit__state__to_correct
+msgid "Differences Found"
+msgstr "Diferencias encontradas"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__display_name
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit__state__done
+msgid "Done"
+msgstr "Listo"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__date_to
+msgid "End Date"
+msgstr "Fecha fin"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Entries regularized"
+msgstr "Asientos regularizados"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__filter_category_ids
+msgid "Filter by Categories"
+msgstr "Filtrar por categorías"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__filter_product_ids
+msgid "Filter by Products"
+msgstr "Filtrar por productos"
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_location_from
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_location_from
+msgid "From"
+msgstr "De"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: stock_kardex_report
+#. odoo-javascript
+#: code:addons/stock_kardex_report/static/src/xml/stock_kardex_report.xml:0
+msgid "Group by Category"
+msgstr "Agrupar por categoría"
+
+#. module: stock_kardex_report
+#. odoo-javascript
+#: code:addons/stock_kardex_report/static/src/xml/stock_kardex_report.xml:0
+msgid "Group by Warehouse"
+msgstr "Agrupar por almacén"
+
+#. module: stock_kardex_report
+#. odoo-javascript
+#: code:addons/stock_kardex_report/static/src/xml/stock_kardex_report.xml:0
+msgid "Grouping"
+msgstr "Agrupación"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__has_difference
+msgid "Has Difference"
+msgstr "Tiene diferencia"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__id
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__only_differences
+msgid ""
+"If enabled, only products whose recorded cost differs from the recomputed "
+"weighted average are listed."
+msgstr ""
+"Si se activa, solo se listan los productos cuyo costo grabado difiere del "
+"promedio ponderado recalculado."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_account_report__kardex_use_accounting_date
+msgid ""
+"If enabled, the kardex computes costs and balances using each valuation "
+"layer accounting date instead of the creation date."
+msgstr ""
+"Si se activa, el kardex calcula costos y saldos usando la fecha contable de "
+"cada capa de valorización en lugar de la fecha de creación."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Initial Balance"
+msgstr "Saldo inicial"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Invalid Selection"
+msgstr "Selección inválida"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit_line__value_recorded
+msgid "Inventory value at the end of the period as recorded by Odoo."
+msgstr ""
+"Valor del inventario al final del período según lo registrado por Odoo."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit_line__value_wac
+msgid ""
+"Inventory value at the end of the period recomputed with the weighted "
+"average cost."
+msgstr ""
+"Valor del inventario al final del período recalculado con el costo promedio "
+"ponderado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Journal Entries"
+msgstr "Asientos contables"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__journal_id
+msgid ""
+"Journal used for the correction entries. Leave empty to use the stock "
+"journal configured on each product category."
+msgstr ""
+"Diario usado para los asientos de corrección. Déjelo vacío para usar el "
+"diario de existencias configurado en cada categoría de producto."
+
+#. module: stock_kardex_report
+#: model:ir.actions.client,name:stock_kardex_report.action_stock_kardex_report
+#: model:ir.ui.menu,name:stock_kardex_report.menu_stock_kardex_report
+msgid "Kardex"
+msgstr "Kardex"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+#: model:ir.actions.act_window,name:stock_kardex_report.action_stock_kardex_cost_audit
+#: model:ir.ui.menu,name:stock_kardex_report.menu_stock_kardex_cost_audit
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Kardex Cost Audit"
+msgstr "Auditoría de costos del kardex"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Kardex Cost Audit  %(date_from)s → %(date_to)s"
+msgstr "Auditoría de costos del Kardex  %(date_from)s → %(date_to)s"
+
+#. module: stock_kardex_report
+#: model:ir.model,name:stock_kardex_report.model_stock_kardex_cost_audit
+msgid "Kardex Cost Audit (WAC vs Recorded)"
+msgstr "Auditoría de costos del kardex (WAC vs grabado)"
+
+#. module: stock_kardex_report
+#: model:ir.model,name:stock_kardex_report.model_stock_kardex_cost_audit_line
+msgid "Kardex Cost Audit Line"
+msgstr "Línea de auditoría de costos del kardex"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_account_report__kardex_use_accounting_date
+msgid "Kardex Uses Accounting Date"
+msgstr "Kardex usa fecha contable"
+
+#. module: stock_kardex_report
+#: model:account.report,name:stock_kardex_report.stock_kardex_location_report_accounting_date
+msgid "Kardex by Locations (Accounting Date)"
+msgstr "Kardex por ubicaciones (Fecha contable)"
+
+#. module: stock_kardex_report
+#: model:account.report,name:stock_kardex_report.stock_kardex_location_report_date
+msgid "Kardex by Locations (Date)"
+msgstr "Kardex por ubicaciones (Fecha)"
+
+#. module: stock_kardex_report
+#: model:account.report,name:stock_kardex_report.stock_kardex_product_report_accounting_date
+msgid "Kardex by Products (Accounting Date)"
+msgstr "Kardex por productos (Fecha contable)"
+
+#. module: stock_kardex_report
+#: model:account.report,name:stock_kardex_report.stock_kardex_product_report_creation_date
+msgid "Kardex by Products (Creation Date)"
+msgstr "Kardex por productos (Fecha)"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Kardex cost audit correction (%(date_from)s → %(date_to)s)"
+msgstr ""
+"Corrección de auditoría de costos del Kardex (%(date_from)s → %(date_to)s)"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Kardex cost regularization: %s"
+msgstr "Regularización de costo del Kardex: %s"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__write_uid
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__write_date
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: stock_kardex_report
+#. odoo-javascript
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/static/src/xml/stock_kardex_report.xml:0
+msgid "Locations"
+msgstr "Ubicaciones"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid ""
+"Missing stock valuation, counterpart (COGS) or journal account for %s. "
+"Configure the product category accounts or fill the regularization options."
+msgstr ""
+"Falta la cuenta de valoración de existencias, contrapartida (COGS) o diario "
+"para %s. Configure las cuentas de la categoría del producto o complete las "
+"opciones de regularización."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_move_type
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_move_type
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_move_type
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_move_type
+msgid "Move Type"
+msgstr "Tipo de movimiento"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__date_from
+msgid ""
+"Movements within this period are audited. Earlier layers are still read to "
+"build the opening balance."
+msgstr ""
+"Se auditan los movimientos dentro de este período. Las capas anteriores se "
+"leen igualmente para construir el saldo inicial."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "No Categories"
+msgstr "Sin categorías"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Journal Entries"
+msgstr "Sin asientos contables"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Journal Entry"
+msgstr "Sin asiento contable"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "No Locations"
+msgstr "Sin ubicaciones"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Lot"
+msgstr "Sin lote"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Products"
+msgstr "Sin productos"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Record"
+msgstr "Sin registro"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Stock Move"
+msgstr "Sin movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Stock Move Lines"
+msgstr "Sin líneas de movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Stock Moves"
+msgstr "Sin movimientos de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No Valuation Layers"
+msgstr "Sin capas de valoración"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "No categories found for the selected criteria."
+msgstr "No se encontraron categorías para los criterios seleccionados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "No correction entry has been created yet."
+msgstr "Aún no se ha creado un asiento de corrección."
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid ""
+"No differences found between the recorded cost and the weighted average for "
+"the selected scope."
+msgstr ""
+"No se encontraron diferencias entre el costo grabado y el promedio ponderado"
+" para el alcance seleccionado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No journal entries found for the selected criteria."
+msgstr ""
+"No se encontraron asientos contables para los criterios seleccionados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "No journal entry found for this stock move line."
+msgstr ""
+"No se encontró asiento contable para esta línea de movimiento de stock."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "No locations found for the selected criteria."
+msgstr "No se encontraron ubicaciones para los criterios seleccionados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No products found for the selected criteria."
+msgstr "No se encontraron productos para los criterios seleccionados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No record found for this line."
+msgstr "No se encontró ningún registro para esta línea."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No stock move lines found for the selected criteria."
+msgstr ""
+"No se encontraron líneas de movimiento de stock para los criterios "
+"seleccionados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No stock moves found for the selected criteria."
+msgstr ""
+"No se encontraron movimientos de stock para los criterios seleccionados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "No valuation layers found for the selected criteria."
+msgstr ""
+"No se encontraron capas de valoración para los criterios seleccionados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "No valuation layers found for this stock move."
+msgstr "No se encontraron capas de valoración para este movimiento de stock."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__only_differences
+msgid "Only Differences"
+msgstr "Solo diferencias"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Category"
+msgstr "Abrir categoría"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Journal Entry"
+msgstr "Abrir asiento contable"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "Open Location"
+msgstr "Abrir ubicación"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Lot/Serial"
+msgstr "Abrir lote/serie"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Product"
+msgstr "Abrir producto"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Reference"
+msgstr "Abrir referencia"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Stock Move"
+msgstr "Abrir movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Stock Move Line"
+msgstr "Abrir línea de movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Open Valuation Layer"
+msgstr "Abrir capa de valoración"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "Open Warehouse"
+msgstr "Abrir almacén"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Open correction entry"
+msgstr "Abrir asiento de corrección"
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_origin
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_origin
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_origin
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_origin
+msgid "Origin"
+msgstr "Origen"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__cogs_difference
+msgid "Output Difference"
+msgstr "Diferencia de salida"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit__state__draft
+msgid "Parameters"
+msgstr "Parámetros"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit_line__correction_state__pending
+msgid "Pending"
+msgstr "Pendiente"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__pending_count
+msgid "Pending Correction"
+msgstr "Corrección pendiente"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__to_regularize_count
+msgid "Pending Entries"
+msgstr "Asientos pendientes"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Period"
+msgstr "Período"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "Please select a stock move line."
+msgstr "Por favor, selecciona una línea de movimiento de stock."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Please select a valuation layer line."
+msgstr "Por favor, selecciona una línea de capa de valoración."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Product category stock journal"
+msgstr "Diario de existencias de la categoría del producto"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Product expense (COGS) account"
+msgstr "Cuenta de gasto (COGS) del producto"
+
+#. module: stock_kardex_report
+#. odoo-javascript
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+#: code:addons/stock_kardex_report/static/src/xml/stock_kardex_report.xml:0
+msgid "Products"
+msgstr "Productos"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__to_regularize_count
+msgid "Products already revalued whose accounting entry is still missing."
+msgstr "Productos ya revaluados cuyo asiento contable aún falta."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__diff_count
+msgid "Products with Differences"
+msgstr "Productos con diferencias"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__pending_count
+msgid "Products with a difference that have not been revalued yet."
+msgstr "Productos con una diferencia que aún no han sido revaluados."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_qty_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_qty_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_qty_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_qty_balance
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__qty_balance
+msgid "Qty Balance"
+msgstr "Cant. sdo."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_qty_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_qty_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_qty_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_qty_in
+msgid "Qty In"
+msgstr "Cant. ent."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_qty_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_qty_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_qty_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_qty_out
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__qty_out
+msgid "Qty Out"
+msgstr "Cant. sal."
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Recompute Valuation"
+msgstr "Recalcular valoración"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Recompute valuation"
+msgstr "Recalcular valoración"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Record Not Found"
+msgstr "Registro no encontrado"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__value_recorded
+msgid "Recorded Balance Value"
+msgstr "Valor de saldo grabado"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__cogs_recorded
+msgid "Recorded Output Cost"
+msgstr "Costo de salida grabado"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit_line__value_difference
+msgid "Recorded minus WAC inventory value."
+msgstr "Valor de inventario registrado menos WAC."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit_line__cogs_difference
+msgid ""
+"Recorded minus WAC. A non-zero value means the booked COGS does not match "
+"the valued kardex."
+msgstr ""
+"Registrado menos WAC. Un valor distinto de cero significa que el costo de "
+"ventas contabilizado no coincide con el kardex valorizado."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__product_code
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Regularization Options"
+msgstr "Opciones de regularización"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Regularize Entries"
+msgstr "Regularizar asientos"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Regularize entry"
+msgstr "Regularizar asiento"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__regularized_count
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit_line__correction_state__regularized
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_list
+msgid "Regularized"
+msgstr "Regularizado"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__line_ids
+msgid "Results"
+msgstr "Resultados"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__revaluation_svl_id
+msgid "Revaluation Layer"
+msgstr "Capa de revaluación"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__revalued_count
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit_line__correction_state__revalued
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Revalued"
+msgstr "Revaluado"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_list
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_search
+msgid "Run By"
+msgstr "Ejecutado por"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_list
+msgid "Run On"
+msgstr "Ejecutado el"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Scope"
+msgstr "Alcance"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid ""
+"Set the audit parameters above and click <b>Compute</b> to compare the "
+"recorded cost against the recomputed weighted average."
+msgstr ""
+"Configure los parámetros de auditoría arriba y pulse <b>Calcular</b> para "
+"comparar el costo grabado con el promedio ponderado recalculado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Skipped:"
+msgstr "Omitidos:"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid ""
+"Some audited products show a difference. Use <b>Recompute Valuation</b> to "
+"align the recorded value with the kardex, then <b>Regularize Entries</b> to "
+"post the correcting journal entries (in draft)."
+msgstr ""
+"Algunos productos auditados muestran una diferencia. Use <b>Recalcular "
+"valoración</b> para alinear el valor registrado con el kardex, luego "
+"<b>Regularizar asientos</b> para registrar los asientos de corrección (en "
+"borrador)."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__date_from
+msgid "Start Date"
+msgstr "Fecha inicio"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit__state
+msgid "Status"
+msgstr "Estado"
+
+#. module: stock_kardex_report
+#: model:ir.model,name:stock_kardex_report.model_stock_kardex_location_report_handler
+msgid "Stock Kardex Location Report Custom Handler"
+msgstr "Manejador Personalizado del Reporte Kardex de Stock por Ubicación"
+
+#. module: stock_kardex_report
+#: model:ir.model,name:stock_kardex_report.model_stock_kardex_product_report_handler
+msgid "Stock Kardex Product Report Custom Handler"
+msgstr "Manejador Personalizado del Reporte Kardex de Stock por Producto"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Stock Move"
+msgstr "Movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Stock Move Line"
+msgstr "Línea de movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Stock Move Lines"
+msgstr "Líneas de movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Stock Moves"
+msgstr "Movimientos de stock"
+
+#. module: stock_kardex_report
+#: model:ir.model,name:stock_kardex_report.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "Capa de valoración de existencias"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,help:stock_kardex_report.field_stock_kardex_cost_audit__computed
+msgid "Technical flag: set once the audit has been run."
+msgstr "Indicador técnico: se activa cuando se ejecuta la auditoría."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "The record no longer exists."
+msgstr "El registro ya no existe."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "The start date cannot be later than the end date."
+msgstr "La fecha de inicio no puede ser posterior a la fecha de fin."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "The stock move line no longer exists."
+msgstr "La línea de movimiento de stock ya no existe."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "The valuation layer no longer exists."
+msgstr "La capa de valoración ya no existe."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "There are no revalued products pending an entry."
+msgstr "No hay productos revaluados pendientes de asiento."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "There is nothing to revalue."
+msgstr "No hay nada que revaluar."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "This line does not have an associated stock move."
+msgstr "Esta línea no tiene un movimiento de stock asociado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "This product has no difference to correct."
+msgstr "Este producto no tiene diferencia que corregir."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "This valuation layer does not have an associated journal entry."
+msgstr "Esta capa de valoración no tiene un asiento contable asociado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "This valuation layer does not have an associated stock move."
+msgstr "Esta capa de valoración no tiene un movimiento de stock asociado."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "This valuation layer does not have associated stock move lines."
+msgstr ""
+"Esta capa de valoración no tiene líneas de movimiento de stock asociadas."
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid ""
+"This will create manual valuation layers to align the recorded value with "
+"the kardex weighted average cost. Continue?"
+msgstr ""
+"Esto creará capas de valoración manuales para alinear el valor registrado "
+"con el costo promedio ponderado del kardex. ¿Continuar?"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid ""
+"This will create the correction journal entries (in draft) for every "
+"revalued product. Continue?"
+msgstr ""
+"Esto creará los asientos contables de corrección (en borrador) para cada "
+"producto revaluado. ¿Continuar?"
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_location_to
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_location_to
+msgid "To"
+msgstr "A"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Total"
+msgstr "Total"
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_value_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_value_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_value_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_value_balance
+msgid "Total Balance"
+msgstr "Val. sdo."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_value_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_value_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_value_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_value_in
+msgid "Total In"
+msgstr "Val. ent."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_value_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_value_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_value_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_value_out
+msgid "Total Out"
+msgstr "Val. sal."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_unit_cost_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_unit_cost_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_unit_cost_balance
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_unit_cost_balance
+msgid "Unit Cost"
+msgstr "C.U."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_unit_cost_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_unit_cost_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_unit_cost_in
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_unit_cost_in
+msgid "Unit Cost In"
+msgstr "C.U. ent."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_unit_cost_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_unit_cost_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_unit_cost_out
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_unit_cost_out
+msgid "Unit Cost Out"
+msgstr "C.U. sal."
+
+#. module: stock_kardex_report
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_accounting_date_uom
+#: model:account.report.column,name:stock_kardex_report.kardex_report_location_date_uom
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_accounting_date_uom
+#: model:account.report.column,name:stock_kardex_report.kardex_report_product_creation_date_uom
+msgid "UoM"
+msgstr "UdM"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "Used by the Recompute Valuation and Regularize Entries actions."
+msgstr "Usado por las acciones Recalcular valoración y Regularizar asientos."
+
+#. module: stock_kardex_report
+#: model:ir.model.fields.selection,name:stock_kardex_report.selection__stock_kardex_cost_audit__state__to_regularize
+msgid "Valuation Aligned"
+msgstr "Valoración alineada"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+msgid "Valuation Layer"
+msgstr "Capa de valoración"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "Valuation Layers"
+msgstr "Capas de valoración"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Valuation Layers: %s"
+msgstr "Capas de valorización: %s"
+
+#. module: stock_kardex_report
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid ""
+"Valuation aligned. Use <b>Regularize Entries</b> to create the correcting "
+"journal entries (in draft) for the revalued products."
+msgstr ""
+"Valoración alineada. Use <b>Regularizar asientos</b> para crear los asientos"
+" de corrección (en borrador) para los productos revaluados."
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/wizards/stock_kardex_cost_audit.py:0
+msgid "Valuation recomputed"
+msgstr "Valoración recalculada"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "View Journal Entries"
+msgstr "Ver asientos contables"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "View Products"
+msgstr "Ver productos"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "View Stock Move Lines"
+msgstr "Ver líneas de movimiento de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+msgid "View Stock Moves"
+msgstr "Ver movimientos de stock"
+
+#. module: stock_kardex_report
+#. odoo-python
+#: code:addons/stock_kardex_report/models/stock_kardex_location_report.py:0
+#: code:addons/stock_kardex_report/models/stock_kardex_product_report.py:0
+#: model_terms:ir.ui.view,arch_db:stock_kardex_report.stock_kardex_cost_audit_view_form
+msgid "View Valuation Layers"
+msgstr "Ver capas de valoración"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__value_wac
+msgid "WAC Balance Value"
+msgstr "Valor de saldo WAC"
+
+#. module: stock_kardex_report
+#: model:ir.model.fields,field_description:stock_kardex_report.field_stock_kardex_cost_audit_line__cogs_wac
+msgid "WAC Output Cost"
+msgstr "Costo de salida WAC"
+
+#. module: stock_kardex_report
+#. odoo-javascript
+#: code:addons/stock_kardex_report/static/src/xml/stock_kardex_report.xml:0
+msgid "Warehouses"
+msgstr "Almacenes"

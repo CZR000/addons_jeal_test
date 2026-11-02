@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_change_lock_date_inherit" model="ir.ui.view">
+            <field name="name">account.change.lock.date.form.period</field>
+            <field name="model">account.change.lock.date</field>
+            <field name="inherit_id" ref="account_accountant.view_account_change_lock_date"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//sheet/group" position="after">
+
+                    <!-- Agregar nuevo periodo -->
+                    <group string="Agregar Nuevo Periodo"
+                           groups="account.group_account_manager">
+                        <group>
+                            <field name="new_date_start"/>
+                            <field name="new_date_end"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <div groups="account.group_account_manager">
+                        <button name="action_add_period"
+                                string="Agregar Periodo"
+                                type="object"
+                                class="btn-primary"
+                                icon="fa-plus"/>
+                    </div>
+
+                    <separator string="Periodos de Bloqueo de Asientos de Diario por rango de fechas"/>
+
+                    <field name="period_lock_ids" nolabel="1"
+                           readonly="1"
+                           context="{'wizard_id': id}">
+                        <list>
+                            <field name="date_start" string="Fecha Inicio"/>
+                            <field name="date_end" string="Fecha Fin"/>
+                            <field name="state"
+                                   widget="badge"
+                                   decoration-success="state == 'open'"
+                                   decoration-danger="state == 'locked'"/>
+                            <field name="is_locked" column_invisible="1"/>
+                            <button name="action_lock"
+                                    string="Bloquear"
+                                    type="object"
+                                    class="btn-danger btn-sm"
+                                    invisible="is_locked"
+                                    groups="account.group_account_manager"/>
+                            <button name="action_unlock"
+                                    string="Abrir"
+                                    type="object"
+                                    class="btn-warning btn-sm"
+                                    invisible="not is_locked"
+                                    groups="account.group_account_manager"/>
+                            <button name="action_delete_period"
+                                    string="Eliminar"
+                                    type="object"
+                                    icon="fa-trash"
+                                    class="btn-sm"
+                                    confirm="¿Eliminar este periodo de bloqueo?"
+                                    groups="account.group_account_manager"/>
+                        </list>
+                    </field>
+
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

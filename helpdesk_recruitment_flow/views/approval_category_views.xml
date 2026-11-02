@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="approval_category_view_form_recruitment_ext" model="ir.ui.view">
+        <field name="name">approval.category.view.form.recruitment.ext</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+        <field name="arch" type="xml">
+            <field name="automated_sequence" position="after">
+                <field name="x_is_recruitment"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

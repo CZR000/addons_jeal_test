@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_edit_code_movement_type" model="res.groups">
+        <field name="name">Editar código de movimiento en las líneas de movimiento y valorización de inventario</field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

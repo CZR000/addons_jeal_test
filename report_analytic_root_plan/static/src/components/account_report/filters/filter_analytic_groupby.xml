@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="account_reports.AccountReportFilterAnalyticGroupby"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-set-slot='content']" position="inside">
+            <div class="dropdown-item gap-2 align-items-center">
+                <label>Planes raíz</label>
+                <MultiRecordSelector
+                    t-props="getMultiRecordSelectorProps('account.analytic.plan', 'analytic_root_plans_groupby')"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

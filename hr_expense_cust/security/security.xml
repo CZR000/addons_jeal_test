@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Categoría propia para que aparezca como sección separada en Ajustes > Usuarios -->
+    <record id="module_category_hr_expense_cust" model="ir.module.category">
+        <field name="name">Aprobación de Gastos</field>
+        <field name="description">Gestión de aprobaciones del módulo de gastos</field>
+        <field name="sequence">9</field>
+    </record>
+
+    <!-- Grupo aprobador de informes de gastos / solicitudes de desembolso -->
+    <record id="group_hr_expense_sheet_approver" model="res.groups">
+        <field name="name">Aprobador de informe de gastos</field>
+        <field name="category_id" ref="module_category_hr_expense_cust"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">
+            Usuarios con este perfil pueden aprobar solicitudes de desembolso
+            generadas desde el módulo de gastos.
+        </field>
+    </record>
+
+    <!--
+        La regla global account.account_payment_comp_rule (id: account_payment_comp_rule)
+        tiene noupdate=True en ir_model_data y no puede sobreescribirse desde XML.
+        El override se aplica vía post_init_hook y script de migración (hooks.py).
+    -->
+</odoo>

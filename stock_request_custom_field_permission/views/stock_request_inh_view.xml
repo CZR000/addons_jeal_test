@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_stock_request_inh_form" model="ir.ui.view">
+            <field name="name">view.stock.request.inh.form</field>
+            <field name="model">stock.request</field>
+            <field name="inherit_id" ref="stock_request.view_stock_request_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group[1]" position="after">
+                    <group string="Comentarios" name="custom_comments_group">
+                        <field name="comment_editable" 
+                            nolabel     = "1" 
+                            colspan     = "2" 
+                            placeholder = "Escribe un comentario..." 
+                            class       = "fw-bold fst-italic text-info" 
+                            groups      = "stock_request_custom_field_permission.group_edit_comment_stock_request"/>
+
+                        <field name="comment_readonly" 
+                            nolabel     = "1" 
+                            colspan     = "2" 
+                            placeholder = "Comentario" 
+                            class       = "fw-bold fst-italic text-info" 
+                            groups      = "stock_request_custom_field_permission.group_view_comment_stock_request"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

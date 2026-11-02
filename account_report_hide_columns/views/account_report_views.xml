@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_report_form_hide_0_columns" model="ir.ui.view">
+            <field name="name">account.report.form.hide.0.columns</field>
+            <field name="model">account.report</field>
+            <field name="inherit_id" ref="account_reports.account_report_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='filter_hide_0_lines']" position="after">
+                    <field name="filter_hide_0_columns" help="Esta opcion oculta columnas cuyos valores son todos 0 en todas las lineas visibles"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

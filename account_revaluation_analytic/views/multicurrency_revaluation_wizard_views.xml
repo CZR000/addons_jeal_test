@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_multicurrency_revaluation_wizard_analytic" model="ir.ui.view">
+        <field name="name">account.multicurrency.revaluation.wizard.analytic</field>
+        <field name="model">account.multicurrency.revaluation.wizard</field>
+        <field name="inherit_id" ref="account_reports.view_account_multicurrency_revaluation_wizard"/>
+        <field name="arch" type="xml">
+            <field name="reversal_date" position="after">
+                <field name="analytic_account_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

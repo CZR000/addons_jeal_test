@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_normal_form_view" model="ir.ui.view">
+         <field name="name">product.product.view.form.inherit.hide.product.price.cost</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="lst_price" position="attributes">
+                <attribute name="groups">product_hide_price_cost.group_show_product_selling_price</attribute>
+            </field>
+            <field name="standard_price" position="attributes">
+                <attribute name="groups">product_hide_price_cost.group_show_product_cost</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_kanban_view" model="ir.ui.view">
+        <field name="name">product.product.view.kanban.inherit.hide.product.price.cost</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_kanban_view"/>
+        <field name="arch" type="xml">
+              <xpath expr="//field[@name='lst_price']//.." position="attributes">
+                <attribute name="groups">product_hide_price_cost.group_show_product_selling_price</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_tree_view" model="ir.ui.view">
+         <field name="name">product.product.view.form.inherit.hide.product.price.cost</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="lst_price" position="attributes">
+                <attribute name="groups">product_hide_price_cost.group_show_product_selling_price</attribute>
+            </field>
+            <field name="standard_price" position="attributes">
+                <attribute name="groups">product_hide_price_cost.group_show_product_cost</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

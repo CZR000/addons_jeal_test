@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_asset_form_book_remaining" model="ir.ui.view">
+        <field name="name">account.asset.form.book.remaining.value</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='depreciation_move_ids']/list/field[@name='asset_remaining_value']"
+                   position="replace">
+                <field name="book_initial_value"
+                       string="Valor Contable Inicial"
+                       optional="show"/>
+                <field name="book_remaining_value"
+                       string="Valor Contable Final"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

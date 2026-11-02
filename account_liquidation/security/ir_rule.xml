@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_liquidation_line_company_rule" model="ir.rule">
+        <field name="name">Lineas de reporte de liquidación multi-company</field>
+        <field name="model_id" ref="model_account_liquidation_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="operation_liquidation_line_company_rule" model="ir.rule">
+        <field name="name">Lineas de operación de liquidación multi-company</field>
+        <field name="model_id" ref="model_operation_liquidation_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="report_liquidation_company_rule" model="ir.rule">
+        <field name="name">Reporte de liequidación multi-company</field>
+        <field name="model_id" ref="model_report_liquidation"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

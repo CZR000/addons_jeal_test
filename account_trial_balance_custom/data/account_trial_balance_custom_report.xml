@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── Definición del reporte ─────────────────────────────────────────── -->
+    <record id="trial_balance_custom_report" model="account.report">
+        <field name="name">Balance de Comprobación Personalizado</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic" eval="True"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <!-- hierarchy en 'optional': desactivada por defecto para coherencia
+             con el filtro de exclusión de cuentas sin grupo -->
+        <field name="filter_hierarchy">by_default</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id"
+               ref="model_account_trial_balance_custom_handler"/>
+        <field name="column_ids">
+            <record id="trial_balance_custom_report_debit" model="account.report.column">
+                <field name="name">Debe</field>
+                <field name="expression_label">debit</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="trial_balance_custom_report_credit" model="account.report.column">
+                <field name="name">Haber</field>
+                <field name="expression_label">credit</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+
+    <!-- ─── Acción cliente ─────────────────────────────────────────────────── -->
+    <record id="action_account_report_trial_balance_custom" model="ir.actions.client">
+        <field name="name">Balance de Comprobación Personalizado</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_trial_balance_custom.trial_balance_custom_report')}"/>
+    </record>
+
+    <!-- ─── Ítem de menú bajo Informes → Auditoría ─────────────────────────── -->
+    <menuitem
+        id="menu_action_trial_balance_custom"
+        name="Balance de Comprobación Personalizado"
+        parent="account_reports.account_reports_audit_reports_menu"
+        action="action_account_report_trial_balance_custom"
+        groups="account.group_account_readonly"
+        sequence="15"/>
+
+</odoo>

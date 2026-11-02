@@ -1,0 +1,24 @@
+<odoo>
+    <record id="crm_lead_loss_fields_form" model="ir.ui.view">
+        <field name="name">crm.lead.loss.fields.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="(//sheet/group)[1]" position="after">
+                <group name="empiria_loss_details" string="Motivo de pérdida">
+                    <field name="x_loss_category" string="Categoría de pérdida" />
+                    <field name="x_loss_detail_price" string="Detalle Precio / Condiciones comerciales" invisible="x_loss_category != 'price'" required="x_loss_category == 'price'" />
+                    <field name="x_loss_detail_operations" string="Detalle Disponibilidad / Operaciones" invisible="x_loss_category != 'operations'" required="x_loss_category == 'operations'" />
+                    <field name="x_loss_detail_product" string="Detalle Producto / Especificaciones" invisible="x_loss_category != 'product'" required="x_loss_category == 'product'" />
+                    <field name="x_loss_detail_client" string="Detalle Cliente / Decisión" invisible="x_loss_category != 'client'" required="x_loss_category == 'client'" />
+                    <field name="x_loss_detail_commercial" string="Detalle Proceso Comercial" invisible="x_loss_category != 'commercial'" required="x_loss_category == 'commercial'" />
+                    <field name="x_loss_detail_service" string="Detalle Servicio / Postventa" invisible="x_loss_category != 'service'" required="x_loss_category == 'service'" />
+                    <field name="x_loss_detail_other" string="Detalle Otros" invisible="x_loss_category != 'other'" required="x_loss_category == 'other'" />
+                    <field name="x_loss_detail_general" invisible="1" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <function model="crm.lead" name="_configure_loss_form_view" />
+</odoo>

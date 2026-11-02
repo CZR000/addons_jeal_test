@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ic_config_user,ic.reconciliation.config user,model_ic_reconciliation_config,group_ic_reconciliation_user,1,0,0,0
+access_ic_config_manager,ic.reconciliation.config manager,model_ic_reconciliation_config,group_ic_reconciliation_manager,1,1,1,0
+access_ic_run_user,ic.reconciliation.run user,model_ic_reconciliation_run,group_ic_reconciliation_user,1,1,1,0
+access_ic_run_manager,ic.reconciliation.run manager,model_ic_reconciliation_run,group_ic_reconciliation_manager,1,1,1,1
+access_ic_pair_user,ic.reconciliation.pair user,model_ic_reconciliation_pair,group_ic_reconciliation_user,1,0,0,0
+access_ic_pair_manager,ic.reconciliation.pair manager,model_ic_reconciliation_pair,group_ic_reconciliation_manager,1,1,1,1
+access_ic_line_user,ic.reconciliation.line user,model_ic_reconciliation_line,group_ic_reconciliation_user,1,0,0,0
+access_ic_line_manager,ic.reconciliation.line manager,model_ic_reconciliation_line,group_ic_reconciliation_manager,1,1,1,1
+access_ic_match_user,ic.reconciliation.manual.match user,model_ic_reconciliation_manual_match,group_ic_reconciliation_user,1,0,0,0
+access_ic_match_manager,ic.reconciliation.manual.match manager,model_ic_reconciliation_manual_match,group_ic_reconciliation_manager,1,1,1,0
+access_ic_review_user,ic.reconciliation.review user,model_ic_reconciliation_review,group_ic_reconciliation_user,1,0,0,0
+access_ic_review_manager,ic.reconciliation.review manager,model_ic_reconciliation_review,group_ic_reconciliation_manager,1,1,1,0
+access_ic_generate_user,ic.reconciliation.generate user,model_ic_reconciliation_generate,group_ic_reconciliation_user,1,1,1,0
+access_ic_review_wizard_manager,ic.reconciliation.review.wizard manager,model_ic_reconciliation_review_wizard,group_ic_reconciliation_manager,1,1,1,0
+access_ic_match_wizard_manager,ic.reconciliation.match.wizard manager,model_ic_reconciliation_match_wizard,group_ic_reconciliation_manager,1,1,1,0
+access_ic_match_wizard_line_manager,ic.reconciliation.match.wizard.line manager,model_ic_reconciliation_match_wizard_line,group_ic_reconciliation_manager,1,1,1,1

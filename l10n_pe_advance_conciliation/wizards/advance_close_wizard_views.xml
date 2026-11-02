@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_advance_close_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.close.wizard.form</field>
+        <field name="model">l10n_pe.advance.close.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cerrar saldo residual">
+                <group>
+                    <field name="advance_id" readonly="1" force_save="1"/>
+                    <field name="advance_type" readonly="1"/>
+                    <field name="residual" readonly="1"/>
+                    <field name="tolerance" readonly="1"/>
+                    <field name="account_id" readonly="1"/>
+                    <field name="analytic_distribution"
+                           widget="analytic_distribution"
+                           groups="analytic.group_analytic_accounting"
+                           options="{'account_field': 'account_id'}"/>
+                    <field name="date"/>
+                    <field name="journal_id" readonly="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="analytic_precision" invisible="1"/>
+                </group>
+                <p class="text-muted">
+                    Se genera un asiento contra la cuenta de gasto por redondeo
+                    (al debe o al haber segun el tipo de documento y el signo
+                    del saldo), se concilia con el documento y este pasa a
+                    Aplicado.
+                </p>
+                <footer>
+                    <button name="action_close" type="object"
+                            string="Cerrar saldo" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

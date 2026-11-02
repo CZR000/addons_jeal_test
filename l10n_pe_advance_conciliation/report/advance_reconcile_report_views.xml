@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_advance_reconcile_report_list" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.reconcile.report.list</field>
+        <field name="model">l10n_pe.advance.reconcile.report</field>
+        <field name="arch" type="xml">
+            <list string="Cuadre contra contabilidad"
+                  decoration-danger="difference != 0"
+                  create="false">
+                <field name="partner_id"/>
+                <field name="account_id"/>
+                <field name="currency_id"/>
+                <field name="module_balance"/>
+                <field name="ledger_balance"/>
+                <field name="difference" sum="Diferencia"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_advance_reconcile_report_search" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.reconcile.report.search</field>
+        <field name="model">l10n_pe.advance.reconcile.report</field>
+        <field name="arch" type="xml">
+            <search string="Cuadre">
+                <field name="partner_id"/>
+                <field name="account_id"/>
+                <filter name="only_diff" string="Solo con diferencia"
+                        domain="[('difference', '!=', 0)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_partner" string="Socio"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_account" string="Cuenta"
+                            context="{'group_by': 'account_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_advance_reconcile_report" model="ir.actions.act_window">
+        <field name="name">Cuadre contra contabilidad</field>
+        <field name="res_model">l10n_pe.advance.reconcile.report</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_advance_reconcile_report_search"/>
+    </record>
+</odoo>

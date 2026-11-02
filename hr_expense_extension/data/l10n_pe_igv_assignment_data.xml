@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            Catálogo inicial de Asignación de IGV.
+            Lista mínima según documento técnico (GE, GN, GG, GA).
+            La lista final la confirma contabilidad de Empiria.
+
+            affects_register=True  → va al Registro de Compras (crédito fiscal)
+            affects_register=False → el IGV va al costo
+        -->
+        <record id="igv_assignment_ge" model="l10n.pe.igv.assignment">
+            <field name="code">GE</field>
+            <field name="name">Gravado destinado a ventas gravadas y/o exportación</field>
+            <field name="affects_register" eval="True"/>
+        </record>
+
+        <record id="igv_assignment_gn" model="l10n.pe.igv.assignment">
+            <field name="code">GN</field>
+            <field name="name">Gravado destinado a ventas no gravadas</field>
+            <field name="affects_register" eval="True"/>
+        </record>
+
+        <record id="igv_assignment_gg" model="l10n.pe.igv.assignment">
+            <field name="code">GG</field>
+            <field name="name">Gravado destinado a ventas gravadas y no gravadas (al costo)</field>
+            <field name="affects_register" eval="False"/>
+        </record>
+
+        <record id="igv_assignment_ga" model="l10n.pe.igv.assignment">
+            <field name="code">GA</field>
+            <field name="name">Adquisición gravada no destinada a operaciones (al costo)</field>
+            <field name="affects_register" eval="False"/>
+        </record>
+    </data>
+</odoo>

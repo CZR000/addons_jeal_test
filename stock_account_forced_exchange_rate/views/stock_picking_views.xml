@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_exchange_rate" model="ir.ui.view">
+        <field name="name">stock.picking.form.exchange.rate</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="before">
+                <field name="exchange_rate_case" invisible="1" />
+
+                <group name="exchange_rate_container"
+                    invisible="picking_type_code != 'incoming' or exchange_rate_case == 'none'">
+                    <group name="exchange_rate_settings" string="Tipo de Cambio">
+                        <field name="exchange_rate_type"
+                            widget="radio"
+                            options="{'horizontal': True}"
+                            readonly="state in ['done', 'cancel']" />
+                        <field name="exchange_rate_date"
+                            readonly="state in ['done', 'cancel']" />
+                    </group>
+
+                    <group name="exchange_rate_values" string="Tasas de Conversión">
+                        <field name="forced_exchange_rate" readonly="state in ['done', 'cancel']"
+                            digits="[12,6]" />
+                        <field name="exchange_rate" readonly="1" force_save="1" digits="[12,12]" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

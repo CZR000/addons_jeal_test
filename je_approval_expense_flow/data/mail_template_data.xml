@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="mail_template_request_submitted" model="mail.template">
+        <field name="name">Aprobaciones: solicitud enviada</field>
+        <field name="model_id" ref="approvals.model_approval_request"/>
+        <field name="subject">Nueva solicitud de aprobación: {{ object.name }}</field>
+        <field name="email_to">{{ ','.join((object.approver_ids.filtered(lambda a: a.status == 'pending')).mapped('user_id.email') or []) }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Buenos días,</p>
+                <p>Ha recibido una nueva solicitud de desembolso:</p>
+                <table style="margin: 8px 0;">
+                    <tr><td style="padding-right: 12px;"><strong>Número de Solicitud</strong></td><td t-out="object.name or ''"/></tr>
+                    <tr><td style="padding-right: 12px;"><strong>Solicitante</strong></td><td t-out="object.request_owner_id.name or ''"/></tr>
+                    <tr><td style="padding-right: 12px;"><strong>Importe</strong></td><td t-out="'%.2f' % object.amount"/></tr>
+                </table>
+                <p>
+                    <a t-att-href="'%s/mail/view?model=approval.request&amp;res_id=%s' % (object.get_base_url(), object.id)"
+                       style="background-color: #714B67; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 4px;">
+                        Ver solicitud
+                    </a>
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_expense_sheet_submitted" model="mail.template">
+        <field name="name">Aprobaciones: informe de gastos enviado</field>
+        <field name="model_id" ref="hr_expense.model_hr_expense_sheet"/>
+        <field name="subject">Solicitud de aprobación de informe de gastos: {{ object.name }}</field>
+        <field name="email_to">{{ object.user_id.email or '' }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Estimado <t t-out="object.user_id.name or ''"/>,</p>
+                <p>Ha recibido una solicitud de aprobación de informe de gastos:</p>
+                <table style="margin: 8px 0;">
+                    <tr><td style="padding-right: 12px;"><strong>Nombre del informe</strong></td><td t-out="object.name or ''"/></tr>
+                    <tr><td style="padding-right: 12px;"><strong>Usuario</strong></td><td t-out="object.employee_id.name or ''"/></tr>
+                    <tr><td style="padding-right: 12px;"><strong>Importe</strong></td><td t-out="'%.2f' % object.total_amount"/></tr>
+                </table>
+                <p>
+                    <a t-att-href="'%s/mail/view?model=hr.expense.sheet&amp;res_id=%s' % (object.get_base_url(), object.id)"
+                       style="background-color: #714B67; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 4px;">
+                        Ver informe
+                    </a>
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_payment_approved" model="mail.template">
+        <field name="name">Aprobaciones: pago confirmado</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="subject">Su solicitud ha sido aprobada: {{ object.approval_request_id.name }}</field>
+        <field name="email_to">{{ object.approval_request_id.request_owner_id.email or '' }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Su solicitud ha sido aprobada.</p>
+                <table style="margin: 8px 0;">
+                    <tr><td style="padding-right: 12px;"><strong>N&#186; de solicitud</strong></td><td t-out="object.approval_request_id.name or ''"/></tr>
+                    <tr><td style="padding-right: 12px;"><strong>Importe</strong></td><td t-out="'%.2f' % object.amount"/></tr>
+                    <tr><td style="padding-right: 12px;"><strong>Fecha</strong></td><td t-out="format_date(object.date)"/></tr>
+                    <tr><td style="padding-right: 12px;"><strong>Aprobador</strong></td>
+                        <td t-out="', '.join(object.approval_request_id.approver_ids.filtered(lambda a: a.status == 'approved').mapped('user_id.name'))"/></tr>
+                </table>
+                <p>
+                    <a t-att-href="'%s/mail/view?model=approval.request&amp;res_id=%s' % (object.get_base_url(), object.approval_request_id.id)"
+                       style="background-color: #714B67; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 4px;">
+                        Ver solicitud
+                    </a>
+                </p>
+            </div>
+        </field>
+    </record>
+
+</odoo>

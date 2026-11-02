@@ -1,0 +1,1 @@
+from . import ple_report_stock_permanent_inventory

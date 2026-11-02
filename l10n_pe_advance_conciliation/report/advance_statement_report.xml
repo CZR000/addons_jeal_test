@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_advance_statement" model="ir.actions.report">
+        <field name="name">Estado de cuenta de anticipos/revolventes</field>
+        <field name="model">l10n_pe.advance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_pe_advance_conciliation.report_advance_statement</field>
+        <field name="report_file">l10n_pe_advance_conciliation.report_advance_statement</field>
+        <field name="binding_model_id" ref="model_l10n_pe_advance"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Estado de cuenta por socio (se lanza desde el wizard de filtro) -->
+    <record id="action_report_advance_partner" model="ir.actions.report">
+        <field name="name">Estado de cuenta por socio</field>
+        <field name="model">l10n_pe.advance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_pe_advance_conciliation.report_advance_partner</field>
+        <field name="report_file">l10n_pe_advance_conciliation.report_advance_partner</field>
+    </record>
+</odoo>

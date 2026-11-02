@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_advance" model="ir.sequence">
+        <field name="name">Anticipo (ANTC)</field>
+        <field name="code">l10n_pe.advance</field>
+        <field name="prefix">ANTC/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_revolving" model="ir.sequence">
+        <field name="name">Revolvente (REV)</field>
+        <field name="code">l10n_pe.revolving</field>
+        <field name="prefix">REV/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

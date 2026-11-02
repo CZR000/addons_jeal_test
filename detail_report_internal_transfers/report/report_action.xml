@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="paperformat_landscape" model="report.paperformat">
+            <field name="name">Formato Horizontal Transferencias</field>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="default" eval="False" />
+            <field name="dpi" eval="90" />
+            <field name="margin_top" eval="40" />
+            <field name="margin_right" eval="7" />
+            <field name="margin_bottom" eval="20" />
+            <field name="margin_left" eval="7" />
+            <field name="header_line" eval="False" />
+            <field name="header_spacing" eval="35" />
+        </record>
+
+        <record id="action_report_internal_transfers_pdf" model="ir.actions.report">
+            <field name="name">Detalle de Almacén (PDF)</field>
+            <field name="model">report.internal.transfers</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">detail_report_internal_transfers.report_informe_bank</field>
+            <field name="report_file">detail_report_internal_transfers.report_informe_bank</field>
+            <field name="print_report_name">'Reporte_Transferencias'</field>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="detail_report_internal_transfers.paperformat_landscape" />
+        </record>
+
+        <record id="action_report_internal_transfers_xlsx" model="ir.actions.report">
+            <field name="name">Detalle de Almacén (Excel)</field>
+            <field name="model">report.internal.transfers</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">detail_report_internal_transfers.transfer_xlsx</field>
+            <field name="report_file">Detalle_Transferencias</field>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

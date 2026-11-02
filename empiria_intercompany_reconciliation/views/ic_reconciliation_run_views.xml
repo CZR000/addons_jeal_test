@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ic_reconciliation_run_list" model="ir.ui.view">
+        <field name="name">ic.reconciliation.run.list</field>
+        <field name="model">ic.reconciliation.run</field>
+        <field name="arch" type="xml">
+            <list string="Ejecuciones" create="0" decoration-danger="state == 'done' and not control_ok">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="name"/>
+                <field name="date_from" optional="show"/>
+                <field name="date_to"/>
+                <field name="origin"/>
+                <field name="pending_pair_count"/>
+                <field name="pending_line_count"/>
+                <field name="new_line_count" optional="show"/>
+                <field name="resolved_line_count" optional="show"/>
+                <field name="reviewed_line_count" optional="hide"/>
+                <field name="control_total" string="Control"/>
+                <field name="control_ok" widget="boolean" optional="hide"/>
+                <field name="user_id" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ic_reconciliation_run_form" model="ir.ui.view">
+        <field name="name">ic.reconciliation.run.form</field>
+        <field name="model">ic.reconciliation.run</field>
+        <field name="arch" type="xml">
+            <form string="Conciliación intercompany" create="0">
+                <header>
+                    <button name="action_open_pairs" type="object" string="Resumen por par" class="oe_highlight" invisible="state != 'done'"/>
+                    <button name="action_open_lines" type="object" string="Detalle" invisible="state != 'done'"/>
+                    <button name="action_export_xlsx" type="object" string="Exportar a Excel" invisible="state != 'done'"/>
+                    <button name="action_compute" type="object" string="Volver a calcular"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert" invisible="state != 'done' or control_ok">
+                        El control no es 0 en algún par: la exportación sale como NO DEFINITIVA.
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_pairs" type="object" class="oe_stat_button" icon="fa-exchange" invisible="state != 'done'">
+                            <field name="pending_pair_count" widget="statinfo" string="Pares por conciliar"/>
+                        </button>
+                        <button name="action_open_lines" type="object" class="oe_stat_button" icon="fa-list" invisible="state != 'done'">
+                            <field name="pending_line_count" widget="statinfo" string="Líneas pendientes"/>
+                        </button>
+                        <button name="action_open_new_lines" type="object" class="oe_stat_button" icon="fa-bell" invisible="not new_line_count">
+                            <field name="new_line_count" widget="statinfo" string="Pendientes nuevos"/>
+                        </button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="date_from" readonly="state == 'done'"/>
+                            <field name="date_to" readonly="state == 'done'"/>
+                            <field name="company_ids" widget="many2many_tags" readonly="state == 'done'"/>
+                            <field name="include_balanced" readonly="state == 'done'"/>
+                            <field name="origin"/>
+                        </group>
+                        <group>
+                            <field name="control_total" string="Control"/>
+                            <field name="control_ok"/>
+                            <field name="reviewed_line_count"/>
+                            <field name="resolved_line_count"/>
+                            <field name="previous_run_id"/>
+                            <field name="user_id"/>
+                            <field name="duration"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ic_reconciliation_run_search" model="ir.ui.view">
+        <field name="name">ic.reconciliation.run.search</field>
+        <field name="model">ic.reconciliation.run</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="date_to" string="Corte desde" operator="&gt;="/>
+                <field name="date_to" string="Corte hasta" operator="&lt;="/>
+                <filter name="filter_last" string="Última ejecución" domain="[('is_last', '=', True)]"/>
+                <separator/>
+                <filter name="filter_date_to" string="Fecha de corte" date="date_to"/>
+                <filter name="filter_period" string="Con periodo (desde - hasta)" domain="[('date_from', '!=', False)]"/>
+                <filter name="filter_cumulative" string="Acumuladas" domain="[('date_from', '=', False)]"/>
+                <separator/>
+                <filter name="filter_manual" string="Manuales" domain="[('origin', '=', 'manual')]"/>
+                <filter name="filter_cron" string="Automáticas" domain="[('origin', '=', 'cron')]"/>
+                <filter name="filter_month_end" string="Cierre de mes" domain="[('is_month_end', '=', True)]"/>
+                <filter name="filter_control" string="Control distinto de 0" domain="[('control_ok', '=', False), ('state', '=', 'done')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_date_to" string="Fecha de corte" context="{'group_by': 'date_to:month'}"/>
+                    <filter name="group_origin" string="Origen" context="{'group_by': 'origin'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ic_reconciliation_run" model="ir.actions.act_window">
+        <field name="name">Conciliación intercompany</field>
+        <field name="res_model">ic.reconciliation.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Genere la conciliación intercompany a una fecha de corte</p>
+            <p>Compara, para cada par de empresas del grupo, sus saldos de balance y explica la diferencia por
+               documento. No crea ni modifica asientos.</p>
+        </field>
+    </record>
+
+</odoo>

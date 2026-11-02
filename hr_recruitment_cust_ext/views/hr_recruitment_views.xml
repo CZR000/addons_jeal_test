@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form: agrega los campos dentro del sheet, después del grupo principal -->
+    <record id="hr_applicant_view_form_ext" model="ir.ui.view">
+        <field name="name">hr.applicant.view.form.ext</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="after">
+                <group>
+                    <group string="Responsables">
+                        <field name="solicitante_id" options="{'no_create': True}"/>
+                        <field name="jefe_directo_id" options="{'no_create': True}"/>
+                        <field name="proveedor_id" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Fechas generales">
+                        <field name="fecha_solicitud_formal"/>
+                        <field name="fecha_aprobacion"/>
+                        <field name="fecha_publicacion"/>
+                        <field name="fecha_envio_req_proveedor"/>
+                        <field name="fecha_cierre_vacante"/>
+                    </group>
+                    <group string="Terna y entrevistas">
+                        <field name="fecha_recepcion_terna"/>
+                        <field name="fecha_envio_terna_jefatura"/>
+                        <field name="fecha_respuesta_jefatura"/>
+                        <field name="fecha_ini_entrevista_jd"/>
+                        <field name="fecha_fin_entrevista_jd"/>
+                        <field name="fecha_entrevista_psico"/>
+                    </group>
+                    <group string="Selección e ingreso">
+                        <field name="fecha_eleccion"/>
+                        <field name="fecha_notif_carta_oferta"/>
+                        <field name="fecha_resultado_examen"/>
+                        <field name="fecha_ingreso"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Pivot: hereda e incluye los nuevos campos como opciones de agrupación -->
+    <record id="hr_applicant_view_pivot_ext" model="ir.ui.view">
+        <field name="name">hr.applicant.view.pivot.ext</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_pivot_view_job"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="solicitante_id" invisible="1"/>
+                <field name="jefe_directo_id" invisible="1"/>
+                <field name="proveedor_id" invisible="1"/>
+                <field name="fecha_solicitud_formal" invisible="1"/>
+                <field name="fecha_aprobacion" invisible="1"/>
+                <field name="fecha_publicacion" invisible="1"/>
+                <field name="fecha_envio_req_proveedor" invisible="1"/>
+                <field name="fecha_recepcion_terna" invisible="1"/>
+                <field name="fecha_envio_terna_jefatura" invisible="1"/>
+                <field name="fecha_respuesta_jefatura" invisible="1"/>
+                <field name="fecha_ini_entrevista_jd" invisible="1"/>
+                <field name="fecha_fin_entrevista_jd" invisible="1"/>
+                <field name="fecha_entrevista_psico" invisible="1"/>
+                <field name="fecha_eleccion" invisible="1"/>
+                <field name="fecha_notif_carta_oferta" invisible="1"/>
+                <field name="fecha_resultado_examen" invisible="1"/>
+                <field name="fecha_ingreso" invisible="1"/>
+                <field name="fecha_cierre_vacante" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

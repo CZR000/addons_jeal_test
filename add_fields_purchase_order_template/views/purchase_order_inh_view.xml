@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="purchase_order_form_inh" model="ir.ui.view">
+            <field name="name">purchase.order.form.inh</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_ref']" position="after">
+                    <label for="account_number_partner_id"/>
+                    <div name="partner_bank_id_div" class="o_row">
+                        <field name="account_number_partner_id" placeholder="Seleccione una cuenta..." options="{'no_create': True, 'no_open': True}"/>
+
+                        <field name="currency_partner_id" nolabel="1" invisible="not account_number_partner_id" options="{'no_create': True, 'no_open': True}" class="fw-bold"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.stock.kardex.adjustment.jeal</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock_account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="valuation_setting_container" position="after">
+                <block title="Ajustes del kardex valorizado" name="kardex_adjustment_setting_container">
+                    <setting id="kardex_adj_accounts" string="Asientos de ajuste"
+                             help="Diario y contrapartida de los ajustes de costo y de tipo de cambio. La cuenta de valoración y la 61 salen de la categoría del producto.">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="kardex_adj_journal_id" class="col-lg-4 o_light_label"/>
+                                <field name="kardex_adj_journal_id" options="{'no_create': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="kardex_adj_cogs_account_id" class="col-lg-4 o_light_label"/>
+                                <field name="kardex_adj_cogs_account_id" options="{'no_create': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="kardex_adj_create_layers" class="col-lg-4 o_light_label"/>
+                                <field name="kardex_adj_create_layers"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="kardex_adj_rules" string="Reglas de cálculo"
+                             help="Costo de las devoluciones de clientes y umbral del ajuste por tipo de cambio factura vs recepción.">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="kardex_adj_return_cost_method" class="col-lg-4 o_light_label"/>
+                                <field name="kardex_adj_return_cost_method"/>
+                            </div>
+                            <div class="row">
+                                <label for="kardex_adj_fx_threshold" class="col-lg-4 o_light_label"/>
+                                <field name="kardex_adj_fx_threshold"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="kardex_adj_manual" string="Asientos manuales con producto"
+                             help="Diarios cuyos apuntes con producto en la cuenta de valoración se incluyen en el kardex, y cuentas que nunca se incluyen.">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="kardex_adj_manual_journal_ids" class="col-lg-4 o_light_label"/>
+                                <field name="kardex_adj_manual_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="kardex_adj_excluded_account_ids" class="col-lg-4 o_light_label"/>
+                                <field name="kardex_adj_excluded_account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+
+</odoo>

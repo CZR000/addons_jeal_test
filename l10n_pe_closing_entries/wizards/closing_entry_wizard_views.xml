@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_closing_entry_wizard_form" model="ir.ui.view">
+        <field name="name">closing.entry.wizard.form</field>
+        <field name="model">closing.entry.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generar Asientos de Cierre">
+                <field name="existing_move_count" invisible="1"/>
+
+                <div class="alert alert-info d-flex align-items-center"
+                     role="alert"
+                     invisible="existing_move_count == 0">
+                    <div class="flex-grow-1">
+                        Ya existen asientos de cierre para este periodo.
+                        Sólo se cerrarán los saldos que sigan pendientes.
+                    </div>
+                    <button name="action_view_existing_moves"
+                            type="object"
+                            string="Ver asientos"
+                            class="btn btn-sm btn-secondary"/>
+                </div>
+
+                <group>
+                    <group string="Periodo a Cerrar">
+                        <label for="date_from" string="Rango de Fechas"/>
+                        <div class="o_row">
+                            <field name="date_from" placeholder="Inicio"/>
+                            <i class="fa fa-long-arrow-right mx-2 text-muted"
+                               title="Hasta" aria-label="Hasta"/>
+                            <field name="date_to" placeholder="Fin"/>
+                        </div>
+                        <field name="company_id"
+                               groups="base.group_multi_company"
+                               options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                    <group string="Datos del Asiento">
+                        <field name="closing_date"/>
+                        <field name="journal_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="line_label"/>
+                    </group>
+                </group>
+
+                <group string="Opciones">
+                    <group>
+                        <field name="entry_grouping"/>
+                        <field name="analytic_mode"/>
+                    </group>
+                    <group>
+                        <field name="auto_post" widget="boolean_toggle"/>
+                        <field name="replace_drafts"
+                               widget="boolean_toggle"
+                               invisible="existing_move_count == 0"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="action_generate_entries"
+                            string="Generar Asientos"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancelar"
+                            special="cancel"
+                            class="btn-secondary"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_closing_entry_wizard" model="ir.actions.act_window">
+        <field name="name">Generar Asientos de Cierre</field>
+        <field name="res_model">closing.entry.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

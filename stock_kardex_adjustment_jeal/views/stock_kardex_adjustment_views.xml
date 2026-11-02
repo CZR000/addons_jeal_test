@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_kardex_adjustment_view_form" model="ir.ui.view">
+        <field name="name">stock.kardex.adjustment.view.form</field>
+        <field name="model">stock.kardex.adjustment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Calcular" name="action_compute" type="object"
+                            class="oe_highlight" data-hotkey="q"/>
+                    <button string="Registrar ajustes" name="action_generate" type="object"
+                            class="btn-primary" invisible="state == 'draft' or pending_count == 0"
+                            confirm="Se crearán, actualizarán o revertirán los asientos y las capas de valoración de los ajustes pendientes, con la fecha contable de cada movimiento ajustado. ¿Continuar?"/>
+                    <button string="Exportar Excel" name="action_export_xlsx" type="object"
+                            invisible="state == 'draft'"/>
+                    <button string="Volver a parámetros" name="action_reset_draft" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,computed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="state == 'draft'">
+                        <button class="oe_stat_button" icon="fa-list" type="object" name="action_view_rows">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Kardex</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-book" type="object" name="action_view_lines">
+                            <field name="unchanged_count" widget="statinfo" string="Registrados"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <div class="text-muted">
+                            Kardex por fecha contable: cada salida al costo de Odoo con su ajuste al
+                            último costo promedio debajo, y cada recepción en moneda extranjera con su
+                            ajuste por tipo de cambio factura vs recepción.
+                        </div>
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="pending_count" invisible="1"/>
+                    <group>
+                        <group string="Período">
+                            <field name="company_id" options="{'no_create': True}"
+                                   groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="date_from" readonly="state != 'draft'"/>
+                            <field name="date_to" readonly="state != 'draft'"/>
+                            <field name="filter_category_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                            <field name="filter_product_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Parámetros">
+                            <field name="return_cost_method" readonly="state != 'draft'"/>
+                            <field name="fx_threshold" readonly="state != 'draft'"/>
+                            <field name="manual_journal_ids" widget="many2many_tags"
+                                   options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="manual_move_ids" widget="many2many_tags"
+                                   options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="excluded_move_ids" widget="many2many_tags"
+                                   options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="excluded_account_ids" widget="many2many_tags"
+                                   options="{'no_create': True}" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Simulación (solo para comparar)">
+                            <field name="is_simulation" invisible="1"/>
+                            <field name="simulation_ignore_corrections" readonly="state != 'draft'"/>
+                            <field name="simulation_move_ids" widget="many2many_tags"
+                                   options="{'no_create': True}" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="state != 'draft'">
+                        Revise los parámetros y pulse <b>Calcular</b>. El cálculo no registra nada:
+                        muestra el kardex y los ajustes pendientes. <b>Registrar ajustes</b> crea, actualiza
+                        o revierte los asientos y capas, sin duplicar lo ya registrado.
+                    </div>
+                    <div class="alert alert-danger" role="alert" invisible="not is_simulation">
+                        Simulación: el cálculo excluye las correcciones indicadas y no se puede registrar.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not warning_message">
+                        <field name="warning_message" nolabel="1"/>
+                    </div>
+                    <group invisible="state == 'draft'">
+                        <group string="Ajustes calculados">
+                            <field name="adjust_count"/>
+                            <field name="cost_adjust_total"/>
+                            <field name="return_adjust_total"/>
+                            <field name="fx_adjust_total"/>
+                            <field name="price_adjust_total"/>
+                            <field name="production_adjust_total"/>
+                            <field name="sales_cost"/>
+                            <field name="review_count"/>
+                            <field name="computed_at"/>
+                        </group>
+                        <group string="Registro">
+                            <field name="to_create_count"/>
+                            <field name="to_update_count"/>
+                            <field name="to_reverse_count"/>
+                            <field name="unchanged_count"/>
+                            <field name="xlsx_filename" invisible="1"/>
+                            <field name="xlsx_file" filename="xlsx_filename" invisible="not xlsx_file"/>
+                        </group>
+                    </group>
+                    <notebook invisible="state == 'draft'">
+                        <page string="Resumen por producto" name="summary">
+                            <field name="summary_ids" nolabel="1">
+                                <list create="false" edit="false" delete="false">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="default_code"/>
+                                    <field name="product_id"/>
+                                    <field name="account_id"/>
+                                    <field name="opening_qty" optional="hide"/>
+                                    <field name="opening_value" sum="Total"/>
+                                    <field name="in_value" sum="Total" optional="show"/>
+                                    <field name="out_value" sum="Total" optional="show"/>
+                                    <field name="out_recalc_value" sum="Total" optional="show"/>
+                                    <field name="cost_adjust" sum="Total"/>
+                                    <field name="return_adjust" sum="Total" optional="show"/>
+                                    <field name="fx_adjust" sum="Total"/>
+                                    <field name="price_adjust" sum="Total" optional="show"/>
+                                    <field name="production_adjust" sum="Total" optional="show"/>
+                                    <field name="sales_cost" sum="Total" optional="hide"/>
+                                    <field name="manual_value" sum="Total" optional="show"/>
+                                    <field name="closing_qty"/>
+                                    <field name="closing_unit"/>
+                                    <field name="closing_value" sum="Total"/>
+                                    <field name="raw_closing_value" sum="Total" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ajustes" name="adjustments">
+                            <field name="adjustment_row_ids" nolabel="1">
+                                <list create="false" edit="false" delete="false"
+                                      decoration-success="sync_state == 'unchanged'"
+                                      decoration-warning="sync_state == 'changed'"
+                                      decoration-info="sync_state == 'new'">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="default_code"/>
+                                    <field name="product_id" optional="hide"/>
+                                    <field name="row_type" optional="hide"/>
+                                    <field name="adj_type"/>
+                                    <field name="reference"/>
+                                    <field name="account_move_id"/>
+                                    <field name="invoice_id" optional="show"/>
+                                    <field name="counterpart_account_id" optional="show"/>
+                                    <field name="adj_move_id" optional="show"/>
+                                    <field name="recalc_value" optional="show"/>
+                                    <field name="adjust_value" sum="Total"/>
+                                    <field name="tc_invoice" optional="show"/>
+                                    <field name="tc_receipt" optional="show"/>
+                                    <field name="note" optional="show"/>
+                                    <field name="sync_state" widget="badge"
+                                           decoration-success="sync_state == 'unchanged'"
+                                           decoration-warning="sync_state == 'changed'"
+                                           decoration-info="sync_state == 'new'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Para revisar" name="review" invisible="not review_count">
+                            <field name="review_row_ids" nolabel="1">
+                                <list create="false" edit="false" delete="false">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="default_code"/>
+                                    <field name="review" widget="badge"/>
+                                    <field name="reference"/>
+                                    <field name="account_move_id"/>
+                                    <field name="out_qty"/>
+                                    <field name="bal_qty"/>
+                                    <field name="recalc_value"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Libros SUNAT" name="ple_books">
+                            <div class="alert alert-info" role="alert">
+                                Formatos 13.1 (valorizado) y 12.1 (unidades físicas) del mes, con las mismas
+                                líneas del kardex: libro físico en Excel y PDF y TXT del PLE. Se emiten solo con
+                                el mes completo, sin filtros y sin ajustes pendientes; antes de generar se vuelve
+                                a calcular el kardex.
+                            </div>
+                            <div class="d-flex gap-2 mb-3">
+                                <button string="Generar libro 13.1" name="action_generate_ple_131" type="object"
+                                        class="btn-primary" icon="fa-file-text-o"/>
+                                <button string="Generar libro 12.1" name="action_generate_ple_121" type="object"
+                                        class="btn-secondary" icon="fa-file-text-o"/>
+                            </div>
+                            <group>
+                                <group string="13.1 Inventario permanente valorizado">
+                                    <field name="ple_131_txt_name" invisible="1"/>
+                                    <field name="ple_131_xlsx_name" invisible="1"/>
+                                    <field name="ple_131_pdf_name" invisible="1"/>
+                                    <field name="ple_131_txt" filename="ple_131_txt_name"/>
+                                    <field name="ple_131_xlsx" filename="ple_131_xlsx_name"/>
+                                    <field name="ple_131_pdf" filename="ple_131_pdf_name"/>
+                                </group>
+                                <group string="12.1 Inventario permanente en unidades físicas">
+                                    <field name="ple_121_txt_name" invisible="1"/>
+                                    <field name="ple_121_xlsx_name" invisible="1"/>
+                                    <field name="ple_121_pdf_name" invisible="1"/>
+                                    <field name="ple_121_txt" filename="ple_121_txt_name"/>
+                                    <field name="ple_121_xlsx" filename="ple_121_xlsx_name"/>
+                                    <field name="ple_121_pdf" filename="ple_121_pdf_name"/>
+                                </group>
+                            </group>
+                            <field name="ple_message" nolabel="1" invisible="not ple_message"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_kardex_adjustment_view_list" model="ir.ui.view">
+        <field name="name">stock.kardex.adjustment.view.list</field>
+        <field name="model">stock.kardex.adjustment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="cost_adjust_total" optional="show"/>
+                <field name="fx_adjust_total" optional="show"/>
+                <field name="pending_count" string="Pendientes"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'computed'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_kardex_adjustment_row_view_list" model="ir.ui.view">
+        <field name="name">stock.kardex.adjustment.row.view.list</field>
+        <field name="model">stock.kardex.adjustment.row</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false" default_order="sequence"
+                  decoration-info="row_type == 'opening'"
+                  decoration-success="row_type == 'adj_cost'"
+                  decoration-primary="row_type in ('adj_fx', 'adj_price')"
+                  decoration-warning="row_type == 'adj_prod'"
+                  decoration-danger="review"
+                  decoration-muted="row_type == 'manual'">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="sequence" column_invisible="1"/>
+                <field name="default_code" optional="show"/>
+                <field name="product_id" optional="hide"/>
+                <field name="account_id" optional="hide"/>
+                <field name="date"/>
+                <field name="row_type" optional="show"/>
+                <field name="account_move_id" optional="show"/>
+                <field name="adj_move_id" optional="hide"/>
+                <field name="reference"/>
+                <field name="operation_type" optional="hide"/>
+                <field name="doc_type" optional="hide"/>
+                <field name="doc_number" optional="hide"/>
+                <field name="partner" optional="hide"/>
+                <field name="in_qty" optional="show"/>
+                <field name="in_unit" optional="hide"/>
+                <field name="in_value" sum="Total"/>
+                <field name="out_qty" optional="show"/>
+                <field name="out_unit" optional="hide"/>
+                <field name="out_value" sum="Total"/>
+                <field name="bal_qty"/>
+                <field name="bal_unit"/>
+                <field name="bal_value"/>
+                <field name="recalc_value" optional="show"/>
+                <field name="adjust_value" sum="Total" optional="show"/>
+                <field name="odoo_create_date" optional="hide"/>
+                <field name="note" optional="show"/>
+                <field name="tc_invoice" optional="hide"/>
+                <field name="tc_receipt" optional="hide"/>
+                <field name="adj_type" optional="hide"/>
+                <field name="invoice_id" optional="hide"/>
+                <field name="counterpart_account_id" optional="hide"/>
+                <field name="review" optional="show"/>
+                <field name="sync_state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_kardex_adjustment_row_view_search" model="ir.ui.view">
+        <field name="name">stock.kardex.adjustment.row.view.search</field>
+        <field name="model">stock.kardex.adjustment.row</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="reference"/>
+                <field name="account_move_id"/>
+                <filter name="adjustments" string="Ajustes"
+                        domain="[('row_type', 'in', ('adj_cost', 'adj_fx', 'adj_price', 'adj_prod'))]"/>
+                <filter name="review" string="Para revisar" domain="[('review', '!=', False)]"/>
+                <filter name="manual" string="Manuales incluidos" domain="[('row_type', '=', 'manual')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_product" string="Producto" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_account" string="Cuenta" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_type" string="Tipo de línea" context="{'group_by': 'row_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_kardex_adjustment" model="ir.actions.act_window">
+        <field name="name">Ajuste del kardex valorizado</field>
+        <field name="res_model">stock.kardex.adjustment</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cree un ajuste del kardex por período</p>
+            <p>
+                Ordena los movimientos por fecha contable, ajusta cada salida al último costo
+                promedio y cada recepción en moneda extranjera al tipo de cambio de su factura,
+                y registra una capa de revaluación y un asiento por ajuste.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_kardex_adjustment"
+              name="Ajuste del kardex valorizado"
+              parent="stock.menu_warehouse_report"
+              action="action_stock_kardex_adjustment"
+              sequence="237"
+              groups="stock.group_stock_manager"/>
+
+</odoo>

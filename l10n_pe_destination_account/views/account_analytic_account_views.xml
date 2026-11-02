@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_account_analytic_account_form_inherit_destination" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.inherit.destination</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="has_destination_account" string="Usar Cuentas de Destino" widget="boolean_toggle"/>
+
+                    <field name="destination_account_id" 
+                        string      = "Cuenta de Destino" 
+                        placeholder = "Seleccione la cuenta de destino..." 
+                        options     = "{'no_create': True, 'no_open': True}" 
+                        invisible   = "not has_destination_account" 
+                        required    = "has_destination_account" />
+
+                    <field name="destination_account_counterpart_id" 
+                        string      = "Cuenta de Contrapartida" 
+                        placeholder = "Seleccione la cuenta de contrapartida..." 
+                        options     = "{'no_create': True, 'no_open': True}" 
+                        invisible   = "not has_destination_account" 
+                        required    = "has_destination_account" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

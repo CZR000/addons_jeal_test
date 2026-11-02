@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_permanent_inventory_opening_balance_tree" model="ir.ui.view">
+            <field name="name">view.permanent.inventory.opening.balance.tree</field>
+            <field name="model">permanent.inventory.opening.balance</field>
+            <field name="arch" type="xml">
+                <list string="Saldo Inicial" editable="bottom">
+                    <field name="product_id" column_invisible="True"/>
+                    <field name="code_exist" column_invisible="True"/>
+                    <field name="product_valuation"/>
+                    <field name="quantity_product_hand"/>
+                    <field name="udm_product"/>
+                    <field name="standard_price"/>
+                    <field name="total_value"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

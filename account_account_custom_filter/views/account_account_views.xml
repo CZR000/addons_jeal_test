@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_search_inherit_has_movements" model="ir.ui.view">
+        <field name="name">account.account.search.has.movements</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="has_movements"
+                        string="Con movimientos"
+                        domain="[('has_movements', '=', True)]"
+                        help="Solo cuentas con al menos un apunte contable posted."/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

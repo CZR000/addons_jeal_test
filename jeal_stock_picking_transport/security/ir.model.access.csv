@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_jeal_product_conversion_user,jeal.product.conversion user,model_jeal_product_conversion,purchase.group_purchase_user,1,0,0,0
+access_jeal_product_conversion_manager,jeal.product.conversion manager,model_jeal_product_conversion,purchase.group_purchase_manager,1,1,1,1

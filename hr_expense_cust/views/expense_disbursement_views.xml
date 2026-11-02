@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         account.payment: vista de lista para solicitudes de desembolso
+         ============================================================ -->
+    <record id="view_disbursement_request_tree" model="ir.ui.view">
+        <field name="name">account.payment.disbursement.tree</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <list string="Solicitudes de desembolso" decoration-warning="disbursement_state == 'pending'" decoration-success="disbursement_state == 'approved'" decoration-danger="disbursement_state == 'rejected'">
+                <field name="name"/>
+                <field name="disbursement_requester_id" string="Solicitado por"/>
+                <field name="date"/>
+                <field name="partner_id" string="Proveedor"/>
+                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="destination_account_id" string="Cuenta destino"/>
+                <field name="memo" string="Memo"/>
+                <field name="disbursement_state" string="Estado" widget="badge"
+                       decoration-warning="disbursement_state == 'pending'"
+                       decoration-success="disbursement_state == 'approved'"
+                       decoration-danger="disbursement_state == 'rejected'"/>
+                <field name="state" string="Estado pago" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state in ('in_process', 'paid')"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         account.payment: formulario para solicitudes de desembolso
+         ============================================================ -->
+    <record id="view_disbursement_request_form" model="ir.ui.view">
+        <field name="name">account.payment.disbursement.form</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <form string="Solicitud de desembolso">
+                <header>
+                    <!-- Botón: solicitar aprobación (solo en borrador) -->
+                    <button name="action_request_disbursement"
+                            string="Solicitar desembolso"
+                            type="object"
+                            class="oe_highlight"
+                            data-hotkey="v"
+                            invisible="disbursement_state != 'draft'"/>
+                    <!-- Botón: aprobar (pendiente + grupo aprobador) -->
+                    <button name="action_approve_disbursement"
+                            string="Aprobar"
+                            type="object"
+                            class="btn-success"
+                            data-hotkey="a"
+                            groups="hr_expense_cust.group_hr_expense_sheet_approver"
+                            invisible="disbursement_state != 'pending'"/>
+                    <!-- Botón: rechazar (pendiente + grupo aprobador) -->
+                    <button name="action_reject_disbursement"
+                            string="Rechazar"
+                            type="object"
+                            class="btn-danger"
+                            data-hotkey="x"
+                            groups="hr_expense_cust.group_hr_expense_sheet_approver"
+                            invisible="disbursement_state != 'pending'"/>
+                    <!-- Barra de estado de aprobación -->
+                    <field name="disbursement_state" widget="statusbar"
+                           statusbar_visible="draft,pending,approved"/>
+                </header>
+
+                <sheet>
+                    <!-- Campos ocultos -->
+                    <field name="is_disbursement_request" invisible="1"/>
+                    <field name="id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="move_id" invisible="1"/>
+                    <field name="is_sent" invisible="1"/>
+                    <field name="is_reconciled" invisible="1"/>
+                    <field name="is_matched" invisible="1"/>
+                    <field name="payment_method_code" invisible="1"/>
+                    <field name="show_partner_bank_account" invisible="1"/>
+                    <field name="require_partner_bank_account" invisible="1"/>
+                    <field name="available_payment_method_line_ids" invisible="1"/>
+                    <field name="available_partner_bank_ids" invisible="1"/>
+                    <field name="country_code" invisible="1"/>
+                    <field name="partner_type" invisible="1"/>
+                    <field name="reconciled_invoices_type" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="paired_internal_transfer_payment_id" invisible="1"/>
+                    <field name="available_journal_ids" invisible="1"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Información del desembolso">
+                            <field name="payment_type" widget="radio"/>
+                            <field name="partner_id"
+                                   string="Proveedor"
+                                   domain="[('supplier_rank', '>', 0)]"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="amount" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="destination_account_id"
+                                   string="Cuenta destino"
+                                   domain="[('deprecated', '=', False), ('code', '=like', '14%')]"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="date"/>
+                            <field name="memo" string="Memo"/>
+                        </group>
+                        <group string="Configuración de pago">
+                            <field name="journal_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="payment_method_line_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <!-- Info de aprobación -->
+                    <group string="Trazabilidad de aprobación"
+                           invisible="disbursement_state == 'draft'">
+                        <group>
+                            <field name="disbursement_requester_id" readonly="1"/>
+                            <field name="disbursement_approver_id" readonly="1"
+                                   invisible="not disbursement_approver_id"/>
+                            <field name="disbursement_approval_date" readonly="1"
+                                   invisible="not disbursement_approval_date"/>
+                        </group>
+                        <group>
+                            <field name="disbursement_rejection_user_id" readonly="1"
+                                   invisible="not disbursement_rejection_user_id"/>
+                            <field name="disbursement_rejection_date" readonly="1"
+                                   invisible="not disbursement_rejection_date"/>
+                            <field name="disbursement_rejection_reason" readonly="1"
+                                   invisible="not disbursement_rejection_reason"/>
+                        </group>
+                    </group>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Vista de búsqueda para solicitudes de desembolso
+         ============================================================ -->
+    <record id="view_disbursement_request_search" model="ir.ui.view">
+        <field name="name">account.payment.disbursement.search</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <search string="Solicitudes de desembolso">
+                <field name="name" string="Referencia"/>
+                <field name="partner_id" string="Proveedor"/>
+                <field name="disbursement_requester_id" string="Solicitado por"/>
+                <separator/>
+                <filter string="Pendientes de aprobación"
+                        name="pending"
+                        domain="[('disbursement_state', '=', 'pending')]"/>
+                <filter string="Aprobados"
+                        name="approved"
+                        domain="[('disbursement_state', '=', 'approved')]"/>
+                <filter string="Rechazados"
+                        name="rejected"
+                        domain="[('disbursement_state', '=', 'rejected')]"/>
+                <filter string="Borradores"
+                        name="draft"
+                        domain="[('disbursement_state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Mis solicitudes pendientes"
+                        name="my_pending"
+                        domain="[('disbursement_requester_id', '=', uid), ('disbursement_state', '=', 'pending')]"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Estado" name="group_state" domain="[]"
+                            context="{'group_by': 'disbursement_state'}"/>
+                    <filter string="Solicitante" name="group_requester" domain="[]"
+                            context="{'group_by': 'disbursement_requester_id'}"/>
+                    <filter string="Fecha" name="group_date" domain="[]"
+                            context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Acción: abrir lista de solicitudes de desembolso
+         ============================================================ -->
+    <record id="action_disbursement_request" model="ir.actions.act_window">
+        <field name="name">Solicitud de desembolso</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_disbursement_request', '=', True)]</field>
+        <field name="context">{
+            'default_is_disbursement_request': True,
+            'default_payment_type': 'outbound',
+            'default_partner_type': 'supplier',
+        }</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_disbursement_request_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_disbursement_request_form')}),
+        ]"/>
+        <field name="search_view_id" ref="view_disbursement_request_search"/>
+    </record>
+
+    <!-- ============================================================
+         Menú: Gastos > Solicitud de desembolso
+         (al costado del menú de Configuración)
+         ============================================================ -->
+    <menuitem
+        id="menu_expense_disbursement_request"
+        name="Solicitud de desembolso"
+        parent="hr_expense.menu_hr_expense_root"
+        action="action_disbursement_request"
+        sequence="110"
+        groups="base.group_user"/>
+
+</odoo>

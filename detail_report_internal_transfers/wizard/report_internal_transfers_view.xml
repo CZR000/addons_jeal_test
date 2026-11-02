@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_report_internal_transfers_form" model="ir.ui.view">
+            <field name="name">report.internal.transfers.form</field>
+            <field name="model">report.internal.transfers</field>
+            <field name="arch" type="xml">
+                <form string="Reporte de Transferencias Internas">
+                    <sheet>
+                        <group>
+                            <field name="type" widget="radio" options="{'horizontal': True}" />
+                        </group>
+
+                        <group>
+                            <group string="Filtro Principal">
+                                <field name="date_start" placeholder="dd/mm/yyyy" invisible="type == 'transfer'" required="type == 'date'"/>
+                                <field name="date_end" placeholder="dd/mm/yyyy" invisible="type == 'transfer'" required="type == 'date'"/>
+
+                                <field name="transferencia_ids" widget="many2many_tags" placeholder="Seleccionar..." options="{'no_create': True}" invisible="type == 'date'" required="type == 'transfer'"/>
+                            </group>
+
+                            <group string="Parámetros">
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="operation_type"/>
+                                <field name="state"/>
+                            </group>
+                        </group>
+
+                        <group string="Filtros Adicionales">
+                            <field name="types_operations_ids" widget="many2many_tags" placeholder="Añadir tipos de operación..." options="{'no_create': True}" required="type == 'transfer'"/>
+                            <field name="product_ids" widget="many2many_tags" placeholder="Añadir productos específicos..." options="{'no_create': True}"/>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_print_xlsx" string="Descargar Excel" type="object" class="btn-primary" icon="fa-file-excel-o" data-hotkey="q"/>
+
+                        <button name="action_print_pdf" string="Descargar PDF" type="object" class="btn-secondary" icon="fa-file-pdf-o" data-hotkey="w"/>
+
+                        <button string="Cancelar" class="btn-link" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_report_internal_transfers" model="ir.actions.act_window">
+            <field name="name">Detalle de Almacén</field>
+            <field name="res_model">report.internal.transfers</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_report_internal_transfers_form" />
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

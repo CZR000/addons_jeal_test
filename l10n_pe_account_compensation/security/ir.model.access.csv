@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_compensation_wizard_user,compensation.wizard.user,model_l10n_pe_compensation_wizard,l10n_pe_account_compensation.group_compensation_user,1,1,1,1
+access_compensation_wizard_line_user,compensation.wizard.line.user,model_l10n_pe_compensation_wizard_line,l10n_pe_account_compensation.group_compensation_user,1,1,1,1

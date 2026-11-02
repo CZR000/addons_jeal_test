@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_request_view_form_je" model="ir.ui.view">
+        <field name="name">approval.request.view.form.je</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="payment_id" invisible="1"/>
+                <button name="action_view_payment" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="not payment_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Pago</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

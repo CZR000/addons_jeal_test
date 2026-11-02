@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_valuation_layer_form_pdiff" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.form.pdiff</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_account.stock_valuation_layer_form"/>
+        <field name="arch" type="xml">
+            <field name="stock_valuation_layer_id" position="after">
+                <field name="pdiff_reversal_of_id" readonly="1"
+                       invisible="not pdiff_reversal_of_id"/>
+                <field name="pdiff_is_adjustment" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

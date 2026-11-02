@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_workcenter_view_form_inherit_mrp_cost_liquidation" model="ir.ui.view">
+        <field name="name">mrp.workcenter.view.form.inherit.mrp_cost_liquidation</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+
+            <!-- 1) Renombrar el label de costs_hour a "Servicios" -->
+            <xpath expr="//group[@name='costing']/label[@for='costs_hour']" position="attributes">
+                <attribute name="string">Servicios</attribute>
+            </xpath>
+
+            <!-- 2) Reemplazar SOLO el div de costs_hour  -->
+            <xpath expr="//group[@name='costing']/div[@id='costs_hour']" position="replace">
+                <div id="costs_hour">
+                    <field name="costs_hour" widget="monetary" class="oe_inline"/> por centro de trabajo
+                </div>
+            </xpath>
+
+            <!-- 3) Agregar los campos custom DESPUÉS del div de costs_hour -->
+            <xpath expr="//group[@name='costing']/div[@id='costs_hour']" position="after">
+                <label for="employee_costs_hour" string=""/>
+                <div>
+                    <field name="employee_costs_hour" class="oe_inline"/> por mano de obra
+                </div>
+                <label for="depreciation_costs_hour" string=""/>
+                <div>
+                    <field name="depreciation_costs_hour" class="oe_inline"/> por depreciación
+                </div>
+                <label for="other_costs_hour" string=""/>
+                <div>
+                    <field name="other_costs_hour" class="oe_inline"/> por otros costos
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

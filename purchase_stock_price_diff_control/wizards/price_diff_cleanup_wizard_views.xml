@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="pdiff_cleanup_wizard_form" model="ir.ui.view">
+        <field name="name">pdiff.cleanup.wizard.form</field>
+        <field name="model">pdiff.cleanup.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Corregir ajustes de precio duplicados">
+                <div class="alert alert-info" role="alert">
+                    Detecta los ajustes por diferencia de precio que quedaron mal aplicados sobre
+                    la valorización de inventario y genera un asiento negativo por cada uno:
+                    los que se repitieron al re-publicar una factura (se conserva el último) y
+                    los que siguen valorizando pese a que su factura ya no está publicada.
+                </div>
+                <group>
+                    <group>
+                        <field name="company_ids" widget="many2many_tags"
+                               readonly="state != 'draft'"/>
+                        <field name="product_ids" widget="many2many_tags"
+                               readonly="state != 'draft'"/>
+                        <field name="force_date"/>
+                    </group>
+                    <group>
+                        <field name="date_from" readonly="state != 'draft'"/>
+                        <field name="date_to" readonly="state != 'draft'"/>
+                        <field name="fix_duplicates" readonly="state != 'draft'"/>
+                        <field name="fix_unposted" readonly="state != 'draft'"/>
+                        <field name="state" invisible="1"/>
+                    </group>
+                </group>
+                <group string="Resultado del análisis" invisible="state == 'draft'">
+                    <group>
+                        <field name="group_count"/>
+                        <field name="surplus_count"/>
+                        <field name="unposted_count"/>
+                    </group>
+                    <group>
+                        <field name="product_count"/>
+                        <field name="surplus_value"/>
+                    </group>
+                </group>
+                <notebook invisible="state == 'draft'">
+                    <page string="Ajustes erróneos detectados">
+                        <field name="line_ids" readonly="1">
+                            <list>
+                                <field name="company_id" optional="show"/>
+                                <field name="reason"/>
+                                <field name="product_id"/>
+                                <field name="origin_layer_id" optional="show"/>
+                                <field name="account_move_id" optional="show"/>
+                                <field name="surplus_count" sum="Total"/>
+                                <field name="surplus_value" sum="Total"/>
+                                <field name="current_value" optional="hide"/>
+                                <field name="keep_layer_id" optional="hide"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_analyze" type="object" string="Analizar"
+                            class="btn-primary" invisible="state == 'done'"/>
+                    <button name="action_apply" type="object" string="Corregir"
+                            class="btn-danger" invisible="state != 'analyzed'"
+                            confirm="Se generará un asiento de reversión por cada ajuste erróneo. ¿Continuar?"/>
+                    <button name="action_open_surplus_layers" type="object"
+                            string="Ver capas" class="btn-secondary"
+                            invisible="state == 'draft'"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pdiff_cleanup_wizard" model="ir.actions.act_window">
+        <field name="name">Corregir ajustes de precio duplicados</field>
+        <field name="res_model">pdiff.cleanup.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_pdiff_cleanup_wizard"
+              name="Corregir ajustes de precio duplicados"
+              parent="stock.menu_warehouse_report"
+              action="action_pdiff_cleanup_wizard"
+              groups="account.group_account_manager"
+              sequence="260"/>
+
+</odoo>

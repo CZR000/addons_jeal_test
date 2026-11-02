@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_informe_bank">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="text-center mb-4" style="border: 2px solid black; color: #28a745; padding: 10px; border-radius: 5px;">
+                        <h2 class="m-0">DETALLE DE ALMACÉN</h2>
+                    </div>
+
+                    <div class="row mb-3" t-if="start_date and end_date">
+                        <div class="col-12">
+                            <strong>Periodo: </strong>
+                            <span t-out="start_date" t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
+                            <span> al </span>
+                            <span t-out="end_date" t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
+                        </div>
+                    </div>
+
+                    <t t-if="form_data">
+                        <table class="table table-sm table-striped table-bordered" style="font-size: 12px; page-break-inside: auto;">
+                            <thead class="table-dark text-center" style="display: table-header-group;">
+                                <tr>
+                                    <th class="align-middle">#</th>
+                                    <th class="align-middle">COMPAÑÍA</th>
+                                    <th class="align-middle">CONTACTO</th>
+                                    <th class="align-middle">TRANSFERENCIA</th>
+                                    <th class="align-middle">FECHA EFECTIVA</th>
+                                    <th class="align-middle">DOC. ORIGEN</th>
+                                    <th class="align-middle">DE</th>
+                                    <th class="align-middle">PARA</th>
+                                    <th class="align-middle">ESTADO</th>
+                                    <th class="align-middle">PRODUCTO</th>
+                                    <th class="align-middle">CANTIDAD</th>
+                                    <th class="align-middle">UDM</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-set="i" t-value="1" />
+
+                                <t t-foreach="form_data" t-as="line">
+                                    <tr style="page-break-inside: avoid;">
+                                        <td class="text-center align-middle">
+                                            <t t-out="i"/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <t t-out="line['compania']"/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <t t-out="line['contacto']"/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <t t-out="line['referencia']"/>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <span t-if="line['fecha_efectiva']" t-out="line['fecha_efectiva']" t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <t t-out="line['documento_origen']"/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <t t-out="line['ubicacion_origen']"/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <t t-out="line['ubicacion_destino']"/>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <t t-out="line['estado']"/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <t t-out="line['producto']"/>
+                                        </td>
+                                        <td class="text-end align-middle">
+                                            <t t-out="line['realizado']"/>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <t t-out="line['udm']"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="i" t-value="i+1"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-else="">
+                        <div class="alert alert-warning text-center mt-5" role="alert">
+                            <h3>NO HAY ITEMS PARA MOSTRAR</h3>
+                            <p>Intente ampliando el rango de fechas o cambiando los filtros.</p>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

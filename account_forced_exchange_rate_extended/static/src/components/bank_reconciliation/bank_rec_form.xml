@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--
+        Añade el tipo de cambio al panel "Operaciones manuales" del widget de
+        conciliación, justo encima del importe en moneda de la compañía.
+
+        Editar la segunda pasa por el circuito estándar cliente/servidor
+        (`actionLineChanged` -> `_js_action_line_changed` ->
+        `_line_value_changed_forced_exchange_rate`), de modo que el saldo
+        abierto y las líneas de diferencia de cambio se recalculan en vivo.
+    -->
+    <t t-name="account_forced_exchange_rate_extended.BankRecRecordNotebookManualOperations"
+       t-inherit="account_accountant.BankRecRecordNotebookManualOperations"
+       t-inherit-mode="extension">
+        <xpath expr="//div[@name='balance']" position="before">
+            <t t-set="showExchangeRate"
+               t-value="data.is_multi_currency and line.data.display_forced_exchange_rate"/>
+
+            <!-- T.C. con que se contabilizó el apunte que se está editando.
+                 A diferencia de los tres campos siguientes, aplica a cualquier
+                 línea, no solo a la de liquidez. -->
+            <div name="aml_exchange_rate"
+                 t-if="line.data.aml_exchange_rate"
+                 class="o_wrap_field d-flex d-sm-contents flex-column">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                    <label class="o_form_label o_form_label_readonly">T.C. del apunte</label>
+                </div>
+                <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 w-100">
+                    <span class="text-muted text-nowrap"
+                          t-esc="line.data.aml_exchange_rate.toFixed(6)"/>
+                </div>
+            </div>
+
+            <!--
+                Compra o venta: decide con qué tasa SBS se lee la fecha.
+            -->
+            <div name="exchange_rate_type"
+                 t-if="showExchangeRate"
+                 class="o_wrap_field d-flex d-sm-contents flex-column">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                    <label class="o_form_label"
+                           t-att-class="{'o_form_label_readonly': reconciled}">T.C.</label>
+                </div>
+
+                <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 w-100">
+                    <div class="o_field_widget o_field_selection">
+                        <SelectionField name="'exchange_rate_type'"
+                                        record="line"
+                                        readonly="reconciled"/>
+                    </div>
+                </div>
+            </div>
+
+            <!--
+                Tipo de cambio de la fecha. Ausente cuando la transacción ya
+                está en moneda de la compañía: la tasa relevante es entonces la
+                de la contrapartida.
+            -->
+            <div name="official_exchange_rate"
+                 t-if="showExchangeRate and line.data.official_exchange_rate"
+                 class="o_wrap_field d-flex d-sm-contents flex-column">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                    <label class="o_form_label o_form_label_readonly">Tipo de Cambio</label>
+                </div>
+
+                <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 w-100">
+                    <div class="d-flex flex-wrap align-items-baseline gap-2">
+                        <span class="text-muted text-nowrap"
+                              t-esc="line.data.official_exchange_rate.toFixed(6)"/>
+                        <small t-if="line.data.exchange_rate_currency_name"
+                               class="text-muted text-nowrap"
+                               t-esc="line.data.exchange_rate_currency_name"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+            Tasa forzada. Vacío significa "usar el tipo de cambio de la fecha". 
+            -->
+            <div name="forced_exchange_rate"
+                 t-if="showExchangeRate"
+                 class="o_wrap_field d-flex d-sm-contents flex-column">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                    <label class="o_form_label"
+                           t-att-class="{'o_form_label_readonly': reconciled}">Forzar T.C.</label>
+                </div>
+
+                <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 w-100">
+                    <div class="o_field_widget o_field_float w-100">
+                        <FloatField name="'forced_exchange_rate'"
+                                    record="line"
+                                    readonly="reconciled"
+                                    digits="[12, 6]"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

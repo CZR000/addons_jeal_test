@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Acciones de informes -->
+    <record id="action_advance_balances" model="ir.actions.act_window">
+        <field name="name">Saldos por documento</field>
+        <field name="res_model">l10n_pe.advance</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="context">{'search_default_open_partial': 1}</field>
+        <field name="search_view_id" ref="view_advance_search"/>
+    </record>
+
+    <record id="action_advance_application" model="ir.actions.act_window">
+        <field name="name">Detalle de aplicaciones</field>
+        <field name="res_model">l10n_pe.advance.application</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!--
+        Ya no es una aplicacion propia: el menu vive dentro de Contabilidad,
+        entre "Contabilidad" (secuencia 4) e "Informes" (secuencia 20).
+    -->
+    <menuitem id="menu_advance_root" name="Anticipos y Revolventes"
+              parent="accountant.menu_accounting"
+              sequence="5"
+              groups="l10n_pe_advance_conciliation.group_advance_user"/>
+
+    <menuitem id="menu_advance_customer" name="Anticipos de clientes"
+              parent="menu_advance_root" sequence="10"
+              action="action_advance_customer"/>
+
+    <menuitem id="menu_advance_supplier" name="Anticipos a proveedores"
+              parent="menu_advance_root" sequence="20"
+              action="action_advance_supplier"/>
+
+    <menuitem id="menu_advance_revolving" name="Revolventes"
+              parent="menu_advance_root" sequence="30"
+              action="action_advance_revolving"/>
+
+    <!-- Informes (dentro de Anticipos y Revolventes) -->
+    <menuitem id="menu_advance_reports" name="Informes"
+              parent="menu_advance_root" sequence="40"/>
+
+    <menuitem id="menu_advance_balances" name="Saldos por documento"
+              parent="menu_advance_reports" sequence="10"
+              action="action_advance_balances"/>
+
+    <menuitem id="menu_advance_application" name="Detalle de aplicaciones"
+              parent="menu_advance_reports" sequence="20"
+              action="action_advance_application"/>
+
+    <menuitem id="menu_advance_statement" name="Estado de cuenta por socio"
+              parent="menu_advance_reports" sequence="25"
+              action="action_advance_statement_wizard"/>
+
+    <menuitem id="menu_advance_reconcile_report" name="Cuadre contra contabilidad"
+              parent="menu_advance_reports" sequence="30"
+              action="action_advance_reconcile_report"/>
+
+    <!-- Configuracion: Contabilidad > Configuracion > Anticipos y Revolventes -->
+    <menuitem id="menu_advance_config_root" name="Anticipos y Revolventes"
+              parent="account.menu_finance_configuration" sequence="60"
+              groups="l10n_pe_advance_conciliation.group_advance_manager"/>
+
+    <menuitem id="menu_advance_config" name="Configuracion de anticipos y revolventes"
+              parent="menu_advance_config_root" sequence="10"
+              action="action_advance_config"/>
+
+    <menuitem id="menu_advance_migration" name="Migracion de saldos iniciales"
+              parent="menu_advance_config_root" sequence="20"
+              action="action_advance_migration"/>
+</odoo>

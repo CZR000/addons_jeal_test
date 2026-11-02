@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="mrp_cost_liquidation"
+              inherit_id="mrp_account_enterprise.mrp_cost_structure"
+              primary="True">
+
+        <!-- 1) Cambiar el título -->
+        <xpath expr="//h1[hasclass('o_mrp_header1')]" position="replace">
+            <h1 class="o_mrp_header o_mrp_header1">Liquidación de costos</h1>
+        </xpath>
+
+        <!-- 2) Mostrar Orden de fabricación y Contacto debajo del título -->
+        <xpath expr="//span[hasclass('text-start')][h1[hasclass('o_mrp_header1')]]" position="after">
+
+            <t t-if="production">
+                <p class="o_mrp_header o_mrp_header_light mb4">
+                    <strong>Orden de fabricación:</strong>
+                    <span class="o_mrp_reports_web_action"
+                          res-model="mrp.production"
+                          view-type="form"
+                          t-att-res-id="production.get('id')"
+                          t-esc="production.get('name')"/>
+                </p>
+            </t>
+
+            <t t-if="contact">
+                <p class="o_mrp_header o_mrp_header_light mb16">
+                    <strong>Contacto:</strong>
+                    <span class="o_mrp_reports_web_action"
+                          res-model="res.partner"
+                          view-type="form"
+                          t-att-res-id="contact.get('id')"
+                          t-esc="contact.get('display_name')"/>
+                </p>
+            </t>
+
+        </xpath>
+
+        <!-- 3) Reemplazar el tbody de la tabla de operaciones para mostrar desglose en Resource -->
+        <xpath expr="//t[@name='operations']//table[hasclass('o_mrp_report_table')]/tbody" position="replace">
+            <tbody>
+                <t t-set="ops" t-value="line.get('operations_breakdown') or []"/>
+                <t t-set="ops_total" t-value="0.0"/>
+
+                <!-- Si existe el breakdown -->
+                <t t-if="ops">
+                    <tr t-foreach="ops" t-as="op" class="text-muted">
+                        <t t-set="ops_total" t-value="ops_total + (op.get('cost_total') or 0.0)"/>
+
+                        <!-- RESOURCE (desglosado) -->
+                        <td>
+                            <t t-set="h" t-value="op.get('hours', 0.0) or 0.0"/>
+
+                            <t t-set="hour_service" t-value="op.get('hour_service', 0.0) or 0.0"/>
+                            <t t-set="hour_labor" t-value="op.get('hour_labor', 0.0) or 0.0"/>
+                            <t t-set="hour_depr" t-value="op.get('hour_depreciation', 0.0) or 0.0"/>
+                            <t t-set="hour_other" t-value="op.get('hour_other', 0.0) or 0.0"/>
+
+                            <t t-set="tot_service" t-value="h * hour_service"/>
+                            <t t-set="tot_labor" t-value="h * hour_labor"/>
+                            <t t-set="tot_depr" t-value="h * hour_depr"/>
+                            <t t-set="tot_other" t-value="h * hour_other"/>
+
+                            <details>
+                                <summary style="cursor: pointer;">
+                                    <span t-esc="op.get('workcenter') or '-'"/>
+                                </summary>
+
+                                <div class="text-muted" style="font-size: 12px; line-height: 1.25; margin-top: 4px;">
+                                    <div>
+                                        Centro de trabajo:
+                                        <span t-esc="hour_service" t-options='{"widget":"monetary","display_currency":currency}'/> /h
+                                        — Total:
+                                        <span t-esc="tot_service" t-options='{"widget":"monetary","display_currency":currency}'/>
+                                    </div>
+
+                                    <div>
+                                        Mano de obra:
+                                        <span t-esc="hour_labor" t-options='{"widget":"monetary","display_currency":currency}'/> /h
+                                        — Total:
+                                        <span t-esc="tot_labor" t-options='{"widget":"monetary","display_currency":currency}'/>
+                                    </div>
+
+                                    <div>
+                                        Depreciación:
+                                        <span t-esc="hour_depr" t-options='{"widget":"monetary","display_currency":currency}'/> /h
+                                        — Total:
+                                        <span t-esc="tot_depr" t-options='{"widget":"monetary","display_currency":currency}'/>
+                                    </div>
+
+                                    <div>
+                                        Otros:
+                                        <span t-esc="hour_other" t-options='{"widget":"monetary","display_currency":currency}'/> /h
+                                        — Total:
+                                        <span t-esc="tot_other" t-options='{"widget":"monetary","display_currency":currency}'/>
+                                    </div>
+                                </div>
+                            </details>
+                        </td>
+
+                        <!-- OPERATION -->
+                        <td>
+                            <span t-esc="op.get('operation')"/>
+                        </td>
+
+                        <!-- WORKING TIME -->
+                        <td class="text-end">
+                            <span>
+                                <t t-esc="op.get('hours', 0.0)" t-options='{"widget": "float", "precision": 4}'/> hours
+                            </span>
+                        </td>
+
+                        <!-- COST/HOUR (TOTAL) -->
+                        <td class="text-end">
+                            <span t-esc="op.get('hour_total', 0.0)"
+                                  t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+
+                        <!-- TOTAL COST -->
+                        <td class="text-end">
+                            <span t-esc="op.get('cost_total', 0.0)"
+                                  t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+
+                    <!-- Total Operations -->
+                    <tr>
+                        <td colspan="4" class="text-end">
+                            <strong>Total Cost of Operations</strong>
+                        </td>
+                        <td class="text-end">
+                            <strong t-esc="ops_total"
+                                    t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+
+                    <!-- Per unit row (mantener lógica de enterprise) -->
+                    <tr t-if="not line['qty_by_byproduct_w_costshare'] and line['mo_qty'] &gt; 1">
+                        <td colspan="4" class="text-end">
+                            <strong>Cost of Operations per unit (in <t t-esc="line['product'].uom_id.name"/>)</strong>
+                        </td>
+                        <td class="text-end">
+                            <span t-esc="ops_total / line['mo_qty']"
+                                  t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                </t>
+
+                <!-- Fallback: si por algo no hay breakdown, se muestra el comportamiento original -->
+                <t t-else="">
+                    <tr t-foreach="line['operations']" t-as="row" class="text-muted">
+                        <td>
+                            <span t-esc="row[0]"/>
+                        </td>
+                        <td>
+                            <span t-if="row[1]" class="o_mrp_reports_web_action"
+                                  t-att-res-id="row[1]" res-model="mrp.routing.workcenter"
+                                  view-type="form" t-esc="row[2]"/>
+                            <span t-else="" t-esc="row[2]"/>
+                        </td>
+                        <td class="text-end">
+                            <span><t t-esc="row[3]" t-options='{"widget": "float", "precision": 4}'/> hours</span>
+                        </td>
+                        <td class="text-end">
+                            <span t-esc="row[4]" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                        <td class="text-end">
+                            <span t-esc="row[3] * row[4]" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-end">
+                            <strong>Total Cost of Operations</strong>
+                        </td>
+                        <td class="text-end">
+                            <strong t-esc="line['total_cost_operations']"
+                                    t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                    <tr t-if="not line['qty_by_byproduct_w_costshare'] and line['mo_qty'] &gt; 1">
+                        <td colspan="4" class="text-end">
+                            <strong>Cost of Operations per unit (in <t t-esc="line['product'].uom_id.name"/>)</strong>
+                        </td>
+                        <td class="text-end">
+                            <span t-esc="line['total_cost_operations'] / line['mo_qty']"
+                                  t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </xpath>
+
+        <!-- 4) Tus tablas extra: costos en destino + facturas + resumen -->
+        <xpath expr="//t[@name='operations']" position="after">
+
+            <!-- Costos en destino -->
+            <t t-set="lc_data" t-value="line.get('landed_costs') or {'docs': [], 'total_applied': 0.0}"/>
+            <h3 class="o_mrp_header o_mrp_table_header">Costos en destino</h3>
+            <table class="table table-sm o_mrp_report_table">
+                <thead>
+                    <tr class="o_mrp_report_header">
+                        <th class="o_mrp_report_line_header"><span>Documento</span></th>
+                        <th class="o_mrp_report_line_header"><span>Fecha</span></th>
+                        <th class="o_mrp_report_line_header"><span>Estado</span></th>
+                        <th class="o_mrp_report_line_header"><span>Producto/Servicio</span></th>
+                        <th class="o_mrp_report_line_header"><span>Método de división</span></th>
+                        <th class="text-end o_mrp_report_line_header"><span>Monto</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-if="lc_data.get('docs')">
+                        <t t-foreach="lc_data['docs']" t-as="lc">
+                            <t t-if="lc.get('cost_lines')">
+                                <tr t-foreach="lc.get('cost_lines')" t-as="lcl" class="text-muted">
+                                    <td>
+                                        <span class="o_mrp_reports_web_action"
+                                              res-model="stock.landed.cost"
+                                              view-type="form"
+                                              t-att-res-id="lc.get('id')"
+                                              t-esc="lc.get('name')"/>
+                                    </td>
+                                    <td><span t-esc="lc.get('date')"/></td>
+                                    <td><span t-esc="lc.get('state_label')"/></td>
+                                    <td><span t-esc="lcl.get('product_name')"/></td>
+                                    <td><span t-esc="lcl.get('split_method_label')"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="lcl.get('amount', 0.0)"
+                                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-else="">
+                                <tr class="text-muted">
+                                    <td>
+                                        <span class="o_mrp_reports_web_action"
+                                              res-model="stock.landed.cost"
+                                              view-type="form"
+                                              t-att-res-id="lc.get('id')"
+                                              t-esc="lc.get('name')"/>
+                                    </td>
+                                    <td><span t-esc="lc.get('date')"/></td>
+                                    <td><span t-esc="lc.get('state_label')"/></td>
+                                    <td colspan="2"><em>Sin líneas</em></td>
+                                    <td class="text-end">
+                                        <span t-esc="0.0"
+                                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No hay costos en destino aplicados.</td>
+                        </tr>
+                    </t>
+
+                    <tr>
+                        <td colspan="5" class="text-end">
+                            <strong>Total Costos en destino aplicados</strong>
+                        </td>
+                        <td class="text-end">
+                            <strong t-esc="lc_data.get('total_applied', 0.0)"
+                                    t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Facturas asociadas -->
+            <t t-set="inv_data" t-value="{'invoices': (line.get('invoices') or []), 'totals': (line.get('invoice_totals') or [])}"/>
+            <h3 class="o_mrp_header o_mrp_table_header">Facturas asociadas</h3>
+            <table class="table table-sm o_mrp_report_table">
+                <thead>
+                    <tr class="o_mrp_report_header">
+                        <th class="o_mrp_report_line_header"><span>Documento</span></th>
+                        <th class="o_mrp_report_line_header"><span>Fecha</span></th>
+                        <th class="o_mrp_report_line_header"><span>Contacto</span></th>
+                        <th class="o_mrp_report_line_header"><span>Estado</span></th>
+                        <th class="text-end o_mrp_report_line_header"><span>Total</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-if="inv_data['invoices']">
+                        <tr t-foreach="inv_data['invoices']" t-as="inv" class="text-muted">
+                            <t t-set="inv_cur" t-value="inv.get('currency') or currency"/>
+                            <td>
+                                <span class="o_mrp_reports_web_action"
+                                      res-model="account.move"
+                                      view-type="form"
+                                      t-att-res-id="inv.get('id')"
+                                      t-esc="inv.get('name')"/>
+                            </td>
+                            <td><span t-esc="inv.get('date')"/></td>
+                            <td><span t-esc="inv.get('partner_name')"/></td>
+                            <td><span t-esc="inv.get('state_label')"/></td>
+                            <td class="text-end">
+                                <span t-esc="inv.get('signed_amount', 0.0)"
+                                      t-options='{"widget": "monetary", "display_currency": inv_cur}'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <t t-else="">
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No hay facturas asociadas.</td>
+                        </tr>
+                    </t>
+
+                    <t t-if="inv_data['totals']">
+                        <t t-foreach="inv_data['totals']" t-as="tot">
+                            <t t-set="tot_cur" t-value="tot.get('currency') or currency"/>
+                            <tr>
+                                <td colspan="4" class="text-end">
+                                    <strong>Total facturas (neto)</strong>
+                                </td>
+                                <td class="text-end">
+                                    <strong t-esc="tot.get('amount_total', 0.0)"
+                                            t-options='{"widget": "monetary", "display_currency": tot_cur}'/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+
+            <!-- Resumen (fuera de la tabla de facturas) -->
+            <t t-set="ccy" t-value="line.get('company_currency') or currency"/>
+            <t t-if="ccy">
+                <h3 class="o_mrp_header o_mrp_table_header">Resumen</h3>
+                <table class="table table-sm o_mrp_report_table">
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="text-end">
+                                <strong>Costo de fabricación</strong>
+                            </td>
+                            <td class="text-end">
+                                <strong t-esc="line.get('fabrication_cost', 0.0)"
+                                        t-options='{"widget": "monetary", "display_currency": ccy}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end">
+                                <strong>Facturado al cliente</strong>
+                            </td>
+                            <td class="text-end">
+                                <strong t-esc="line.get('customer_invoiced_company', 0.0)"
+                                        t-options='{"widget": "monetary", "display_currency": ccy}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end">
+                                <strong>Utilidad bruta</strong>
+                            </td>
+                            <td class="text-end">
+                                <strong t-esc="line.get('gross_profit', 0.0)"
+                                        t-options='{"widget": "monetary", "display_currency": ccy}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+
+        </xpath>
+
+    </template>
+
+</odoo>

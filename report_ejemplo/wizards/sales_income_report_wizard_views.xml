@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_cost_center_report_wizard_form" model="ir.ui.view">
+            <field name="name">cost.center.report.wizard.form</field>
+            <field name="model">cost.center.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Asistente de Reportes de Centros de Costos">
+                    <sheet>
+                        <group>
+                            <group string="Periodo">
+                                <field name="date_filter_type" widget="radio"/>
+                            </group>
+                            
+                            <group string="Configuración General">
+                                <field name="company_id" placeholder="Seleccione una compañía" options="{'no_create': True, 'no_open': True}" />
+                                <field name="report_type" placeholder="Seleccione un tipo de reporte" />
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Año Específico" invisible="date_filter_type != 'period_year'">
+                                <field name="year" placeholder="Ej. 2024" required="date_filter_type == 'period_year'" help="Año fiscal."/>
+                            </group>
+
+                            <group string="Mes Específico" invisible="date_filter_type != 'period_month'">
+                                <label for="month" string="Periodo"/>
+                                <div class="o_row">
+                                    <field name="month" placeholder="Mes" required="date_filter_type == 'period_month'"/>
+                                    <span class="fw-bold mx-1">/</span>
+                                    <field name="year" placeholder="Año" required="date_filter_type == 'period_month'"/>
+                                </div>
+                            </group>
+
+                            <group string="Acumulado al Periodo" invisible="date_filter_type != 'up_to_period'">
+                                <label for="month" string="Hasta el Periodo"/>
+                                <div class="o_row">
+                                    <field name="month" placeholder="Mes" required="date_filter_type == 'up_to_period'"/>
+                                    <span class="fw-bold mx-1">/</span>
+                                    <field name="year" placeholder="Año" required="date_filter_type == 'up_to_period'"/>
+                                </div>
+                            </group>
+
+                            <group string="Acumulado a la Fecha" invisible="date_filter_type != 'up_to_date'">
+                                <field name="date_up_to" placeholder="Seleccione una fecha" required="date_filter_type == 'up_to_date'"/>
+                            </group>
+
+                            <group string="Rango Personalizado" invisible="date_filter_type != 'range'">
+                                <label for="date_from" string="Fechas"/>
+                                <div class="o_row">
+                                    <field name="date_from" placeholder="Inicio" required="date_filter_type == 'range'"/>
+                                    <i class="fa fa-long-arrow-right mx-2 text-muted" aria-label="Flecha" title="Hasta"/>
+                                    <field name="date_to" placeholder="Fin" required="date_filter_type == 'range'"/>
+                                </div>
+                            </group>
+
+                            <group string="Descarga del Reporte" invisible="not xlsx_binary">
+                                <field name="xlsx_filename" invisible="1"/>
+                                <field name="xlsx_binary" filename="xlsx_filename" readonly="1" widget="binary"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Filtros Analíticos" name="analytic_filters">
+                                <group>
+                                    <field name="analytic_plan_ids" widget="many2many_tags" placeholder="Todos los Planes Analíticos" options="{'no_create': True}"/>
+                                    <field name="analytic_account_ids" widget="many2many_tags" placeholder="Todos los Centros de Costo" options="{'no_create': True}"/>
+                                </group>
+                            </page>
+
+                            <page string="Filtros Contables" name="accounting_filters">
+                                <group>
+                                    <field name="account_group_ids" widget="many2many_tags" placeholder="Todos los Grupos Contables" options="{'no_create': True}" />
+                                    <field name="account_ids" widget="many2many_tags" placeholder="Todas las Cuentas Contables" options="{'no_create': True}" />
+                                    <field name="journal_ids" widget="many2many_tags" placeholder="Todos los Diarios Contables" options="{'no_create': True}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <footer>
+                        <button string="Generar Reporte" name="action_generate_report" type="object" class="btn-primary" data-hotkey="q"/>
+
+                        <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_cost_center_report_wizard" model="ir.actions.act_window">
+            <field name="name">Reportes de Centros de Costos</field>
+            <field name="res_model">cost.center.report.wizard</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_cost_center_report_wizard_form" />
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

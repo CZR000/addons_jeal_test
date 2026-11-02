@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form view: agregar campo en la pestaña de ventas/compras o junto a datos generales -->
+    <record id="view_partner_form_inherit_carrier" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.carrier</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_carrier"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List (tree) view -->
+    <record id="view_partner_tree_inherit_carrier" model="ir.ui.view">
+        <field name="name">res.partner.list.inherit.carrier</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="is_carrier" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search view: filtro y group by -->
+    <record id="view_res_partner_filter_inherit_carrier" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.carrier</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator/>
+                <filter string="Es Transportista"
+                        name="filter_is_carrier"
+                        domain="[('is_carrier', '=', True)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_company']" position="after">
+                <filter string="Es Transportista"
+                        name="group_is_carrier"
+                        context="{'group_by': 'is_carrier'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

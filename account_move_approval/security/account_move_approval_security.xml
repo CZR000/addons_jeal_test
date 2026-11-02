@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_account_move_approval" model="ir.module.category">
+            <field name="name">Aprobación de Asientos</field>
+            <field name="description">Aprobación de asientos contables</field>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="group_account_journal_approver" model="res.groups">
+            <field name="name">Aprobador de Asientos Contables</field>
+            <field name="category_id" ref="module_category_account_move_approval"/>
+            <!--
+                FIX: Heredar permisos de Contador (account.group_account_user).
+                Sin esto, el aprobador NO puede crear ni editar asientos contables.
+                account.group_account_user a su vez hereda de group_account_invoice.
+            -->
+            <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="comment">
+                Usuario con facultad para aprobar o rechazar asientos contables que requieren validación.
+                No puede aprobar sus propios asientos ni los que él mismo solicitó.
+                Puede publicar asientos directamente sin flujo de aprobación.
+                Hereda permisos de Contador para poder crear y gestionar asientos.
+            </field>
+        </record>
+    </data>
+</odoo>

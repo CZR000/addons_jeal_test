@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ic_reconciliation_generate_form" model="ir.ui.view">
+        <field name="name">ic.reconciliation.generate.form</field>
+        <field name="model">ic.reconciliation.generate</field>
+        <field name="arch" type="xml">
+            <form string="Generar conciliación intercompany">
+                <group>
+                    <group>
+                        <field name="period" widget="radio"/>
+                        <field name="year" invisible="period != 'year'" required="period == 'year'"/>
+                        <field name="date_from" invisible="period == 'all'" required="period != 'all'"
+                               readonly="period != 'range'" force_save="1"/>
+                        <field name="date_to" readonly="period not in ('all', 'range')" force_save="1"/>
+                    </group>
+                    <group>
+                        <field name="available_company_ids" invisible="1"/>
+                        <field name="company_ids" widget="many2many_tags" domain="[('id', 'in', available_company_ids)]"/>
+                        <field name="include_balanced"/>
+                    </group>
+                </group>
+                <div class="text-muted">
+                    Lee los apuntes publicados hasta la fecha de corte (fecha contable), aplica las reglas y recupera
+                    las revisiones y emparejamientos manuales vigentes. El emparejamiento usa todo el historial; la
+                    fecha desde solo decide qué se lista: una línea se muestra si su fecha o la de su contraparte es
+                    igual o posterior. Lo anterior que sigue pendiente se resume en "Arrastre anterior al periodo"
+                    para que el total del par cuadre con la contabilidad. No crea asientos.
+                </div>
+                <footer>
+                    <button name="action_generate" type="object" string="Generar" class="btn-primary"/>
+                    <button special="cancel" string="Cancelar"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ic_reconciliation_generate" model="ir.actions.act_window">
+        <field name="name">Generar conciliación intercompany</field>
+        <field name="res_model">ic.reconciliation.generate</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

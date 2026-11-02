@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">stock.move.line.view.list.inherit.stock_moves_history_fields</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="before">
+                <field name="code_movement_type" optional="hide"/>
+                <field name="movement_type" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="signed_quantity" optional="show"/>
+                <field name="real_quantity" optional="show"/>
+                <field name="remaining_qty" optional="hide" groups="product_hide_price_cost.group_show_product_cost"/>
+                <field name="unit_cost" optional="show" groups="product_hide_price_cost.group_show_product_cost"/>
+                <field name="value" widget="monetary" optional="show" groups="product_hide_price_cost.group_show_product_cost"/>
+                <field name="remaining_value" widget="monetary" optional="hide" groups="product_hide_price_cost.group_show_product_cost"/>
+                <field name="company_currency_id" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_move_line_view_search" model="ir.ui.view">
+        <field name="name">stock.move.line.view.form.inherit.stock_moves_history_fields</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='groupby']" position="inside">
+                <filter string="Tipo de movimiento" name="by_movement_type" domain="[]" context="{'group_by': 'movement_type'}"/>
+            </xpath>
+            <xpath expr="//filter[@name='done']" position="before">
+                <filter string="Nuevo" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="En espera de otro movimiento" name="waiting" domain="[('state', '=', 'waiting')]"/>
+                <filter string="En espera de disponibilidad" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Parcialmente disponible" name="partially_available" domain="[('state', '=', 'partially_available')]"/>
+                <filter string="Disponible" name="assigned" domain="[('state', '=', 'assigned')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='done']" position="after">
+                <filter string="Cancelado" name="cancelled" domain="[('state', '=', 'cancel')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='date']" position="before">
+                <filter string="Entrada - Recepción" name="movement_type_incoming_receipt" domain="[('movement_type', '=', 'incoming_receipt')]"/>
+                <filter string="Salida - Entrega" name="movement_type_outgoing_delivery" domain="[('movement_type', '=', 'outgoing_delivery')]"/>
+                <filter string="Devolución de cliente" name="movement_type_customer_return" domain="[('movement_type', '=', 'customer_return')]"/>
+                <filter string="Devolución a proveedor" name="movement_type_supplier_return" domain="[('movement_type', '=', 'supplier_return')]"/>
+                <filter string="Transferencia interna" name="movement_type_internal_transfer" domain="[('movement_type', '=', 'internal_transfer')]"/>
+                <filter string="Ajuste de inventario" name="movement_type_inventory_adjustment" domain="[('movement_type', '=', 'inventory_adjustment')]"/>
+                <filter string="Desecho" name="movement_type_scrap" domain="[('movement_type', '=', 'scrap')]"/>
+                <filter string="Otro" name="movement_type_other" domain="[('movement_type', '=', 'other')]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_form" model="ir.ui.view">
+        <field name="name">stock.move.line.view.form.inherit.stock_moves_history_fields</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//group//field[@name='location_dest_id']" position="after">
+                <field name="code_movement_type" readonly="1"/>
+                <field name="movement_type"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

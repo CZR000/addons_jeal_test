@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_closing_entries_root"
+              name="Cierre Contable"
+              parent="account.menu_finance_entries"
+              sequence="100"
+              groups="account.group_account_manager"/>
+
+    <menuitem id="menu_closing_entries"
+              name="Generar Asientos de Cierre"
+              parent="menu_closing_entries_root"
+              action="action_closing_entry_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_closing_entry_moves"
+              name="Asientos de Cierre Generados"
+              parent="menu_closing_entries_root"
+              action="action_closing_entry_moves"
+              sequence="20"/>
+</odoo>

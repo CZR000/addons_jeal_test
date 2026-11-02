@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_credit_send_wizard_form" model="ir.ui.view">
+        <field name="name">sale.credit.approval.send.wizard.form</field>
+        <field name="model">sale.credit.approval.send.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Se requiere aprobación de crédito">
+                <field name="order_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <div class="alert alert-warning" role="alert">
+                    Esta cotización necesita aprobación de crédito para poder confirmarse.
+                </div>
+                <group>
+                    <field name="amount_pen" string="Esta venta"/>
+                    <field name="credit_available" string="Crédito disponible"
+                           invisible="not credit_limit"/>
+                    <field name="credit_limit" string="Línea de crédito"/>
+                    <field name="excess" string="Supera la línea en"
+                           invisible="excess &lt;= 0 or not credit_limit"/>
+                    <field name="debt_overdue" string="Deuda vencida"
+                           invisible="debt_overdue &lt;= 0"/>
+                </group>
+                <p>
+                    Se enviará a <strong><field name="approver_name" class="oe_inline" readonly="1"/></strong>.
+                    El enlace vence en <field name="validity_label" class="oe_inline" readonly="1"/>.
+                </p>
+                <footer>
+                    <button name="action_send" type="object"
+                            string="Enviar solicitud al aprobador" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <template id="report_sale_custom">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.basic_layout">
+                        <style>
+                            .bg-primary-custom { background-color: 
+                            <t t-esc="doc.company_id.report_primary_color or '#f29206'"/>
+                            !important; }
+                        </style>
+
+                        <div class="custom-report-container container-fluid p-0">
+                            <div class="header" t-attf-style="margin-left:-5mm; margin-right:-5mm;">
+                                <div class="row p-0" style="height:200px; position:relative;">
+                                    <!-- LOGO IZQUIERDO -->
+                                    <div class="col-7 px-4 d-flex justify-content-start" style="padding-top:40px;">
+                                        <img t-if="doc.company_id.report_logo_main" t-att-src="image_data_uri(doc.company_id.report_logo_main)" style="max-height: 90px; width:auto; object-fit: contain;" alt="Logo Principal"/>
+                                    </div>
+
+                                    <!-- LOGO DERECHO -->
+                                    <div class="col-5 d-flex justify-content-end">
+                                        <img t-if="doc.company_id.report_logo_secondary" t-att-src="image_data_uri(doc.company_id.report_logo_secondary)" style="max-height:180px; width:auto; object-fit:contain;" alt="Logo Secundario"/>
+                                    </div>
+
+                                    <!-- TEXTO CORPORATIVO -->
+                                    <div class="position-absolute" style="left:40px; top:140px; max-width:600px; font-size:14px;">
+                                        <!-- Subtítulo -->
+                                        <p class="mb-1" style="font-size:12px;">
+                                            Especialistas en soluciones de equipos para minería, construcción e industria
+                                        </p>
+
+                                        <!-- Texto principal -->
+                                        <p class="mb-0" style="font-family:sans-serif; font-style:italic;">
+                                            Minidumpers eléctricos · Compresoras de aire diésel y eléctricas · 
+                                            <br/>
+                                            Grupos electrógenos · Mucking · Pulmón de aire · 
+                                            <br/>
+                                            Perforadoras · Brocas y barrenos
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- WATERMARK -->
+                                <div t-if="doc.company_id.report_watermark" t-attf-style="
+                                    position:absolute;
+                                    top:450px;
+                                    left:25%;
+                                    width:50%;
+                                    height:500px;
+                                    opacity:0.80;                                   
+                                    background-image:url({{image_data_uri(doc.company_id.report_watermark)}});
+                                    background-size:contain;
+                                    background-repeat:no-repeat;
+                                    background-position:center;
+                                "/>
+                            </div>
+
+                            <div class="row px-4 py-0 pt-3 mb-3 font-weight-bold">
+                                <div class="col-7" style="font-size: 17px;">
+                                    <div class="p-0 mb-3">
+                                        <t t-set="now" t-value="context_timestamp(datetime.datetime.now())"/>
+
+                                        <span t-if="doc.company_id.city" t-esc="doc.company_id.city + ','"/>
+                                        <span t-esc="now" t-options='{"widget": "date", "format": " dd"}'/>
+                                        <span>de</span>
+                                        <span t-esc="now" t-options='{"widget": "date", "format": "MMMM"}'/>
+                                        <span>de</span>
+                                        <span t-esc="now" t-options='{"widget": "date", "format": "yyyy"}'/>
+                                    </div>
+
+                                    <div class="p-0 mb-3">
+                                        <span>Estimados:</span>
+                                        <span t-if="doc.partner_id" t-field="doc.partner_id"/>
+                                        <br/>
+                                        <span>RUC/DNI:</span>
+                                        <span t-field="doc.partner_id.vat"/>
+                                    </div>
+
+                                    <div class="p-0">
+                                        <span >Atención:</span>
+                                        <t t-if="doc.partner_id.type == 'contact' and doc.partner_id.parent_id">
+                                            <span t-field="doc.partner_id.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="doc.partner_id.name"/>
+                                        </t>
+                                    </div>
+                                    <div class="p-0 d-flex align-items-baseline">
+                                        <span >Referencia:</span>
+                                        <span t-if="doc.note" class="px-1" t-field="doc.note"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-5 d-flex justify-content-end">
+                                    <h2 style="margin-top: 50px;">
+                                        Cotización: 
+                                        <span t-field="doc.name"/>
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <p class="px-4 py-0 mb-4" style="font-size: 17px;">
+                                Atendiendo su solicitud, favor de encontrar nuestra propuesta técnica y comercial por lo siguiente:
+                            </p>
+
+                            <div class="page px-4 py-0">
+                                <t t-set="lines_to_print" t-value="doc.order_line.filtered(lambda x: not x.display_type)"/>
+                                <t t-set="has_discount" t-value="any(line.discount_fixed > 0 for line in lines_to_print)"/>
+
+                                <table class="table-cargamax">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th class="align-middle py-1" style="width:5%;">#</th>
+                                            <th class="align-middle py-1" style="width:8%;">CÓDIGO</th>
+                                            <th class="align-middle py-1 text-left pl-2" t-attf-style="width: #{has_discount and '32%' or '40%'};">
+                                                DESCRIPCIÓN
+                                            </th>
+                                            <th class="align-middle py-1 text-nowrap" style="width:20%;">IMAGEN</th>
+                                            <th class="align-middle py-1" style="width:8%;">CANT.</th>
+                                            <th class="align-middle py-1" style="width:7%;">UNID</th>
+                                            <th class="align-middle py-1" style="width:8%;">V. UNIT.</th>
+                                            <t t-if="has_discount">
+                                                <th class="align-middle py-1" style="width:7%;">DTO. %</th>
+                                            </t>
+                                            <th class="align-middle py-1" style="width:10%;">V. VENTA</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <t t-set="line_number" t-value="1"/>
+                                        <t t-set="current_chars" t-value="0"/>
+                                        <t t-set="char_limit" t-value="1200"/>
+
+                                        <t t-foreach="lines_to_print" t-as="line">
+                                            <t t-set="line_len" t-value="len(str(line.product_id.description_sale or line.name or ''))"/>
+                                            <t t-set="current_chars" t-value="current_chars + line_len"/>
+
+                                            <t t-if="current_chars > char_limit">
+                                                <tr style="page-break-after: always; height: 0; border: none; margin: 0; padding: 0;">
+                                                    <td colspan="100" style="border: none;"></td>
+                                                </tr>
+                                                <t t-set="current_chars" t-value="0"/>
+                                            </t>
+
+                                            <tr>
+                                                <!-- N° Línea -->
+                                                <td class="align-top text-center">
+                                                    <span t-esc="line_number"/>
+                                                </td>
+
+                                                <!-- Referencia interna -->
+                                                <td class="align-top text-center">
+                                                    <div t-if="line.product_id.default_code" class="small">
+                                                        <span t-field="line.product_id.default_code"/>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Producto + Descripción -->
+                                                <td class="align-top text-start">
+                                                    <div class="mb-1">
+                                                        <span t-field="line.product_id.name"/>
+                                                    </div>
+                                                    <div style="white-space: pre-line; font-size: 12px;">
+                                                        <t t-if="line.product_id.include_template_description and line.product_id.description_sale">
+                                                            <span class="mb-1" t-esc="line.product_id.description_sale"/>
+                                                        </t>
+                                                        <t t-if="line.product_id.variant_description_sale">
+                                                            <span t-esc="line.product_id.variant_description_sale"/>
+                                                        </t>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Imagen -->
+                                                <td class="align-middle text-center">
+                                                    <div class="product-img-container" t-if="line.product_id.image_128">
+                                                        <img t-att-src="image_data_uri(line.product_id.image_128)"/>
+                                                    </div>
+                                                    <div t-else="" class="text-muted small">
+                                                        Sin imagen
+                                                    </div>
+                                                </td>
+
+                                                <!-- Cantidad -->
+                                                <td class="align-top text-center">
+                                                    <span t-field="line.product_uom_qty" t-options='{"widget": "integer"}'/>
+                                                </td>
+
+                                                <!-- Unidad de Medida -->
+                                                <td class="align-top text-center">
+                                                    <span t-field="line.product_uom"/>
+                                                </td>
+
+                                                <!-- Valor Unitario -->
+                                                <td class="align-top text-start">
+                                                    <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                </td>
+
+                                                <!-- Descuento -->
+                                                <t t-if="line.discount">
+                                                    <td class="align-top text-end">
+                                                        <span t-field="line.discount" t-options='{"widget": "float", "precision": 2}'/>
+                                                    </td>
+                                                </t>
+
+                                                <!-- Valor Venta -->
+                                                <td class="align-top text-start">
+                                                    <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                </td>
+
+                                                <t t-set="line_number" t-value="line_number + 1"/>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+
+                                <div class="row p-0" style="page-break-inside: avoid;">
+                                    <div class="col-5 px-2">
+                                    </div>
+                                    <div class="col-7 justify-content-end total-container">
+                                        <table style="page-break-inside: avoid; width: 100%;">
+                                            <tr>
+                                                <td></td>
+                                                <td class="align-middle text-end">
+                                                    Precio <span t-field="doc.currency_id.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-start">Subtotal</td>
+                                                <td class="align-middle text-end border-top border-dark">
+                                                    <span t-field="doc.amount_untaxed"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="doc.company_id.report_show_tax">
+                                                <td class="align-middle text-start">IGV (18%)</td>
+                                                <td class="align-middle text-end border-top border-dark">
+                                                    <span t-field="doc.amount_tax"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="total-row-black">
+                                                <td class="align-middle text-start pl-3">Total</td>
+                                                <td class="align-middle text-end pr-3">
+                                                    <span t-field="doc.amount_total"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- <div style="page-break-after: always;"></div> -->
+
+                                <!-- TÉRMINOS Y CONDICIONES DINÁMICOS -->
+                                <div class="row p-0 mb-4" style="page-break-inside: avoid;">
+                                    <div class="col-12">
+                                        <span t-field="doc.custom_warranty_terms"/>
+                                    </div>
+                                </div>
+
+                                <!-- Mensaje -->
+                                <div class="row p-2 mb-4" style="page-break-inside: avoid;">
+                                    <div class="col-12">
+                                        <span t-field="doc.company_id.report_closing_message"/>
+                                    </div>
+                                </div>
+
+                                <div class="row p-0 mb-4" style="page-break-inside: avoid;">
+                                    <div class="col-12">
+                                        <table class="table table-borderless" style="page-break-inside: avoid; width: 100%;">
+                                            <tr>
+                                                <td class="align-middle text-center p-0">
+                                                    <!-- Logo -->
+                                                    <div>
+                                                        <img t-if="doc.company_id.report_logo_main" t-att-src="image_data_uri(doc.company_id.report_logo_main)" style="height: auto; width: 240px; object-fit: contain;"/>
+                                                    </div>
+
+                                                    <!-- Redes -->
+                                                    <div class="mt-1">
+                                                        <a t-att-href="'https://linktr.ee/cargamax.pe'" target="_blank">
+                                                            <span class="text-dark" style="font-size:20px;">¡Haz clic aquí!</span>
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="mt-1 text-center justify-content-center">
+                                                        <t t-if="doc.company_id.social_facebook_url and doc.company_id.social_facebook_icon">
+                                                            <a t-att-href="doc.company_id.social_facebook_url" target="_blank">
+                                                                <img t-att-src="image_data_uri(doc.company_id.social_facebook_icon)" height="30"/>
+                                                            </a>
+                                                        </t>
+
+                                                        <t t-if="doc.company_id.social_instagram_url and doc.company_id.social_instagram_icon">
+                                                            <a t-att-href="doc.company_id.social_instagram_url" target="_blank">
+                                                                <img t-att-src="image_data_uri(doc.company_id.social_instagram_icon)" height="30"/>
+                                                            </a>
+                                                        </t>
+
+                                                        <t t-if="doc.company_id.social_tiktok_url and doc.company_id.social_tiktok_icon">
+                                                            <a t-att-href="doc.company_id.social_tiktok_url" target="_blank">
+                                                                <img t-att-src="image_data_uri(doc.company_id.social_tiktok_icon)" height="30"/>
+                                                            </a>
+                                                        </t>
+
+                                                        <t t-if="doc.company_id.social_linkedin_url and doc.company_id.social_linkedin_icon">
+                                                            <a t-att-href="doc.company_id.social_linkedin_url" target="_blank">
+                                                                <img t-att-src="image_data_uri(doc.company_id.social_linkedin_icon)" height="30"/>
+                                                            </a>
+                                                        </t>
+
+                                                        <t t-if="doc.company_id.social_youtube_url and doc.company_id.social_youtube_icon">
+                                                            <a t-att-href="doc.company_id.social_youtube_url" target="_blank">
+                                                                <img t-att-src="image_data_uri(doc.company_id.social_youtube_icon)" height="30"/>
+                                                            </a>
+                                                        </t>
+                                                    </div>
+                                                </td>
+
+                                                <td class="align-middle text-start p-0">
+                                                    <div style="line-height:0; font-size:16px;">
+                                                        <t t-set="emp" t-value="doc.report_employee_id"/>
+
+                                                        <t t-if="emp">
+                                                            <div style="font-weight:bold; font-size:18px;">
+                                                                <span t-field="emp.name"/>
+                                                            </div>
+
+                                                            <div>
+                                                                <span t-field="emp.job_title"/>
+                                                            </div>
+
+                                                            <t t-if="emp.work_phone">
+                                                                <a t-att-href="'https://wa.me/51' + emp.work_phone.replace(' ', '')" target="_blank">
+                                                                    <span class="text-dark" t-field="emp.work_phone"/>
+                                                                </a>
+                                                            </t>
+
+                                                            <t t-if="emp.work_email">
+                                                                <div>
+                                                                    <span t-field="emp.work_email"/>
+                                                                </div>
+                                                            </t>
+                                                        </t>
+
+                                                        <!-- Dirección -->
+                                                        <div>
+                                                            <span t-esc="doc.company_id.street.title()"/>
+                                                            <t t-if="doc.company_id.street2">,
+                                                                <span t-esc="doc.company_id.street2.title()"/>
+                                                            </t>,
+                                                            <span t-esc="doc.company_id.city.title()"/>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="row px-0 pt-4" style="page-break-inside: avoid;">
+                                    <div class="col-12">
+                                        <table class="table table-borderless" style="page-break-inside: avoid; width: 100%;">
+                                            <tr>
+                                                <td class="align-middle text-center">
+                                                    <div t-if="doc.company_id.report_logo_bank_account">
+                                                        <img t-att-src="image_data_uri(doc.company_id.report_logo_bank_account)" style="height: auto; width: 180px; object-fit: contain;"/>
+                                                    </div>
+                                                    <div t-else="" class="text-muted small">
+                                                        BCP
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-start">
+                                                    <div t-if="doc.company_id.report_bank_accounts">
+                                                        <span t-field="doc.company_id.report_bank_accounts"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="footer" t-attf-style="margin-left: -5mm; margin-right: -5mm;">
+                                <div class="row p-0" style="height: 200px; position: relative; overflow: visible;">
+                                    <div class="col-12 text-center pt-1 border-top border-dark">
+                                        <span t-field="doc.company_id.report_contact_footer"/>
+
+                                        <div t-if="doc.company_id.report_show_page_numbers" class="mt-2" style="font-size: 18px;">
+                                            Página 
+                                            <span class="page"/>
+                                            / 
+                                            <span class="topage"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4" style="position: absolute; bottom: 0; left: 0; width: 35%; height: 100%; background-color: #bcbcbb; border-top-right-radius: 100%; opacity: 0.3;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

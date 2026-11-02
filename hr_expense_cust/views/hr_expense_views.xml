@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         hr.expense: agregar campos vendor_id, l10n_latam_document_type_id,
+         include_in_purchase_register
+         ============================================================ -->
+    <record id="hr_expense_view_form_cust" model="ir.ui.view">
+        <field name="name">hr.expense.view.form.cust</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Agregar campos después del campo nativo vendor_id -->
+            <xpath expr="//field[@name='vendor_id']" position="after">
+                <!-- Referencia de factura (SERIE-NUMERO) -->
+                <field name="reference" invisible="product_has_cost"/>
+
+                <!-- Tipo de documento -->
+                <field name="l10n_latam_document_type_id"
+                       groups="account.group_account_readonly"
+                       options="{'no_create': True}"
+                       invisible="product_has_cost"/>
+
+                <!-- Va al registro de compras -->
+                <field name="include_in_purchase_register"
+                       invisible="product_has_cost"/>
+
+                <!-- Usar más líneas -->
+                <field name="use_extra_lines"
+                       invisible="product_has_cost"/>
+            </xpath>
+
+            <!-- Tabla de líneas adicionales (visible cuando use_extra_lines=True) -->
+            <xpath expr="//sheet" position="inside">
+                <div invisible="not use_extra_lines">
+                    <separator string="Líneas del comprobante"/>
+                    <field name="extra_line_ids" nolabel="1"
+                           invisible="not use_extra_lines">
+                        <list string="Líneas" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id" required="1"/>
+                            <field name="account_id" required="1"
+                                   options="{'no_create': True}"/>
+                            <field name="analytic_distribution"
+                                   widget="analytic_distribution"
+                                   optional="show"
+                                   groups="analytic.group_analytic_accounting"/>
+                            <field name="quantity" digits="[16, 2]"/>
+                            <field name="price_unit" string="Precio" digits="[16, 2]"/>
+                            <field name="tax_ids" widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="price_subtotal" string="Subtotal"/>
+                            <field name="price_total" string="Total"/>
+                            <field name="name" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="company_id" column_invisible="1"/>
+                            <field name="analytic_precision" column_invisible="1"/>
+                        </list>
+                    </field>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================
+         hr.expense.sheet: ocultar botón "Registrar asientos contables"
+         ya que en v18 se auto-genera al aprobar (mediante _do_create_moves)
+         ============================================================ -->
+    <record id="view_hr_expense_sheet_form_cust" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.cust</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <!-- Ocultar el botón "Post Journal Entries" / "Registrar asientos contables"
+                 porque en v18 se genera automáticamente al aprobar -->
+            <xpath expr="//button[@name='action_sheet_move_post']" position="replace">
+                <!-- Botón eliminado: los asientos se crean automáticamente al aprobar -->
+            </xpath>
+        </field>
+    </record>
+</odoo>

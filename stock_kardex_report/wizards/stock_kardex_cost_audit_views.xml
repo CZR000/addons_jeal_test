@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_kardex_cost_audit_view_form" model="ir.ui.view">
+        <field name="name">stock.kardex.cost.audit.view.form</field>
+        <field name="model">stock.kardex.cost.audit</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Compute" name="action_compute" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Recompute Valuation"
+                            name="action_recompute_valuation" type="object"
+                            class="btn-primary"
+                            invisible="not computed or pending_count == 0"
+                            confirm="This will create manual valuation layers to align the recorded value with the kardex weighted average cost. Continue?"/>
+                    <button string="Regularize Entries"
+                            name="action_regularize_entries" type="object"
+                            class="btn-primary"
+                            invisible="not computed or to_regularize_count == 0"
+                            confirm="This will create the correction journal entries (in draft) for every revalued product. Continue?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,to_correct,to_regularize,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="not computed">
+                        <button class="oe_stat_button" icon="fa-cubes">
+                            <field name="line_count" widget="statinfo" string="Audited"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-exclamation-triangle">
+                            <field name="diff_count" widget="statinfo" string="Differences"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-balance-scale">
+                            <field name="revalued_count" widget="statinfo" string="Revalued"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-book">
+                            <field name="regularized_count" widget="statinfo" string="Regularized"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>Kardex Cost Audit</h1>
+                        <div class="text-muted">
+                            Compares the cost of goods sold posted by Odoo against the weighted average cost recomputed chronologically.
+                        </div>
+                    </div>
+
+                    <field name="currency_id" invisible="1"/>
+                    <field name="computed" invisible="1"/>
+                    <field name="pending_count" invisible="1"/>
+                    <field name="to_regularize_count" invisible="1"/>
+
+                    <group>
+                        <group string="Period">
+                            <field name="company_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}" groups="base.group_multi_company"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="date_basis"/>
+                        </group>
+                        <group string="Scope">
+                            <field name="only_differences"/>
+                            <field name="filter_category_ids" widget="many2many_tags"/>
+                            <field name="filter_product_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-info" role="alert" invisible="computed">
+                        Set the audit parameters above and click <b>Compute</b> to compare the recorded cost against the recomputed weighted average.
+                    </div>
+
+                    <group invisible="not computed">
+                        <group string="Regularization Options"
+                               help="Used by the Recompute Valuation and Regularize Entries actions.">
+                            <field name="correction_date"/>
+                            <field name="journal_id" options="{'no_create': True}" placeholder="Product category stock journal"/>
+                            <field name="counterpart_account_id" options="{'no_create': True}" placeholder="Product expense (COGS) account"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-success" role="alert" invisible="not computed or diff_count &gt; 0">
+                        No differences found between the recorded cost and the weighted average for the selected scope.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not computed or pending_count == 0">
+                        Some audited products show a difference. Use <b>Recompute Valuation</b> to align the recorded value with the kardex, then <b>Regularize Entries</b> to post the correcting journal entries (in draft).
+                    </div>
+                    <div class="alert alert-info" role="alert" invisible="not computed or pending_count &gt; 0 or to_regularize_count == 0">
+                        Valuation aligned. Use <b>Regularize Entries</b> to create the correcting journal entries (in draft) for the revalued products.
+                    </div>
+                    <div class="alert alert-success" role="alert" invisible="not computed or diff_count == 0 or pending_count &gt; 0 or to_regularize_count &gt; 0">
+                        All differences have been revalued and regularized.
+                    </div>
+
+                    <field name="line_ids" invisible="not computed" nolabel="1">
+                        <list create="false" edit="false" delete="false"
+                              decoration-danger="has_difference and correction_state == 'pending'"
+                              decoration-warning="correction_state == 'revalued'"
+                              decoration-success="correction_state == 'regularized'"
+                              default_order="has_difference desc, value_difference desc">
+                            <field name="product_code" optional="show"/>
+                            <field name="product_id"/>
+                            <field name="qty_out"/>
+                            <field name="cogs_recorded" sum="Total" optional="hide"/>
+                            <field name="cogs_wac" sum="Total" optional="hide"/>
+                            <field name="cogs_difference" sum="Total" optional="show"/>
+                            <field name="qty_balance" optional="hide"/>
+                            <field name="value_recorded" sum="Total" optional="show"/>
+                            <field name="value_wac" sum="Total" optional="show"/>
+                            <field name="value_difference" sum="Total"/>
+                            <field name="correction_state" widget="badge"
+                                   decoration-danger="correction_state == 'pending'"
+                                   decoration-warning="correction_state == 'revalued'"
+                                   decoration-success="correction_state == 'regularized'"/>
+                            <field name="has_difference" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="revaluation_svl_id" column_invisible="1"/>
+                            <field name="correction_move_id" column_invisible="1"/>
+                            <button name="action_line_recompute" type="object"
+                                    icon="fa-balance-scale" title="Recompute valuation"
+                                    invisible="not has_difference or correction_state != 'pending'"/>
+                            <button name="action_line_regularize" type="object"
+                                    icon="fa-book" title="Regularize entry"
+                                    invisible="correction_state != 'revalued'"/>
+                            <button name="action_open_correction_move" type="object"
+                                    icon="fa-external-link" title="Open correction entry"
+                                    invisible="not correction_move_id"/>
+                            <button name="action_view_valuation_layers" type="object"
+                                    icon="fa-search-plus" title="View Valuation Layers"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_kardex_cost_audit_view_list" model="ir.ui.view">
+        <field name="name">stock.kardex.cost.audit.view.list</field>
+        <field name="model">stock.kardex.cost.audit</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="create_date" string="Run On"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="date_basis" optional="show"/>
+                <field name="line_count" string="Audited"/>
+                <field name="diff_count" string="Differences"/>
+                <field name="regularized_count" string="Regularized" optional="show"/>
+                <field name="create_uid" string="Run By" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'to_correct'"
+                       decoration-primary="state == 'to_regularize'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_kardex_cost_audit_view_search" model="ir.ui.view">
+        <field name="name">stock.kardex.cost.audit.view.search</field>
+        <field name="model">stock.kardex.cost.audit</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="company_id"/>
+                <field name="create_uid"/>
+                <filter name="accounting_basis" string="Accounting Date" domain="[('date_basis', '=', 'accounting')]"/>
+                <filter name="creation_basis" string="Creation Date" domain="[('date_basis', '=', 'creation')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter name="group_basis" string="Date Basis" context="{'group_by': 'date_basis'}"/>
+                    <filter name="group_run_by" string="Run By" context="{'group_by': 'create_uid'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_kardex_cost_audit" model="ir.actions.act_window">
+        <field name="name">Kardex Cost Audit</field>
+        <field name="res_model">stock.kardex.cost.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="target">current</field>
+        <field name="search_view_id" ref="stock_kardex_cost_audit_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Kardex cost audit
+            </p>
+            <p>
+                Compare the cost of goods sold posted by Odoo against the weighted
+                average cost recomputed chronologically, then recompute the
+                valuation and regularize the accounting entries.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_kardex_cost_audit"
+        name="Kardex Cost Audit"
+        parent="stock.menu_warehouse_report"
+        action="action_stock_kardex_cost_audit"
+        sequence="236"
+        groups="stock.group_stock_manager"/>
+
+</odoo>

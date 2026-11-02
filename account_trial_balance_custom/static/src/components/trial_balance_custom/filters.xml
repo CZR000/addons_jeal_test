@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_trial_balance_custom.TrialBalanceCustomFilters"
+       t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="//div[@id='filter_extra_options']" position="replace">
+            <t t-call="account_trial_balance_custom.TrialBalanceCustomFilterExtraOptions"/>
+        </xpath>
+    </t>
+</templates>

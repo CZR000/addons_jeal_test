@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_account_form_closing_config" model="ir.ui.view">
+        <field name="name">account.account.form.closing.config</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="after">
+                <page name="closing_config" string="Configuración de Cierre">
+                    <group>
+                        <group string="Cadena de Cierre">
+                            <field name="closing_account_id"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="closing_depth"/>
+                            <field name="is_closing_account" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Detalle del Asiento">
+                            <field name="closing_detail"/>
+                        </group>
+                    </group>
+                    <div class="text-muted mt-2">
+                        <p class="mb-1">
+                            Una cuenta se cierra únicamente si tiene una
+                            <b>Cuenta de Cierre</b> configurada.
+                        </p>
+                        <p class="mb-1">
+                            La cuenta destino puede tener a su vez su propia cuenta de
+                            cierre (por ejemplo <code>60 → 89 → 59</code>). El asistente
+                            resuelve la cadena por niveles y genera un asiento distinto
+                            para cada eslabón, de modo que nunca se mezclan en un mismo
+                            asiento.
+                        </p>
+                    </div>
+                    <field name="closing_source_ids" nolabel="1"
+                           invisible="not closing_source_ids"
+                           readonly="1">
+                        <list string="Cuentas que cierran contra esta">
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="closing_depth"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.l10n_pe_settlement</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_expense.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr_expense']" position="inside">
+                <block title="Rendición de gastos" name="l10n_pe_hr_expense_settlement_setting_container">
+                    <setting company_dependent="1" string="Diario de liquidación"
+                             help="Diario misceláneo del asiento que cancela la factura del comprobante contra el anticipo del empleado.">
+                        <field name="hr_expense_settlement_journal_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting company_dependent="1" string="Liquidar automáticamente"
+                             help="Al publicar la factura de un comprobante rendido se liquida sola contra los anticipos del empleado; lo que no cubran queda a su favor.">
+                        <field name="hr_expense_auto_settle"/>
+                    </setting>
+                    <setting company_dependent="1" string="Comprobantes fuera del Registro de Compras"
+                             help="Diario de compras excluido del PLE para los gastos que no van al Registro de Compras.">
+                        <field name="hr_expense_non_register_journal_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting company_dependent="1" string="Cuentas de entregas a rendir"
+                             help="Cuentas de los anticipos al personal. Vacío: cuentas conciliables que empiezan con 14.">
+                        <field name="hr_expense_advance_account_ids" widget="many2many_tags"
+                               placeholder="Cuentas 14 conciliables" options="{'no_create': True}"/>
+                    </setting>
+                    <setting company_dependent="1" string="Fondo de caja chica"
+                             help="Cuenta del fondo y diario de liquidación propios de caja chica. Vacíos: los de las rendiciones.">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="hr_expense_petty_cash_account_id" string="Cuenta" class="col-lg-4 o_light_label"/>
+                                <field name="hr_expense_petty_cash_account_id" options="{'no_create': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="hr_expense_petty_cash_settlement_journal_id" string="Diario de liquidación" class="col-lg-4 o_light_label"/>
+                                <field name="hr_expense_petty_cash_settlement_journal_id" options="{'no_create': True}"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting company_dependent="1" string="Bloquear desembolsos con rendición pendiente"
+                             help="No se registra una entrega a rendir, fondo o reposición de caja chica a un empleado con otro desembolso sin rendir en cualquier empresa del grupo.">
+                        <field name="hr_expense_block_pending_advances"/>
+                        <div class="content-group" invisible="not hr_expense_block_pending_advances">
+                            <div class="row mt8">
+                                <label for="hr_expense_block_pending_days" class="col-lg-4 o_light_label"/>
+                                <field name="hr_expense_block_pending_days"/>
+                            </div>
+                            <div class="row">
+                                <label for="hr_expense_block_include_petty_cash" class="col-lg-4 o_light_label"/>
+                                <field name="hr_expense_block_include_petty_cash"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

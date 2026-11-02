@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_closing_entry_confirm_wizard_form" model="ir.ui.view">
+        <field name="name">closing.entry.confirm.wizard.form</field>
+        <field name="model">closing.entry.confirm.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmación de Cierre">
+                <field name="closing_wizard_id" invisible="1"/>
+                <div class="alert alert-warning" role="alert">
+                    <field name="message" nolabel="1" readonly="1" class="mb-0"/>
+                </div>
+                <footer>
+                    <button name="action_confirm"
+                            string="Crear Asientos"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancelar"
+                            special="cancel"
+                            class="btn-secondary"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

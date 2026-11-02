@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ple_report_cash_bank_view_form" model="ir.ui.view">
+        <field name="name">ple.report.cash.bank.form.ple_cash_book_jeal</field>
+        <field name="model">ple.report.cash.bank</field>
+        <field name="inherit_id" ref="ple_cash_book.ple_report_purchase_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group[@id='ple_cash_bank']" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_l10n_pe_view_missing_means" type="object"
+                            class="oe_stat_button text-warning" icon="fa-credit-card"
+                            invisible="not l10n_pe_missing_means_count">
+                        <field name="l10n_pe_missing_means_count" string="Sin medio de pago" widget="statinfo"/>
+                    </button>
+                    <button name="action_l10n_pe_view_undocumented_partners" type="object"
+                            class="oe_stat_button text-warning" icon="fa-id-card-o"
+                            invisible="not l10n_pe_undocumented_partner_count">
+                        <field name="l10n_pe_undocumented_partner_count" string="Socios sin documento" widget="statinfo"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Asignación del medio de pago (tabla 1) a los movimientos bancarios, también en bloque. -->
+    <record id="view_move_list_payment_means" model="ir.ui.view">
+        <field name="name">account.move.list.payment_means</field>
+        <field name="model">account.move</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" multi_edit="1" create="0" delete="0">
+                <field name="date" readonly="1"/>
+                <field name="name" readonly="1"/>
+                <field name="journal_id" readonly="1" optional="show"/>
+                <field name="l10n_pe_bank_operation" readonly="1"/>
+                <field name="ref" readonly="1" optional="show"/>
+                <field name="partner_id" readonly="1" optional="show"/>
+                <field name="l10n_pe_bank_currency_id" column_invisible="1"/>
+                <field name="l10n_pe_bank_amount" readonly="1"
+                       decoration-success="l10n_pe_bank_amount &gt; 0" decoration-danger="l10n_pe_bank_amount &lt; 0"/>
+                <field name="amount_total_signed" string="Importe del asiento" readonly="1" optional="hide"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="payment_method_id" string="Medio de pago" required="1"
+                       options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

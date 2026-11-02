@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_applicant_form_recruitment_flow_ext" model="ir.ui.view">
+        <field name="name">hr.applicant.form.recruitment.flow.ext</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Campos ocultos necesarios para condiciones de visibilidad + ticket de origen -->
+            <field name="company_id" position="after">
+                <field name="x_stage_is_carta_oferta" invisible="1"/>
+                <field name="x_stage_is_contrato_firmado" invisible="1"/>
+                <field name="x_stage_is_medical_exam" invisible="1"/>
+                <field name="x_slot_1_is_mine" invisible="1"/>
+                <field name="x_slot_2_is_mine" invisible="1"/>
+                <field name="x_slot_3_is_mine" invisible="1"/>
+                <field name="x_helpdesk_ticket_id" readonly="1"/>
+            </field>
+
+            <!-- Entrevistador 1/2/3 + Calificación: cada par se bloquea al entrevistador asignado -->
+            <field name="interviewer_ids" position="after">
+                <field name="x_entrevistador_1"
+                       readonly="x_entrevistador_1 and not x_slot_1_is_mine"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+                <field name="x_calificacion_entrevista_1"
+                       widget="priority"
+                       readonly="not x_entrevistador_1 or not x_slot_1_is_mine"/>
+                <field name="x_entrevistador_2"
+                       readonly="x_entrevistador_2 and not x_slot_2_is_mine"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+                <field name="x_calificacion_entrevista_2"
+                       widget="priority"
+                       readonly="not x_entrevistador_2 or not x_slot_2_is_mine"/>
+                <field name="x_entrevistador_3"
+                       readonly="x_entrevistador_3 and not x_slot_3_is_mine"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+                <field name="x_calificacion_entrevista_3"
+                       widget="priority"
+                       readonly="not x_entrevistador_3 or not x_slot_3_is_mine"/>
+            </field>
+
+            <!-- Botón Solicitud de firma en header (visible solo en Contrato Firmado) -->
+            <button name="create_employee_from_applicant" position="before">
+                <button name="action_send_sign_request"
+                        string="Solicitud de firma"
+                        type="object"
+                        invisible="not x_stage_is_contrato_firmado or not id"
+                        groups="hr_contract.group_hr_contract_manager"/>
+            </button>
+
+            <!-- Botón Generar oferta (hr_contract_salary): solo habilitado en etapa Carta Oferta -->
+            <button name="action_generate_offer" position="attributes">
+                <attribute name="invisible">not active or application_status == 'hired' or not x_stage_is_carta_oferta</attribute>
+            </button>
+
+            <!-- Smart button: Excepción Examen Médico -->
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" icon="fa-user-md"
+                        invisible="not x_stage_is_medical_exam or x_medical_exam_result not in ('apto_restricciones', 'apto_observaciones', 'observado')">
+                    <field name="x_medical_exam_exception" widget="boolean_toggle" string="Excepción Examen Médico"/>
+                </button>
+            </div>
+
+            <!-- Examen médico: solo visible en la etapa correspondiente -->
+            <notebook position="inside">
+                <page string="Examen Médico" name="medical_exam" invisible="not x_stage_is_medical_exam">
+                    <group>
+                        <field name="x_medical_exam_result"/>
+                        <field name="x_medical_exam_note"
+                               invisible="x_medical_exam_result not in ('apto_restricciones', 'apto_observaciones')"/>
+                    </group>
+                </page>
+            </notebook>
+
+            <!-- Campos obligatorios: DNI, Fecha de nacimiento, Distrito
+                 Insertados antes del campo email del grupo izquierdo -->
+            <field name="email_from" position="before">
+                <field name="x_identification_doc"
+                       string="DNI"
+                       required="1"
+                       placeholder="Nro. de documento"/>
+                <field name="x_birthday"
+                       string="Fecha de nacimiento"
+                       required="1"/>
+                <field name="x_distrito"
+                       string="Distrito"
+                       required="1"/>
+            </field>
+
+            <!-- Teléfono obligatorio -->
+            <field name="partner_phone" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+
+            <!-- Disponibilidad: solo visible y requerida en Carta Oferta -->
+            <field name="availability" position="attributes">
+                <attribute name="invisible">not x_stage_is_carta_oferta</attribute>
+                <attribute name="required">x_stage_is_carta_oferta</attribute>
+            </field>
+
+            <!-- Reemplazar grupo Salary Package por versión condicional
+                 (visible y requerida solo en etapa Carta Oferta) -->
+            <xpath expr="//group[@name='recruitment_contract']" position="replace">
+                <group string="Contrato"
+                       name="recruitment_contract"
+                       invisible="not x_stage_is_carta_oferta"
+                       groups="hr_recruitment.group_hr_recruitment_user">
+                    <label for="salary_expected" string="Salario esperado"/>
+                    <div class="o_row">
+                        <field name="salary_expected"
+                               placeholder="Esperado"
+                               required="x_stage_is_carta_oferta"/>
+                        <span invisible="not salary_expected_extra"> + </span>
+                        <field name="salary_expected_extra" placeholder="Otros beneficios"/>
+                    </div>
+                    <label for="salary_proposed" string="Salario propuesto"/>
+                    <div class="o_row">
+                        <field name="salary_proposed"
+                               required="x_stage_is_carta_oferta"/>
+                        <span invisible="not salary_proposed_extra"> + </span>
+                        <field name="salary_proposed_extra" placeholder="Otros beneficios"/>
+                    </div>
+                    <field name="x_work_system_id"
+                           required="x_stage_is_carta_oferta"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="x_contract_modality_id"
+                           required="x_stage_is_carta_oferta"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="x_work_modality_id"
+                           required="x_stage_is_carta_oferta"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

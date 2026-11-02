@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="add_extra_tags" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[@id='informations']/div[@t-if='o.date_planned']" position="after">
+            <div t-if="o.account_number_partner_id" class="col-3 bm-2" name="bank_info">
+                <strong>Cuenta Bancaria:</strong>
+                <div class="m-0">
+                    <span t-field="o.account_number_partner_id.bank_id.name"/>
+                    <span> - </span>
+                    <span t-field="o.account_number_partner_id.acc_number"/>
+                </div>
+
+                <div t-if="o.currency_partner_id" class="text-muted small">
+                    Moneda: <span t-field="o.currency_partner_id.name"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

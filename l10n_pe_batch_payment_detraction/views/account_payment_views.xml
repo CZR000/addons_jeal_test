@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form: campo editable junto a memo -->
+    <record id="view_account_payment_form_detraction" model="ir.ui.view">
+        <field name="name">account.payment.form.detraction</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='memo']" position="after">
+                <field name="is_detraction"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List: columna opcional -->
+    <record id="view_account_payment_list_detraction" model="ir.ui.view">
+        <field name="name">account.payment.list.detraction</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="is_detraction" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List popup del batch payment: sumatoria de Importe de Moneda -->
+    <record id="view_account_payment_tree_popup_sum_amount_signed" model="ir.ui.view">
+        <field name="name">account.payment.list.popup.sum.amount.signed</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account_batch_payment.view_account_payment_tree_popup_inherit_account_batch_payment"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_signed'][@groups='base.group_multi_currency']" position="attributes">
+                <attribute name="sum">Total en moneda</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_signed'][@groups='!base.group_multi_currency']" position="attributes">
+                <attribute name="sum">Total en moneda</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

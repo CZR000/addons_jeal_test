@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_ic_reconciliation" model="ir.module.category">
+        <field name="name">Conciliación IC</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="group_ic_reconciliation_user" model="res.groups">
+        <field name="name">Usuario</field>
+        <field name="category_id" ref="module_category_ic_reconciliation"/>
+        <field name="comment">Generar, ver, abrir documentos y exportar la conciliación intercompany.</field>
+    </record>
+
+    <record id="group_ic_reconciliation_manager" model="res.groups">
+        <field name="name">Responsable</field>
+        <field name="category_id" ref="module_category_ic_reconciliation"/>
+        <field name="implied_ids" eval="[(4, ref('group_ic_reconciliation_user'))]"/>
+        <field name="comment">Además marcar revisado, emparejar a mano, deshacer y configurar.</field>
+    </record>
+
+    <!-- Los usuarios de contabilidad son "Usuario"; el responsable se asigna a mano. -->
+    <record id="account.group_account_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_ic_reconciliation_user'))]"/>
+    </record>
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_ic_reconciliation_manager'))]"/>
+    </record>
+
+    <!-- El detalle solo de las empresas a las que el usuario tiene acceso; los
+         pares (totales) se ven completos. -->
+    <record id="rule_ic_reconciliation_line_company" model="ir.rule">
+        <field name="name">Conciliación IC: detalle de mis empresas</field>
+        <field name="model_id" ref="model_ic_reconciliation_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

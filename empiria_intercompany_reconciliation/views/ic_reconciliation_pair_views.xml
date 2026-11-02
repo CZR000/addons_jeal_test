@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ic_reconciliation_pair_list" model="ir.ui.view">
+        <field name="name">ic.reconciliation.pair.list</field>
+        <field name="model">ic.reconciliation.pair</field>
+        <field name="arch" type="xml">
+            <list string="Resumen por par" create="0" edit="0" delete="0"
+                  decoration-success="state == 'balanced'" decoration-muted="state == 'reviewed'">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="run_id" optional="hide"/>
+                <field name="date_from" optional="show"/>
+                <field name="date_to" optional="show"/>
+                <field name="company_a_id"/>
+                <field name="company_b_id"/>
+                <field name="block" optional="hide"/>
+                <field name="block_name"/>
+                <field name="opening_a" optional="hide" sum="Total"/>
+                <field name="opening_b" optional="hide" sum="Total"/>
+                <field name="opening_difference" optional="hide" sum="Total"/>
+                <field name="balance_a" sum="Total"/>
+                <field name="balance_b" sum="Total"/>
+                <field name="difference" sum="Total" decoration-danger="difference != 0" decoration-bf="1"/>
+                <field name="total_difference" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'balanced'"
+                       decoration-danger="state == 'pending'" decoration-info="state == 'reviewed'"/>
+                <field name="pending_count" sum="Total"/>
+                <field name="reviewed_count" optional="show" sum="Total"/>
+                <field name="amount_unregistered_receiver" optional="show" sum="Total"/>
+                <field name="amount_no_issuer" optional="show" sum="Total"/>
+                <field name="amount_advance_diff" optional="show" sum="Total"/>
+                <field name="amount_amount_diff" optional="hide" sum="Total"/>
+                <field name="amount_currency_diff" optional="hide" sum="Total"/>
+                <field name="amount_rate_diff" optional="hide" sum="Total"/>
+                <field name="amount_period_diff" optional="hide" sum="Total"/>
+                <field name="amount_rounding" optional="show" sum="Total"/>
+                <field name="amount_serie_diff" optional="show" sum="Total"/>
+                <field name="amount_number_diff" optional="hide" sum="Total"/>
+                <field name="amount_payment" optional="show" sum="Total"/>
+                <field name="amount_detraction" optional="show" sum="Total"/>
+                <field name="amount_retention" optional="show" sum="Total"/>
+                <field name="amount_manual_entry" optional="show" sum="Total"/>
+                <field name="amount_opening" optional="show" sum="Total"/>
+                <field name="amount_triangular" optional="hide" sum="Total"/>
+                <field name="amount_triangular_incomplete" optional="show" sum="Total"/>
+                <field name="amount_manual_match" optional="hide" sum="Total"/>
+                <field name="amount_fx" optional="show" sum="Total"/>
+                <field name="amount_no_effect" optional="hide" sum="Total"/>
+                <field name="amount_matched_account" optional="hide" sum="Total"/>
+                <field name="amount_matched" optional="hide" sum="Total"/>
+                <field name="amount_prior_period" optional="show" sum="Total"/>
+                <field name="control" sum="Total" decoration-danger="control != 0" decoration-success="control == 0"/>
+                <button name="action_open_lines" type="object" string="Detalle" icon="fa-list"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ic_reconciliation_pair_form" model="ir.ui.view">
+        <field name="name">ic.reconciliation.pair.form</field>
+        <field name="model">ic.reconciliation.pair</field>
+        <field name="arch" type="xml">
+            <form string="Par" create="0" edit="0" delete="0">
+                <header>
+                    <button name="action_open_lines" type="object" string="Ver detalle" class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h2><field name="display_name"/></h2></div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="block_name"/>
+                            <field name="date_from" invisible="not date_from"/>
+                            <field name="date_to"/>
+                            <field name="opening_difference" invisible="not date_from"/>
+                            <field name="balance_a"/>
+                            <field name="balance_b"/>
+                            <field name="difference" class="fw-bold"/>
+                            <field name="total_difference"/>
+                            <field name="control" decoration-danger="control != 0"/>
+                        </group>
+                        <group>
+                            <field name="pending_count"/>
+                            <field name="reviewed_count"/>
+                            <field name="matched_count"/>
+                        </group>
+                    </group>
+                    <separator string="Desglose de la diferencia (clic abre el detalle)"/>
+                    <div class="d-flex flex-column gap-1">
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'unregistered_receiver'}" invisible="not amount_unregistered_receiver">
+                            <span>Factura/NC sin registrar en el receptor</span>: <field name="amount_unregistered_receiver" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'no_issuer'}" invisible="not amount_no_issuer">
+                            <span>Compra sin factura/NC del emisor</span>: <field name="amount_no_issuer" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'advance_diff'}" invisible="not amount_advance_diff">
+                            <span>Anticipo/retención aplicado distinto</span>: <field name="amount_advance_diff" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'amount_diff'}" invisible="not amount_amount_diff">
+                            <span>Importe distinto entre emisor y receptor</span>: <field name="amount_amount_diff" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'currency_diff'}" invisible="not amount_currency_diff">
+                            <span>Moneda distinta</span>: <field name="amount_currency_diff" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'rate_diff'}" invisible="not amount_rate_diff">
+                            <span>Tipo de cambio distinto al de la venta</span>: <field name="amount_rate_diff" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'period_diff'}" invisible="not amount_period_diff">
+                            <span>Documento en periodo distinto</span>: <field name="amount_period_diff" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'rounding'}" invisible="not amount_rounding">
+                            <span>Redondeo (≤ 1)</span>: <field name="amount_rounding" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'serie_diff'}" invisible="not amount_serie_diff">
+                            <span>NC con serie distinta</span>: <field name="amount_serie_diff" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'number_diff'}" invisible="not amount_number_diff">
+                            <span>Documento con número distinto</span>: <field name="amount_number_diff" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'payment'}" invisible="not amount_payment">
+                            <span>Pago/cobro sin contrapartida</span>: <field name="amount_payment" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'detraction'}" invisible="not amount_detraction">
+                            <span>Detracción sin contrapartida</span>: <field name="amount_detraction" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'retention'}" invisible="not amount_retention">
+                            <span>Retención sin contrapartida</span>: <field name="amount_retention" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'manual_entry'}" invisible="not amount_manual_entry">
+                            <span>Asiento manual sin contrapartida</span>: <field name="amount_manual_entry" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'opening'}" invisible="not amount_opening">
+                            <span>Saldo de apertura sin contrapartida</span>: <field name="amount_opening" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'triangular'}" invisible="not amount_triangular">
+                            <span>Compensación de 3 empresas</span>: <field name="amount_triangular" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'triangular_incomplete'}" invisible="not amount_triangular_incomplete">
+                            <span>Compensación incompleta</span>: <field name="amount_triangular_incomplete" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'manual_match'}" invisible="not amount_manual_match">
+                            <span>Conciliado manual (diferencia aceptada)</span>: <field name="amount_manual_match" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'fx'}" invisible="not amount_fx">
+                            <span>Diferencia de cambio</span>: <field name="amount_fx" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'no_effect'}" invisible="not amount_no_effect">
+                            <span>Anulado en la misma empresa (sin efecto)</span>: <field name="amount_no_effect" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'matched'}" invisible="not amount_matched">
+                            <span>Conciliado</span>: <field name="amount_matched" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'prior_period'}" invisible="not amount_prior_period">
+                            <span>Arrastre anterior al periodo</span>: <field name="amount_prior_period" class="fw-bold"/>
+                        </button>
+                        <button name="action_open_category" type="object" class="btn btn-link p-0 text-start" context="{'ic_category': 'matched_account'}" invisible="not amount_matched_account">
+                            <span>Conciliado – cuenta distinta</span>: <field name="amount_matched_account" class="fw-bold"/>
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ic_reconciliation_pair_search" model="ir.ui.view">
+        <field name="name">ic.reconciliation.pair.search</field>
+        <field name="model">ic.reconciliation.pair</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="company_a_id" string="Empresa" filter_domain="['|', ('company_a_id', 'ilike', self), ('company_b_id', 'ilike', self)]"/>
+                <field name="run_id"/>
+                <field name="date_to" string="Corte desde" operator="&gt;="/>
+                <field name="date_to" string="Corte hasta" operator="&lt;="/>
+                <filter name="filter_last" string="Última ejecución" domain="[('is_last', '=', True)]"/>
+                <filter name="filter_date_to" string="Fecha de corte" date="date_to"/>
+                <separator/>
+                <filter name="filter_current_year" string="Año en curso"
+                        domain="[('line_ids.date', '&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d')), ('line_ids.date', '&lt;=', (context_today() + relativedelta(month=12, day=31)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_current_month" string="Mes en curso"
+                        domain="[('line_ids.date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('line_ids.date', '&lt;=', (context_today() + relativedelta(day=1, months=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="filter_pending" string="Por conciliar" domain="[('state', '=', 'pending')]"/>
+                <filter name="filter_balanced" string="Cuadra" domain="[('state', '=', 'balanced')]"/>
+                <filter name="filter_reviewed" string="Con revisiones" domain="[('reviewed_count', '>', 0)]"/>
+                <separator/>
+                <filter name="filter_a_receivable" string="A por cobrar / B por pagar" domain="[('block', '=', 'a_receivable')]"/>
+                <filter name="filter_b_receivable" string="B por cobrar / A por pagar" domain="[('block', '=', 'b_receivable')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_company_a" string="Empresa A" context="{'group_by': 'company_a_id'}"/>
+                    <filter name="group_company_b" string="Empresa B" context="{'group_by': 'company_b_id'}"/>
+                    <filter name="group_block" string="Bloque" context="{'group_by': 'block'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_run" string="Ejecución" context="{'group_by': 'run_id'}"/>
+                    <filter name="group_date_to" string="Fecha de corte" context="{'group_by': 'date_to:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ic_reconciliation_pair" model="ir.actions.act_window">
+        <field name="name">Resumen por par</field>
+        <field name="res_model">ic.reconciliation.pair</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_last': 1, 'search_default_filter_pending': 1}</field>
+    </record>
+
+</odoo>

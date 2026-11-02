@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Botón nativo de Odoo 18 (action_add_component) visible en el formulario de la OT. -->
+    <record id="mrp_workorder_form_add_component_button_woec" model="ir.ui.view">
+        <field name="name">mrp.workorder.form.woec.add.component.button</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_add_component"
+                        type="object"
+                        string="Añadir componente"
+                        class="btn-primary"
+                        invisible="production_state in ('draft', 'done', 'cancel') or state in ('done', 'cancel')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_advance_apply_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.apply.wizard.form</field>
+        <field name="model">l10n_pe.advance.apply.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Aplicar anticipos">
+                <group>
+                    <group>
+                        <field name="move_id" readonly="1" force_save="1"/>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="advance_type" readonly="1" force_save="1"/>
+                    </group>
+                    <group>
+                        <field name="currency_id" readonly="1"/>
+                        <field name="move_total" readonly="1"/>
+                    </group>
+                </group>
+                <field name="line_ids">
+                    <list editable="bottom" create="false" delete="false">
+                        <field name="selected"/>
+                        <field name="advance_id" readonly="1" force_save="1"/>
+                        <field name="origin_move_id" readonly="1" optional="show"/>
+                        <field name="advance_date" readonly="1"/>
+                        <field name="contract_ref" readonly="1" optional="hide"/>
+                        <field name="advance_currency_id" readonly="1"/>
+                        <field name="saldo_base" readonly="1" force_save="1"/>
+                        <field name="saldo_total" readonly="1" force_save="1"/>
+                        <field name="apply_amount"
+                               readonly="selected == False"/>
+                        <field name="equivalent_amount" readonly="1" force_save="1"/>
+                        <field name="move_currency_id" column_invisible="1"/>
+                    </list>
+                </field>
+                <group class="oe_subtotal_footer">
+                    <field name="base_to_apply"/>
+                    <field name="total_to_apply"/>
+                    <field name="new_move_total"/>
+                </group>
+                <p class="text-muted">
+                    Por cada fila marcada se crea una linea de aplicacion con
+                    cantidad -1, el IGV del producto y la glosa
+                    "ANTICIPO: FACTURA NRO. ...". El monto (con IGV) no puede
+                    superar el saldo ni dejar la factura en negativo.
+                </p>
+                <footer>
+                    <button name="action_apply" type="object"
+                            string="Aplicar" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Reporte: línea de crédito por cliente -->
+    <record id="view_partner_credit_list" model="ir.ui.view">
+        <field name="name">res.partner.credit.line.list</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Línea de crédito por cliente" create="false"
+                  decoration-danger="sca_debt_overdue &gt; 0"
+                  decoration-warning="sca_credit_usage &gt; 80 and sca_debt_overdue == 0">
+                <field name="display_name" string="Cliente"/>
+                <field name="vat" string="RUC"/>
+                <field name="sca_credit_limit"/>
+                <field name="sca_debt_total"/>
+                <field name="sca_debt_overdue"/>
+                <field name="sca_credit_available"/>
+                <field name="sca_credit_usage" widget="percentage"/>
+                <field name="sca_company_currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_partner_credit_report" model="ir.actions.act_window">
+        <field name="name">Reporte línea de crédito</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_partner_credit_list"/>
+        <field name="domain">[('customer_rank', '>', 0), '|', ('is_company', '=', True), ('parent_id', '=', False)]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+</odoo>

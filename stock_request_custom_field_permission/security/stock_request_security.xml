@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="group_edit_comment_stock_request" model="res.groups">
+            <field name="name">Permitir editar comentarios</field>
+            <field name="category_id" ref="stock_request.module_category_stock_request"/>
+        </record>
+
+        <record id="group_view_comment_stock_request" model="res.groups">
+            <field name="name">Permitir ver comentarios</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="stock_request.module_category_stock_request"/>
+        </record>
+
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('stock_request_custom_field_permission.group_edit_comment_stock_request'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_category_action_expense_new_request" model="ir.actions.act_window">
+        <field name="name">Solicitudes</field>
+        <field name="res_model">approval.category</field>
+        <field name="view_mode">kanban</field>
+        <field name="views" eval="[(ref('approvals.approval_category_view_kanban'), 'kanban')]"/>
+        <field name="domain">[('is_expense_category', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay categorías de solicitud marcadas para Gastos.
+            </p>
+            <p>
+                Marque "Aplica a Informe de Gastos" en Aprobaciones &gt; Configuración &gt;
+                Tipos de aprobación para que aparezcan aquí.
+            </p>
+        </field>
+    </record>
+
+    <record id="approval_request_action_my_expense_requests" model="ir.actions.act_window">
+        <field name="name">Mis solicitudes</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('request_owner_id', '=', uid), ('category_id.is_expense_category', '=', True)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no tiene solicitudes.</p>
+            <p>Créelas desde "Solicitudes de Aprobacion" (anticipos, fondo de caja chica) o con "Reponer fondo" en un informe de caja chica.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_expense_approvals"
+              name="Solicitudes de Aprobacion"
+              parent="hr_expense.menu_hr_expense_root"
+              action="approval_category_action_expense_new_request"
+              sequence="3"/>
+
+    <menuitem id="menu_hr_expense_my_approval_requests"
+              name="Mis solicitudes"
+              parent="hr_expense.menu_hr_expense_root"
+              action="approval_request_action_my_expense_requests"
+              sequence="4"/>
+</odoo>

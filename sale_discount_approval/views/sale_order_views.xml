@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit sale order form to add discount approval workflow -->
+    <record id="view_order_form_discount_approval" model="ir.ui.view">
+        <field name="name">sale.order.form.discount.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- ============================================================
+                 HEADER: add approval buttons before the Confirm button
+                 ============================================================ -->
+            <button name="action_confirm" id="action_confirm" position="before">
+                <!-- Invisible computed fields needed for visibility expressions -->
+                <field name="discount_approval_state" invisible="1"/>
+                <field name="requires_discount_approval" invisible="1"/>
+                <field name="show_request_approval_button" invisible="1"/>
+                <field name="can_approve_discount" invisible="1"/>
+
+                <!-- Pedir Autorización: visible when discount exceeds limit and not yet pending -->
+                <button name="action_request_discount_approval"
+                        type="object"
+                        string="Pedir Autorización"
+                        class="btn-warning"
+                        invisible="not show_request_approval_button"/>
+
+                <!-- Aprobar Descuento: visible for sales managers when pending -->
+                <button name="action_approve_discount"
+                        type="object"
+                        string="Aprobar Descuento"
+                        class="btn-success"
+                        icon="fa-check"
+                        invisible="not can_approve_discount"/>
+
+                <!-- Rechazar Descuento: visible for sales managers when pending -->
+                <button name="action_reject_discount"
+                        type="object"
+                        string="Rechazar"
+                        class="btn-danger"
+                        icon="fa-times"
+                        invisible="not can_approve_discount"/>
+            </button>
+
+            <!-- ============================================================
+                 ALERT BANNERS: before the form sheet (after all native warning banners)
+                 ============================================================ -->
+            <sheet position="before">
+
+                <!-- Warning: discount requires approval (not yet requested) -->
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="discount_approval_state not in ('not_required', 'rejected') or not requires_discount_approval">
+                    <span class="fa fa-exclamation-triangle me-2" title="Advertencia"/>
+                    <strong>Aprobación de descuento requerida.</strong>
+                    Los descuentos en esta cotización superan el límite sin autorización.
+                    Haga clic en <strong>"Pedir Autorización"</strong> o guarde la cotización
+                    para enviar la solicitud automáticamente al Gerente de Ventas.
+                </div>
+
+                <!-- Info: approval pending -->
+                <div class="alert alert-info mb-0" role="alert"
+                     invisible="discount_approval_state != 'pending'">
+                    <span class="fa fa-clock-o me-2" title="Pendiente"/>
+                    <strong>Aprobación de descuento pendiente.</strong>
+                    La solicitud fue enviada al Gerente de Ventas y está esperando confirmación.
+                    Los campos de descuento están bloqueados hasta la aprobación.
+                </div>
+
+                <!-- Success: approved -->
+                <div class="alert alert-success mb-0" role="alert"
+                     invisible="discount_approval_state != 'approved'">
+                    <span class="fa fa-check-circle me-2" title="Aprobado"/>
+                    <strong>Descuento aprobado.</strong>
+                    El Gerente de Ventas aprobó los descuentos de esta cotización.
+                </div>
+
+                <!-- Danger: rejected -->
+                <div class="alert alert-danger mb-0" role="alert"
+                     invisible="discount_approval_state != 'rejected'">
+                    <span class="fa fa-times-circle me-2" title="Rechazado"/>
+                    <strong>Descuento rechazado.</strong>
+                    El Gerente de Ventas rechazó los descuentos. Por favor, ajuste los
+                    descuentos y vuelva a solicitar autorización.
+                    <span invisible="not discount_rejection_reason">
+                        <br/>
+                        <strong>Motivo:</strong>
+                        <field name="discount_rejection_reason" readonly="1" nolabel="1"/>
+                    </span>
+                </div>
+            </sheet>
+
+            <!-- ============================================================
+                 ORDER LINES: lock the discount field when approval is pending
+                 ============================================================ -->
+            <field name="discount" position="attributes">
+                <attribute name="readonly">parent.discount_approval_state == 'pending'</attribute>
+            </field>
+
+            <!-- ============================================================
+                 OTHER INFORMATION TAB: add approval details section
+                 ============================================================ -->
+            <page name="other_information" position="inside">
+                <group string="Aprobación de Descuento"
+                       invisible="discount_approval_state == 'not_required'">
+                    <group>
+                        <field name="discount_approval_state"
+                               string="Estado"
+                               widget="badge"
+                               decoration-success="discount_approval_state == 'approved'"
+                               decoration-warning="discount_approval_state == 'pending'"
+                               decoration-danger="discount_approval_state == 'rejected'"
+                               decoration-muted="discount_approval_state == 'not_required'"/>
+                        <field name="discount_requester_id" string="Solicitado por"/>
+                    </group>
+                    <group>
+                        <field name="discount_approver_id" string="Aprobado por"
+                               invisible="not discount_approver_id"/>
+                        <field name="discount_approval_date" string="Fecha aprobación"
+                               invisible="not discount_approval_date"/>
+                        <field name="discount_rejection_user_id" string="Rechazado por"
+                               invisible="not discount_rejection_user_id"/>
+                        <field name="discount_rejection_date" string="Fecha rechazo"
+                               invisible="not discount_rejection_date"/>
+                    </group>
+                    <group invisible="not discount_rejection_reason">
+                        <field name="discount_rejection_reason" string="Motivo de rechazo"/>
+                    </group>
+                </group>
+            </page>
+
+        </field>
+    </record>
+
+    <!-- ============================================================
+         LIST/TREE VIEW: add decorations for approval state
+         ============================================================ -->
+    <record id="view_quotation_tree_discount_approval" model="ir.ui.view">
+        <field name="name">sale.order.list.discount.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="decoration-warning">discount_approval_state == 'pending'</attribute>
+            </list>
+            <field name="name" position="after">
+                <field name="discount_approval_state" optional="hide"
+                       string="Estado Descuento"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

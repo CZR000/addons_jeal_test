@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_kardex_adjustment_line_view_list" model="ir.ui.view">
+        <field name="name">stock.kardex.adjustment.line.view.list</field>
+        <field name="model">stock.kardex.adjustment.line</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false"
+                  decoration-muted="state == 'reversed'">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="adjustment_type"/>
+                <field name="invoice_id" optional="show"/>
+                <field name="counterpart_account_id" optional="show"/>
+                <field name="picking_id" optional="show"/>
+                <field name="adjusted_move_id" optional="show"/>
+                <field name="amount" sum="Total"/>
+                <field name="move_id" optional="show"/>
+                <field name="fx_move_id" optional="show"/>
+                <field name="revaluation_layer_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'posted'"
+                       decoration-muted="state == 'reversed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_kardex_adjustment_line_view_form" model="ir.ui.view">
+        <field name="name">stock.kardex.adjustment.line.view.form</field>
+        <field name="model">stock.kardex.adjustment.line</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-book" type="object" name="action_open_moves"
+                                string="Asientos"/>
+                    </div>
+                    <div class="oe_title">
+                        <h2><field name="name"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="adjustment_type"/>
+                            <field name="invoice_id" invisible="not invoice_id"/>
+                            <field name="counterpart_account_id"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="adjusted_layer_id"/>
+                            <field name="picking_id"/>
+                            <field name="adjusted_move_id"/>
+                            <field name="revaluation_layer_id"/>
+                            <field name="move_id"/>
+                            <field name="fx_move_id" invisible="not fx_move_id"/>
+                            <field name="reversal_move_ids" widget="many2many_tags" invisible="state != 'reversed'"/>
+                            <field name="run_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_kardex_adjustment_line_view_search" model="ir.ui.view">
+        <field name="name">stock.kardex.adjustment.line.view.search</field>
+        <field name="model">stock.kardex.adjustment.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="picking_id"/>
+                <field name="move_id"/>
+                <field name="invoice_id"/>
+                <filter name="posted" string="Vigentes" domain="[('state', '=', 'posted')]"/>
+                <filter name="reversed" string="Revertidos" domain="[('state', '=', 'reversed')]"/>
+                <separator/>
+                <filter name="cost" string="Costo promedio" domain="[('adjustment_type', '=', 'cost')]"/>
+                <filter name="return" string="Devoluciones y reingresos" domain="[('adjustment_type', '=', 'return')]"/>
+                <filter name="fx" string="Diferencia de cambio" domain="[('adjustment_type', '=', 'fx')]"/>
+                <filter name="price" string="Diferencia de precio" domain="[('adjustment_type', '=', 'price')]"/>
+                <filter name="production" string="Fabricación y desmontaje" domain="[('adjustment_type', '=', 'production')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_product" string="Producto" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_type" string="Tipo de ajuste" context="{'group_by': 'adjustment_type'}"/>
+                    <filter name="group_date" string="Fecha" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_kardex_adjustment_line" model="ir.actions.act_window">
+        <field name="name">Ajustes de kardex registrados</field>
+        <field name="res_model">stock.kardex.adjustment.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_posted': 1}</field>
+    </record>
+
+    <menuitem id="menu_stock_kardex_adjustment_line"
+              name="Ajustes de kardex registrados"
+              parent="stock.menu_warehouse_report"
+              action="action_stock_kardex_adjustment_line"
+              sequence="238"
+              groups="stock.group_stock_manager"/>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_disbursement_reject_wizard_form" model="ir.ui.view">
+        <field name="name">expense.disbursement.reject.wizard.form</field>
+        <field name="model">expense.disbursement.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rechazar solicitud de desembolso">
+                <sheet>
+                    <group>
+                        <field name="payment_id" invisible="1"/>
+                        <field name="reason"
+                               placeholder="Ingrese el motivo del rechazo..."
+                               required="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_reject"
+                            string="Rechazar"
+                            type="object"
+                            class="btn-danger"/>
+                    <button string="Cancelar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

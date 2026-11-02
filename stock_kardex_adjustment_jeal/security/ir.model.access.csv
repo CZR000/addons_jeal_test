@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_kardex_adjustment_manager,stock.kardex.adjustment.manager,model_stock_kardex_adjustment,stock.group_stock_manager,1,1,1,1
+access_stock_kardex_adjustment_row_manager,stock.kardex.adjustment.row.manager,model_stock_kardex_adjustment_row,stock.group_stock_manager,1,1,1,1
+access_stock_kardex_adjustment_summary_manager,stock.kardex.adjustment.summary.manager,model_stock_kardex_adjustment_summary,stock.group_stock_manager,1,1,1,1
+access_stock_kardex_adjustment_line_manager,stock.kardex.adjustment.line.manager,model_stock_kardex_adjustment_line,stock.group_stock_manager,1,0,0,0
+access_stock_kardex_adjustment_line_account,stock.kardex.adjustment.line.account,model_stock_kardex_adjustment_line,account.group_account_readonly,1,0,0,0
+access_stock_kardex_adjustment_account,stock.kardex.adjustment.account,model_stock_kardex_adjustment,account.group_account_readonly,1,0,0,0
+access_stock_kardex_adjustment_row_account,stock.kardex.adjustment.row.account,model_stock_kardex_adjustment_row,account.group_account_readonly,1,0,0,0
+access_stock_kardex_adjustment_summary_account,stock.kardex.adjustment.summary.account,model_stock_kardex_adjustment_summary,account.group_account_readonly,1,0,0,0

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="approval_request_form_ext" model="ir.ui.view">
+        <field name="name">approval.request.form.recruitment.ext</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Campos de reclutamiento: se agregan antes del notebook -->
+            <notebook position="before">
+                <group string="Información de Reclutamiento"
+                       invisible="not x_helpdesk_ticket_id">
+                    <group>
+                        <field name="x_helpdesk_ticket_id" readonly="1"/>
+                        <field name="x_perfil_id"
+                               options="{'no_create': True, 'no_create_edit': True}"
+                               readonly="request_status != 'new'"/>
+                    </group>
+                    <group>
+                        <field name="x_departamento_id"
+                               options="{'no_create': True, 'no_create_edit': True}"
+                               readonly="request_status != 'new'"/>
+                    </group>
+                </group>
+            </notebook>
+
+        </field>
+    </record>
+
+</odoo>

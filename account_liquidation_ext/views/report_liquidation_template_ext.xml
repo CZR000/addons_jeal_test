@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_liquidation_web_ext"
+              inherit_id="account_liquidation.report_liquidation_web">
+
+        <!-- ===================================================
+             TRANSPORT SECTION
+        ==================================================== -->
+
+        <xpath expr="//tr[@t-foreach=&quot;r['transport_lines']&quot;]/ancestor::table[1]" position="attributes">
+            <attribute name="style">table-layout: fixed; width: 100%;</attribute>
+        </xpath>
+        <xpath expr="//tr[@t-foreach=&quot;r['transport_lines']&quot;]/ancestor::table[1]/thead" position="before">
+            <colgroup>
+                <col style="width: 60%;"/>
+                <col style="width: 20%;"/>
+                <col style="width: 20%;"/>
+            </colgroup>
+        </xpath>
+        <xpath expr="//tr[@t-foreach=&quot;r['transport_lines']&quot;]/ancestor::table[1]//th[hasclass('text-end', 'o_mrp_report_line_header')]" position="before">
+            <th class="text-end o_mrp_report_line_header"><span>Importe USD</span></th>
+        </xpath>
+
+        <!-- Fix PEN amount rendering (Babel inserts U+202F which wkhtmltopdf can't render) -->
+        <xpath expr="//tr[@t-foreach=&quot;r['transport_lines']&quot;]/td[hasclass('text-end')]/span" position="replace">
+            <span t-esc="currency.symbol + '{:,.2f}'.format(-(l['total_company'] or 0.0))"/>
+        </xpath>
+
+        <!-- Add USD column -->
+        <xpath expr="//tr[@t-foreach=&quot;r['transport_lines']&quot;]/td[hasclass('text-end')]" position="before">
+            <td class="text-end">
+                <t t-if="l.get('total_usd')">
+                    <span t-esc="'${:,.2f}'.format(-(l['total_usd']))"/>
+                </t>
+                <t t-else="">&#160;</t>
+            </td>
+        </xpath>
+
+        <xpath expr="//td[contains(text(),'No hay costos de transporte')]" position="attributes">
+            <attribute name="colspan">3</attribute>
+        </xpath>
+
+        <!-- Fix PEN subtotal + add USD subtotal -->
+        <xpath expr="//strong[text()='Subtotal Costos de Transporte']/ancestor::tr/td[last()]/strong" position="replace">
+            <strong t-esc="currency.symbol + '{:,.2f}'.format(r['transport_subtotal'])"/>
+        </xpath>
+        <xpath expr="//strong[text()='Subtotal Costos de Transporte']/ancestor::tr/td[last()]" position="before">
+            <td class="text-end">
+                <strong t-esc="'${:,.2f}'.format(r['transport_subtotal_usd'])"/>
+            </td>
+        </xpath>
+
+        <!-- ===================================================
+             PROCESS SECTION
+        ==================================================== -->
+
+        <xpath expr="//tr[@t-foreach=&quot;r['process_lines']&quot;]/ancestor::table[1]" position="attributes">
+            <attribute name="style">table-layout: fixed; width: 100%;</attribute>
+        </xpath>
+        <xpath expr="//tr[@t-foreach=&quot;r['process_lines']&quot;]/ancestor::table[1]/thead" position="before">
+            <colgroup>
+                <col style="width: 60%;"/>
+                <col style="width: 20%;"/>
+                <col style="width: 20%;"/>
+            </colgroup>
+        </xpath>
+        <xpath expr="//tr[@t-foreach=&quot;r['process_lines']&quot;]/ancestor::table[1]//th[hasclass('text-end', 'o_mrp_report_line_header')]" position="before">
+            <th class="text-end o_mrp_report_line_header"><span>Importe USD</span></th>
+        </xpath>
+
+        <xpath expr="//tr[@t-foreach=&quot;r['process_lines']&quot;]/td[hasclass('text-end')]/span" position="replace">
+            <span t-esc="currency.symbol + '{:,.2f}'.format(-(l['total_company'] or 0.0))"/>
+        </xpath>
+
+        <xpath expr="//tr[@t-foreach=&quot;r['process_lines']&quot;]/td[hasclass('text-end')]" position="before">
+            <td class="text-end">
+                <t t-if="l.get('total_usd')">
+                    <span t-esc="'${:,.2f}'.format(-(l['total_usd']))"/>
+                </t>
+                <t t-else="">&#160;</t>
+            </td>
+        </xpath>
+
+        <xpath expr="//td[contains(text(),'No hay costos de proceso')]" position="attributes">
+            <attribute name="colspan">3</attribute>
+        </xpath>
+
+        <xpath expr="//strong[text()='Subtotal Costos de Proceso']/ancestor::tr/td[last()]/strong" position="replace">
+            <strong t-esc="currency.symbol + '{:,.2f}'.format(r['process_subtotal'])"/>
+        </xpath>
+        <xpath expr="//strong[text()='Subtotal Costos de Proceso']/ancestor::tr/td[last()]" position="before">
+            <td class="text-end">
+                <strong t-esc="'${:,.2f}'.format(r['process_subtotal_usd'])"/>
+            </td>
+        </xpath>
+
+        <!-- ===================================================
+             INVOICED SECTION
+        ==================================================== -->
+
+        <xpath expr="//tr[@t-foreach=&quot;r['invoiced_lines']&quot;]/ancestor::table[1]" position="attributes">
+            <attribute name="style">table-layout: fixed; width: 100%;</attribute>
+        </xpath>
+        <xpath expr="//tr[@t-foreach=&quot;r['invoiced_lines']&quot;]/ancestor::table[1]/thead" position="before">
+            <colgroup>
+                <col style="width: 60%;"/>
+                <col style="width: 20%;"/>
+                <col style="width: 20%;"/>
+            </colgroup>
+        </xpath>
+        <xpath expr="//tr[@t-foreach=&quot;r['invoiced_lines']&quot;]/ancestor::table[1]//th[hasclass('text-end', 'o_mrp_report_line_header')]" position="before">
+            <th class="text-end o_mrp_report_line_header"><span>Importe USD</span></th>
+        </xpath>
+
+        <xpath expr="//tr[@t-foreach=&quot;r['invoiced_lines']&quot;]/td[hasclass('text-end')]/span" position="replace">
+            <span t-esc="currency.symbol + '{:,.2f}'.format(l['total_company'] or 0.0)"/>
+        </xpath>
+
+        <xpath expr="//tr[@t-foreach=&quot;r['invoiced_lines']&quot;]/td[hasclass('text-end')]" position="before">
+            <td class="text-end">
+                <t t-if="l.get('total_usd')">
+                    <span t-esc="'${:,.2f}'.format(l['total_usd'])"/>
+                </t>
+                <t t-else="">&#160;</t>
+            </td>
+        </xpath>
+
+        <xpath expr="//td[contains(text(),'No hay facturas al cliente')]" position="attributes">
+            <attribute name="colspan">3</attribute>
+        </xpath>
+
+        <xpath expr="//strong[text()='Subtotal Facturado al Cliente']/ancestor::tr/td[last()]/strong" position="replace">
+            <strong t-esc="currency.symbol + '{:,.2f}'.format(r['invoiced_subtotal'])"/>
+        </xpath>
+        <xpath expr="//strong[text()='Subtotal Facturado al Cliente']/ancestor::tr/td[last()]" position="before">
+            <td class="text-end">
+                <strong t-esc="'${:,.2f}'.format(r['invoiced_subtotal_usd'])"/>
+            </td>
+        </xpath>
+
+        <!-- ===================================================
+             TOTAL GENERAL — same colgroup, add USD column, fix PEN format
+        ==================================================== -->
+
+        <xpath expr="//strong[text()='Total General']/ancestor::table[1]" position="attributes">
+            <attribute name="style">table-layout: fixed; width: 100%;</attribute>
+        </xpath>
+        <xpath expr="//strong[text()='Total General']/ancestor::tbody" position="before">
+            <colgroup>
+                <col style="width: 60%;"/>
+                <col style="width: 20%;"/>
+                <col style="width: 20%;"/>
+            </colgroup>
+        </xpath>
+
+        <!-- Fix PEN grand total format -->
+        <xpath expr="//strong[text()='Total General']/ancestor::tr/td[last()]/strong" position="replace">
+            <strong t-esc="currency.symbol + '{:,.2f}'.format(r['grand_total'])"/>
+        </xpath>
+
+        <!-- Add USD grand total -->
+        <xpath expr="//strong[text()='Total General']/ancestor::tr/td[last()]" position="before">
+            <td class="text-end">
+                <strong t-esc="'${:,.2f}'.format(r['grand_total_usd'])"/>
+            </td>
+        </xpath>
+
+    </template>
+</odoo>

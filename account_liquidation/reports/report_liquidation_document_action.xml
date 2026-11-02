@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_liquidation" model="ir.actions.report">
+        <field name="name">Liquidación</field>
+        <field name="model">report.liquidation</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_liquidation.report_liquidation_web</field>
+        <field name="report_file">account_liquidation.report_liquidation_web</field>
+        <field name="print_report_name">'Liquidación - %s' % object.name</field>
+    </record>
+
+</odoo>

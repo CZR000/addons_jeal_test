@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_edit_accounting_date" model="res.groups">
+        <field name="name">Edit the Accounting Date in the Inventory Movement and Valuation Lines</field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

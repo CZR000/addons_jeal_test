@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_l10n_pe_igv_assignment_list" model="ir.ui.view">
+        <field name="name">l10n.pe.igv.assignment.list</field>
+        <field name="model">l10n.pe.igv.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Asignaciones de IGV">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="affects_register"/>
+                <field name="tax_group_id" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_pe_igv_assignment_form" model="ir.ui.view">
+        <field name="name">l10n.pe.igv.assignment.form</field>
+        <field name="model">l10n.pe.igv.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Asignación de IGV">
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="affects_register"/>
+                            <field name="tax_group_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_pe_igv_assignment" model="ir.actions.act_window">
+        <field name="name">Asignaciones de IGV</field>
+        <field name="res_model">l10n.pe.igv.assignment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!--
+        Menú contenedor propio para englobar los catálogos del módulo,
+        en vez de dejarlos sueltos en Configuración de Contabilidad.
+    -->
+    <menuitem id="menu_hr_expense_extension_root"
+              name="Gastos SUNAT (Empiria)"
+              parent="account.menu_finance_configuration"
+              sequence="90"/>
+
+    <menuitem id="menu_l10n_pe_igv_assignment"
+              name="Asignaciones de IGV"
+              parent="menu_hr_expense_extension_root"
+              action="action_l10n_pe_igv_assignment"
+              sequence="10"/>
+
+</odoo>

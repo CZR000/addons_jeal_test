@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_job_form_ext" model="ir.ui.view">
+        <field name="name">hr.job.form.helpdesk.ext</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart button: tickets de mesa de ayuda vinculados a este puesto -->
+            <div name="button_box" position="inside">
+                <button name="action_view_helpdesk_tickets"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-life-ring"
+                        invisible="helpdesk_ticket_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="helpdesk_ticket_count" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Mesa de Ayuda</span>
+                    </div>
+                </button>
+            </div>
+
+        </field>
+    </record>
+
+</odoo>

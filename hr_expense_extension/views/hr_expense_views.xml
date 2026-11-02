@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_expense_form_sunat" model="ir.ui.view">
+        <field name="name">hr.expense.form.sunat</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Sobrescribir el vendor_id nativo:
+                 - Odoo lo oculta en own_account porque asume que el
+                   proveedor no importa en modo reembolso. En Perú SUNAT
+                   sí lo exige (Registro de Compras), así que lo forzamos
+                   visible siempre.
+                 - Le fijamos label en español y bloqueamos la creación
+                   inline desde el gasto. -->
+            <xpath expr="//field[@name='vendor_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+                <attribute name="string">Proveedor</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+
+            <!-- ==========================================================
+                 Bloque de captura SUNAT.
+                 Se ancla DENTRO del segundo <group> (columna derecha),
+                 justo después del vendor_id nativo, para que Odoo genere
+                 los labels automáticamente. Visible solo en own_account.
+                 ========================================================== -->
+            <xpath expr="//field[@name='vendor_id']" position="after">
+                <field name="l10n_latam_document_type_id"
+                       invisible="payment_mode != 'own_account'"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="document_serie"
+                       invisible="payment_mode != 'own_account'"/>
+                <field name="document_number"
+                       invisible="payment_mode != 'own_account'"/>
+                <field name="igv_assignment_id"
+                       invisible="payment_mode != 'own_account'"
+                       required="l10n_latam_document_type_id != False"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="in_purchase_register"
+                       invisible="payment_mode != 'own_account'"
+                       readonly="1"/>
+                <field name="ecpn_id"
+                       invisible="payment_mode != 'own_account'"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="merchant_id"
+                       invisible="payment_mode != 'own_account'"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="use_multiple_lines"
+                       invisible="payment_mode != 'own_account'"/>
+            </xpath>
+
+            <!-- ==========================================================
+                 Notebook con el detalle del comprobante.
+                 Visible solo cuando use_multiple_lines=True.
+                 ========================================================== -->
+            <xpath expr="//sheet/group" position="after">
+                <notebook invisible="not use_multiple_lines">
+                    <page string="Líneas del comprobante"
+                          name="expense_lines">
+                        <field name="line_ids">
+                            <list editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_id"
+                                       options="{'no_create': True, 'no_open': True}"/>
+                                <field name="name"/>
+                                <field name="account_id"
+                                       options="{'no_create': True, 'no_open': True}"/>
+                                <field name="analytic_distribution"
+                                       widget="analytic_distribution"
+                                       groups="analytic.group_analytic_accounting"
+                                       optional="show"/>
+                                <field name="quantity"/>
+                                <field name="price_unit"/>
+                                <field name="tax_ids"
+                                       widget="many2many_tags"
+                                       options="{'no_create': True}"
+                                       optional="show"/>
+                                <field name="price_subtotal" sum="Subtotal"/>
+                                <field name="currency_id" column_invisible="1"/>
+                                <field name="company_id" column_invisible="1"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

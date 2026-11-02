@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_transport_tab" model="ir.ui.view">
+        <field name="name">stock.picking.form.transport.tab</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- Nueva pestaña "Guía de transportista" antes de la pestaña Note -->
+            <xpath expr="//page[@name='note']" position="before">
+                <page string="Guía de transportista" name="guia_transportista">
+                    <group>
+                        <group>
+                            <field name="transportista_id" options="{'no_create': True}"/>
+                            <field name="guias_grr"/>
+                            <field name="guias_gtr"/>
+                        </group>
+                        <group>
+                            <field name="placa"/>
+                            <field name="ticket_pesaje"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="vpicktree_ticket_pesaje" model="ir.ui.view">
+        <field name="name">stock.picking.tree.ticket.pesaje</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="before">
+                <field name="ticket_pesaje" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="view_picking_internal_search_ticket_pesaje" model="ir.ui.view">
+        <field name="name">stock.picking.search.ticket.pesaje</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="ticket_pesaje"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

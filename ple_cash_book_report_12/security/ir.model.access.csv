@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ple_report_cash_book_current_user,ple.report.cash.book.current.user,model_ple_report_cash_book_current,account.group_account_user,1,1,1,1
+access_ple_report_cash_book_current_manager,ple.report.cash.book.current.manager,model_ple_report_cash_book_current,account.group_account_manager,1,1,1,1

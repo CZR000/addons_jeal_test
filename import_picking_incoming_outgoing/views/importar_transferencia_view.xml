@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================ -->
+        <!-- VISTA DEL FORMULARIO DEL ASISTENTE DE IMPORTACION            -->
+        <!-- ============================================================ -->
+        <record model="ir.ui.view" id="vista_importar_transferencia_form">
+            <field name="name">picking.incoming.outgoing.form</field>
+            <field name="model">picking.incoming.outgoing</field>
+            <field name="arch" type="xml">
+                <form string="Asistente de Importacion de Transferencias">
+                    <separator string="Este asistente importara Recepciones, Entregas y Transferencias Internas desde un archivo Excel. Asegurese de seleccionar un archivo .xls valido."/>
+                    <group>
+                        <group string="Configuracion General">
+                            <field name="company_id" readonly="1" force_save="1"/>
+                            <field name="ubicacion_origen_id"
+                                   domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="importar_producto_por" widget="radio"/>
+                        </group>
+                        <group string="Tipo de Operacion y Estado">
+                            <field name="tipo_operacion_id"
+                                   domain="[('company_id', '=', company_id)]"/>
+                            <field name="ubicacion_destino_id"
+                                   domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="estado" widget="radio"/>
+                        </group>
+                        <group string="Archivo Excel">
+                            <label for="archivo" class="oe_inline"/>
+                            <div>
+                                <field name="archivo" class="oe_inline" filename="nombre_archivo"/>
+                                <field name="nombre_archivo" class="oe_inline" invisible="1" readonly="1"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Importar"
+                                name="importar_transferencias_desde_excel"
+                                type="object"
+                                class="oe_highlight"/>
+                        o
+                        <button string="Cancelar"
+                                class="btn-secondary"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- ACCION DE VENTANA                                             -->
+        <!-- ============================================================ -->
+        <record model="ir.actions.act_window" id="accion_importar_transferencia">
+            <field name="name">Importar Transferencias (Recepciones / Entregas / Transferencias Internas)</field>
+            <field name="res_model">picking.incoming.outgoing</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- MENU EN INVENTARIO                                            -->
+        <!-- ============================================================ -->
+        <menuitem name="Importar Transferencias desde Excel"
+                  id="menu_importar_transferencias_excel"
+                  parent="stock.menu_stock_warehouse_mgmt"
+                  action="import_picking_incoming_outgoing.accion_importar_transferencia"
+                  sequence="140"
+                  groups="stock.group_stock_manager"/>
+
+    </data>
+</odoo>

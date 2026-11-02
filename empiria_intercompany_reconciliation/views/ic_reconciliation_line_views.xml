@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ic_reconciliation_line_list" model="ir.ui.view">
+        <field name="name">ic.reconciliation.line.list</field>
+        <field name="model">ic.reconciliation.line</field>
+        <field name="arch" type="xml">
+            <list string="Detalle de diferencias" create="0" edit="0" delete="0"
+                  decoration-muted="status in ('reviewed', 'matched', 'manual')" decoration-bf="is_new">
+                <header>
+                    <button name="action_mark_reviewed" type="object" string="Marcar revisado"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <button name="action_manual_match" type="object" string="Emparejar a mano"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <button name="action_undo_review" type="object" string="Deshacer revisión"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <button name="action_undo_manual_match" type="object" string="Deshacer emparejamiento"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                </header>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="is_new" column_invisible="1"/>
+                <field name="run_id" optional="hide"/>
+                <field name="pair_id" optional="show"/>
+                <field name="category"/>
+                <field name="company_id" string="Registrado en"/>
+                <field name="counterpart_company_id" optional="show"/>
+                <field name="doc_type" optional="hide"/>
+                <field name="move_name" string="Asiento"/>
+                <field name="doc_number" optional="show"/>
+                <field name="date"/>
+                <field name="account_code" optional="show"/>
+                <field name="line_currency_id" string="Mon." optional="show"/>
+                <field name="amount_currency" optional="show"/>
+                <field name="amount_pen" sum="Total"/>
+                <field name="counterpart_move_name" optional="show"/>
+                <field name="counterpart_amount_pen" optional="hide" sum="Total"/>
+                <field name="effect_pen" sum="Total" decoration-bf="1"/>
+                <field name="label" optional="show"/>
+                <field name="note" optional="show"/>
+                <field name="account_note" optional="show"/>
+                <field name="suggestion_note" optional="show"/>
+                <field name="action_hint" optional="hide"/>
+                <field name="status" widget="badge" decoration-danger="status == 'pending'"
+                       decoration-info="status == 'reviewed'" decoration-success="status in ('matched', 'manual')"/>
+                <field name="rule" optional="hide"/>
+                <button name="action_open_document" type="object" icon="fa-external-link" title="Abrir documento"
+                        invisible="not move_id"/>
+                <button name="action_open_counterpart" type="object" icon="fa-exchange" title="Abrir contraparte"
+                        invisible="not counterpart_move_id"/>
+                <field name="move_id" column_invisible="1"/>
+                <field name="counterpart_move_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ic_reconciliation_line_form" model="ir.ui.view">
+        <field name="name">ic.reconciliation.line.form</field>
+        <field name="model">ic.reconciliation.line</field>
+        <field name="arch" type="xml">
+            <form string="Línea de detalle" create="0" edit="0" delete="0">
+                <header>
+                    <button name="action_open_document" type="object" string="Abrir documento" class="oe_highlight" invisible="not move_id"/>
+                    <button name="action_open_counterpart" type="object" string="Abrir contraparte" invisible="not counterpart_move_id"/>
+                    <button name="action_open_move_lines" type="object" string="Ver apuntes"/>
+                    <button name="action_mark_reviewed" type="object" string="Marcar revisado" invisible="status != 'pending'"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <button name="action_undo_review" type="object" string="Deshacer revisión" invisible="status != 'reviewed'"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <button name="action_match_suggestion" type="object" string="Emparejar con la sugerencia"
+                            invisible="not suggested_line_id or status not in ('pending', 'reviewed')"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <button name="action_undo_manual_match" type="object" string="Deshacer emparejamiento"
+                            invisible="status != 'manual' or not manual_match_id"
+                            groups="empiria_intercompany_reconciliation.group_ic_reconciliation_manager"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h2><field name="category"/></h2><field name="pair_id"/></div>
+                    <group>
+                        <group string="Registro">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id"/>
+                            <field name="move_id"/>
+                            <field name="doc_type"/>
+                            <field name="doc_number"/>
+                            <field name="date"/>
+                            <field name="account_code"/>
+                            <field name="line_currency_id"/>
+                            <field name="amount_currency"/>
+                            <field name="amount_pen"/>
+                            <field name="label"/>
+                        </group>
+                        <group string="Contraparte">
+                            <field name="counterpart_company_id"/>
+                            <field name="counterpart_move_id"/>
+                            <field name="counterpart_date"/>
+                            <field name="counterpart_currency_id"/>
+                            <field name="counterpart_amount_currency"/>
+                            <field name="counterpart_amount_pen"/>
+                            <field name="effect_pen" class="fw-bold"/>
+                            <field name="rule_name"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                        <field name="account_note" invisible="not account_note"/>
+                        <field name="is_partial_advance" invisible="not is_partial_advance"/>
+                        <field name="action_hint"/>
+                    </group>
+                    <group string="Posible contraparte" invisible="not suggested_line_id and not suggestion_note">
+                        <field name="suggested_line_id"/>
+                        <field name="suggestion_note"/>
+                    </group>
+                    <group string="Revisión" invisible="not review_id">
+                        <field name="review_id" invisible="1"/>
+                        <field name="review_user_id"/>
+                        <field name="review_date"/>
+                        <field name="review_comment"/>
+                    </group>
+                    <group string="Emparejamiento manual" invisible="not manual_match_id">
+                        <field name="manual_match_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ic_reconciliation_line_search" model="ir.ui.view">
+        <field name="name">ic.reconciliation.line.search</field>
+        <field name="model">ic.reconciliation.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="move_name"/>
+                <field name="doc_number"/>
+                <field name="label"/>
+                <field name="pair_id"/>
+                <field name="company_id"/>
+                <field name="category"/>
+                <field name="date" string="Fecha desde" operator="&gt;="/>
+                <field name="date" string="Fecha hasta" operator="&lt;="/>
+                <field name="run_id"/>
+                <filter name="filter_last" string="Última ejecución" domain="[('is_last', '=', True)]"/>
+                <separator/>
+                <filter name="filter_current_year" string="Año en curso"
+                        domain="['|', '&amp;', ('date', '&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(month=12, day=31)).strftime('%Y-%m-%d')),
+                                 '&amp;', ('counterpart_date', '&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d')), ('counterpart_date', '&lt;=', (context_today() + relativedelta(month=12, day=31)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_current_month" string="Mes en curso"
+                        domain="['|', '&amp;', ('date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(day=1, months=1, days=-1)).strftime('%Y-%m-%d')),
+                                 '&amp;', ('counterpart_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('counterpart_date', '&lt;=', (context_today() + relativedelta(day=1, months=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_date" string="Fecha del documento" date="date"/>
+                <filter name="filter_run_date" string="Fecha de corte" date="run_date_to"/>
+                <separator/>
+                <filter name="filter_pending" string="Pendientes" domain="[('status', '=', 'pending')]"/>
+                <filter name="filter_reviewed" string="Revisados" domain="[('status', '=', 'reviewed')]"/>
+                <filter name="filter_matched" string="Conciliados" domain="[('status', 'in', ('matched', 'manual'))]"/>
+                <filter name="filter_new" string="Nuevos" domain="[('is_new', '=', True)]"/>
+                <filter name="filter_account_note" string="Conciliado – cuenta distinta" domain="[('account_note', '!=', False)]"/>
+                <filter name="filter_suggestion" string="Con posible contraparte" domain="[('suggestion_note', '!=', False)]"/>
+                <filter name="filter_partial_advance" string="Anticipo aplicado parcialmente" domain="[('is_partial_advance', '=', True)]"/>
+                <separator/>
+                <filter name="filter_usd" string="En dólares" domain="[('line_currency_id.name', '=', 'USD')]"/>
+                <filter name="filter_pen" string="En soles" domain="[('line_currency_id.name', '=', 'PEN')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_category" string="Categoría" context="{'group_by': 'category'}"/>
+                    <filter name="group_company" string="Registrado en" context="{'group_by': 'company_id'}"/>
+                    <filter name="group_pair" string="Par" context="{'group_by': 'pair_id'}"/>
+                    <filter name="group_currency" string="Moneda" context="{'group_by': 'line_currency_id'}"/>
+                    <filter name="group_account_note" string="Cuenta distinta" context="{'group_by': 'account_note'}"/>
+                    <filter name="group_date" string="Fecha del documento" context="{'group_by': 'date:month'}"/>
+                    <filter name="group_run" string="Ejecución" context="{'group_by': 'run_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ic_reconciliation_line" model="ir.actions.act_window">
+        <field name="name">Detalle de diferencias</field>
+        <field name="res_model">ic.reconciliation.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_last': 1, 'search_default_filter_pending': 1, 'search_default_group_category': 1}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <menuitem
+            id="menu_sire_rce_report_custom_national_purchase"
+            name="Reporte RCE - Compras nacionales personalizado"
+            action="l10n_pe_sire_purchase_national_custom.action_sire_rce_report_custom_national_purchase"
+            parent="l10n_pe_sire_sunat.menu_sire_electronic_register"
+            sequence="2"/>
+    </data>
+</odoo>

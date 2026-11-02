@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_permanent_inventory_valuation_form" model="ir.ui.view">
+            <field name="name">view.permanent.inventory.valuation.form</field>
+            <field name="model">permanent.inventory.valuation</field>
+            <field name="arch" type="xml">
+                <form string="Inventario Permanente">
+                    <header>
+                        <button name="action_calc_balance" string="Calcular Saldo Inicial" type="object" invisible="state != 'draft'" class="btn-primary"/>
+
+                        <button name="calculate_products_final" string="Calcular Saldo Final" type="object" invisible="not validation_generate_report" class="btn-primary"/>
+
+                        <button name="action_generate_report_valued" string="Generar Reporte Valorizado" type="object" invisible="status_permanent != 'draft_perm'" class="btn-secondary"/>
+
+                        <button name="%(action_update_opening_wizard)d" string="Trasladar del mes anterior" type="action" context="{'default_permanent_id': id}" class="btn-secondary"/>
+
+                        <button name="action_close" string="Declarar a SUNAT" type="object" invisible="state != 'load'" class="btn-danger" confirm="¿Está seguro de declarar y cerrar este periodo?"/>
+
+                        <button name="action_rollback_permanent" string="Regresar a Borrador Reporte" type="object" invisible="status_permanent != 'load_perm'"/>
+
+                        <button name="action_rollback" string="Regresar a Borrador" type="object" invisible="state not in ('load', 'closed')"/>
+
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="validation_calc_balance" invisible="1"/>
+                                <field name="validation_generate_report" invisible="1"/>
+                                <field name="status_permanent" invisible="1"/>
+
+                                <field name="company_id" options="{'no_create': True}"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="state_send"/>
+                                <field name="date_ple"/>
+                            </group>
+
+                            <group string="Reportes PLE" id="ple_sale">
+                                <field name="xls_filename_valued" invisible="1"/>
+                                <field name="xls_binary_valued" filename="xls_filename_valued" readonly="1" widget="binary"/>
+
+                                <field name="txt_filename_valued" invisible="1"/>
+                                <field name="txt_binary_valued" filename="txt_filename_valued" readonly="1" widget="binary"/>
+                            </group>
+                        </group>
+
+                        <div class="alert alert-danger" role="alert" invisible="not error_dialog">
+                            <field name="error_dialog" nolabel="1"/>
+                        </div>
+
+                        <notebook>
+                            <page name="stock_product_units_valuation" string="Saldo Inicial">
+                                <field name="list_val_units"/>
+                            </page>
+                            <page name="final_products" string="Saldo Final">
+                                <field name="list_val_unit_final"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_permanent_inventory_valuation_tree" model="ir.ui.view">
+            <field name="name">view.permanent.inventory.valuation.tree</field>
+            <field name="model">permanent.inventory.valuation</field>
+            <field name="arch" type="xml">
+                <list string="Inventario Permanente" decoration-info="state == 'draft'" decoration-success="state == 'closed'">
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="company_id"/>
+                    <field name="date_ple"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'closed'"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="permanent_inventory_valuation_action" model="ir.actions.act_window">
+            <field name="name">Inventario Permanente</field>
+            <field name="res_model">permanent.inventory.valuation</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

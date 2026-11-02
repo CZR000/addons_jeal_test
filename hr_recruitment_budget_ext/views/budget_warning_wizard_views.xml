@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_budget_warning_wizard_form" model="ir.ui.view">
+        <field name="name">budget.warning.wizard.form</field>
+        <field name="model">budget.warning.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Alerta: Presupuesto Excedido">
+                <sheet>
+                    <field name="message" widget="html" readonly="1" nolabel="1"/>
+                </sheet>
+                <footer>
+                    <button string="Cerrar" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

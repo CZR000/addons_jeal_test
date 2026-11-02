@@ -1,0 +1,39 @@
+/* Styles for Select All / Deselect All buttons in journal filter */
+
+.js_select_all_journals_container {
+    background-color: #f8f9fa;
+    
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+        
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        i.fa {
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .d-flex {
+            flex-direction: column;
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    }
+}
+
+/* Ensure buttons don't close the dropdown when clicked */
+.o_search_options .dropdown-menu .js_select_all_journals_container {
+    cursor: default;
+    
+    .btn {
+        cursor: pointer;
+    }
+}

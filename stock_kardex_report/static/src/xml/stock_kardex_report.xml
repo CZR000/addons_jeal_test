@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_kardex_report.KardexFilterGrouping">
+        <Dropdown menuClass="'account_report_filter kardex_grouping'">
+            <button class="btn btn-secondary">
+                <i class="fa fa-object-group me-1"/>Grouping
+                <t t-set="groupCount" t-value="(controller.options.group_by_category ? 1 : 0) + (controller.options.group_by_warehouse ? 1 : 0)"/>
+                <t t-if="groupCount > 0">
+                    <span class="badge bg-light ms-1" t-esc="groupCount"/>
+                </t>
+            </button>
+            <t t-set-slot="content">
+                <t t-if="'group_by_category' in controller.options">
+                    <DropdownItem
+                        class="{ 'selected': controller.options.group_by_category }"
+                        onSelected="() => this.onGroupingChange('group_by_category')"
+                        closingMode="'none'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <input type="checkbox" class="form-check-input me-2" t-att-checked="controller.options.group_by_category"/>
+                            <i class="fa fa-tags me-1"/>Group by Category
+                        </div>
+                    </DropdownItem>
+                </t>
+                <t t-if="'group_by_warehouse' in controller.options">
+                    <DropdownItem
+                        class="{ 'selected': controller.options.group_by_warehouse }"
+                        onSelected="() => this.onGroupingChange('group_by_warehouse')"
+                        closingMode="'none'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <input type="checkbox" class="form-check-input me-2" t-att-checked="controller.options.group_by_warehouse"/>
+                            <i class="fa fa-building me-1"/>Group by Warehouse
+                        </div>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="stock_kardex_report.KardexFilterWarehouse">
+        <Dropdown menuClass="'account_report_filter kardex_warehouse'">
+            <button class="btn btn-secondary">
+                <i class="fa fa-building me-1"/>Warehouses
+                <t t-if="controller.options.filter_warehouse_ids and controller.options.filter_warehouse_ids.length > 0">
+                    <span class="badge bg-light ms-1" t-esc="controller.options.filter_warehouse_ids.length"/>
+                </t>
+            </button>
+            <t t-set-slot="content">
+                <div class="dropdown-item d-flex gap-2 align-items-center">
+                    <label class="mb-0">Warehouses</label>
+                    <MultiRecordSelector 
+                        t-props="getMultiRecordSelectorProps('stock.warehouse', 'filter_warehouse_ids')"
+                        domain="[['active', 'in', [true, false]]]"/>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="stock_kardex_report.KardexFilterLocation">
+        <Dropdown menuClass="'account_report_filter kardex_location'">
+            <button class="btn btn-secondary">
+                <i class="fa fa-map-marker me-1"/>Locations
+                <t t-if="controller.options.filter_location_ids and controller.options.filter_location_ids.length > 0">
+                    <span class="badge bg-light ms-1" t-esc="controller.options.filter_location_ids.length"/>
+                </t>
+            </button>
+            <t t-set-slot="content">
+                <div class="dropdown-item d-flex gap-2 align-items-center">
+                    <label class="mb-0">Locations</label>
+                    <MultiRecordSelector 
+                        t-props="getMultiRecordSelectorProps('stock.location', 'filter_location_ids')"
+                        domain="[['usage', '=', 'internal'], ['active', 'in', [true, false]]]"/>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="stock_kardex_report.KardexFilterCategory">
+        <Dropdown menuClass="'account_report_filter kardex_category'">
+            <button class="btn btn-secondary">
+                <i class="fa fa-tags me-1"/>Categories
+                <t t-if="controller.options.filter_category_ids and controller.options.filter_category_ids.length > 0">
+                    <span class="badge bg-light ms-1" t-esc="controller.options.filter_category_ids.length"/>
+                </t>
+            </button>
+            <t t-set-slot="content">
+                <div class="dropdown-item d-flex gap-2 align-items-center">
+                    <label class="mb-0">Categories</label>
+                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('product.category', 'filter_category_ids')"/>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="stock_kardex_report.KardexFilterProduct">
+        <Dropdown menuClass="'account_report_filter kardex_product'">
+            <button class="btn btn-secondary">
+                <i class="fa fa-cube me-1"/>Products
+                <t t-if="controller.options.filter_product_ids and controller.options.filter_product_ids.length > 0">
+                    <span class="badge bg-light ms-1" t-esc="controller.options.filter_product_ids.length"/>
+                </t>
+            </button>
+            <t t-set-slot="content">
+                <div class="dropdown-item d-flex gap-2 align-items-center">
+                    <label class="mb-0">Products</label>
+                    <MultiRecordSelector 
+                        t-props="getMultiRecordSelectorProps('product.product', 'filter_product_ids')"
+                        domain="[['is_storable', '=', true], ['active', 'in', [true, false]]]"/>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="stock_kardex_report.AccountReportFiltersCustomizable" t-inherit="account_reports.AccountReportFiltersCustomizable" t-inherit-mode="extension">
+        <xpath expr="//div[@id='filter_date']" position="after">
+            <t t-if="'group_by_category' in controller.options or 'group_by_warehouse' in controller.options">
+                <div id="filter_kardex_grouping">
+                    <t t-call="stock_kardex_report.KardexFilterGrouping"/>
+                </div>
+            </t>
+            <t t-if="'filter_warehouse_ids' in controller.options">
+                <div id="filter_kardex_warehouse">
+                    <t t-call="stock_kardex_report.KardexFilterWarehouse"/>
+                </div>
+            </t>
+            <t t-if="'filter_location_ids' in controller.options">
+                <div id="filter_kardex_location">
+                    <t t-call="stock_kardex_report.KardexFilterLocation"/>
+                </div>
+            </t>
+            <t t-if="'filter_category_ids' in controller.options">
+                <div id="filter_kardex_category">
+                    <t t-call="stock_kardex_report.KardexFilterCategory"/>
+                </div>
+            </t>
+            <t t-if="'filter_product_ids' in controller.options">
+                <div id="filter_kardex_product">
+                    <t t-call="stock_kardex_report.KardexFilterProduct"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

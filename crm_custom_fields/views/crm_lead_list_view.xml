@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_loss_fields_list" model="ir.ui.view">
+        <field name="name">crm.lead.loss.fields.list</field>
+        <field name="model">crm.lead</field>
+
+        <!--  ID correcto encontrado en tu instancia -->
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+
+            <!-- Odoo 18: el tag <tree> se renombró a <list> en v17 -->
+            <xpath expr="//list/field[last()]" position="after">
+
+                <field name="x_loss_category"
+                       string="Categoría de pérdida"
+                       optional="show"/>
+
+                <field name="x_loss_detail_general"
+                       string="Detalle"
+                       optional="show"/>
+
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

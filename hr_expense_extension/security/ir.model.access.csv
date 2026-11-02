@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_expense_line_user,hr.expense.line user,model_hr_expense_line,hr_expense.group_hr_expense_user,1,1,1,1
+access_hr_expense_line_manager,hr.expense.line manager,model_hr_expense_line,hr_expense.group_hr_expense_manager,1,1,1,1
+access_l10n_pe_igv_assignment_user,l10n.pe.igv.assignment user,model_l10n_pe_igv_assignment,base.group_user,1,0,0,0
+access_l10n_pe_igv_assignment_manager,l10n.pe.igv.assignment manager,model_l10n_pe_igv_assignment,account.group_account_manager,1,1,1,1
+access_l10n_pe_ecpn_category_user,l10n.pe.ecpn.category user,model_l10n_pe_ecpn_category,base.group_user,1,0,0,0
+access_l10n_pe_ecpn_category_manager,l10n.pe.ecpn.category manager,model_l10n_pe_ecpn_category,account.group_account_manager,1,1,1,1

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_closing_entry_wizard_manager,closing.entry.wizard manager,model_closing_entry_wizard,account.group_account_manager,1,1,1,1
+access_closing_entry_confirm_wizard_manager,closing.entry.confirm.wizard manager,model_closing_entry_confirm_wizard,account.group_account_manager,1,1,1,1

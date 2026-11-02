@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Regla que restringe el uso del wizard al grupo propio del módulo. -->
+    <record id="rule_compensation_wizard_user" model="ir.rule">
+        <field name="name">Compensación: solo usuarios autorizados</field>
+        <field name="model_id" ref="model_l10n_pe_compensation_wizard"/>
+        <field name="groups" eval="[(4, ref('l10n_pe_account_compensation.group_compensation_user'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_compensation_wizard_line_user" model="ir.rule">
+        <field name="name">Compensación línea: solo usuarios autorizados</field>
+        <field name="model_id" ref="model_l10n_pe_compensation_wizard_line"/>
+        <field name="groups" eval="[(4, ref('l10n_pe_account_compensation.group_compensation_user'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

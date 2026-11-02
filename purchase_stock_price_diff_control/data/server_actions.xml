@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="action_pdiff_delete_valuation" model="ir.actions.server">
+            <field name="name">Eliminar valorización y regularizar asientos</field>
+            <field name="model_id" ref="stock_account.model_stock_valuation_layer"/>
+            <field name="binding_model_id" ref="stock_account.model_stock_valuation_layer"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">records.action_pdiff_delete_valuation()</field>
+        </record>
+    </data>
+</odoo>

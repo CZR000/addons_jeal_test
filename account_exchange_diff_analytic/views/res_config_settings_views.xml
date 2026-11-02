@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account_exchange_diff_analytic</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- In Odoo 18 the element changed from div to block; attrs= replaced by invisible= -->
+            <xpath expr="//block[@id='default_accounts']" position="inside">
+                <setting string="Analítica - Diferencia de cambio"
+                         invisible="country_code != 'PE'">
+                    <div class="content-group">
+                        <div class="row mt8">
+                            <span class="col-lg-4 o_light_label">Cuenta analítica</span>
+                            <field name="exchange_diff_analytic_account_id"
+                                   placeholder="Seleccione una cuenta analítica..."
+                                   options="{'no_create_edit': True}"/>
+                        </div>
+                        <div class="text-muted mt4">
+                            Cuenta analítica asignada automáticamente a los asientos de
+                            diferencia de cambio generados por la conciliación.
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

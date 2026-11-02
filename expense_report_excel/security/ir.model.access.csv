@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_expense_report_wizard,expense.report.wizard,model_expense_report_wizard,account.group_account_user,1,1,1,1
+access_expense_report_wizard_manager,expense.report.wizard.manager,model_expense_report_wizard,account.group_account_manager,1,1,1,1
+access_expense_report_extra_field,expense.report.extra.field,model_expense_report_extra_field,account.group_account_user,1,1,1,1
+access_expense_report_extra_field_manager,expense.report.extra.field.manager,model_expense_report_extra_field,account.group_account_manager,1,1,1,1

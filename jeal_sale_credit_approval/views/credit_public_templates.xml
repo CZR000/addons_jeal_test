@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Página autocontenida: no depende de website ni portal -->
+    <template id="credit_public_invalid" name="Solicitud no válida">
+        <html lang="es">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Aprobación de crédito</title>
+                <style>
+                    body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f6;margin:0;color:#1a1a1a;}
+                    .wrap{max-width:640px;margin:48px auto;padding:0 16px;}
+                    .alert{padding:14px 18px;border-radius:8px;background:#ececed;color:#555;}
+                </style>
+            </head>
+            <body>
+                <div class="wrap">
+                    <div class="alert">El enlace no es válido o la solicitud no existe.</div>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="credit_public_page" name="Aprobación de crédito">
+        <t t-set="state_label" t-value="{'pending':'Pendiente','approved':'Aprobada','rejected':'Rechazada','expired':'Vencida'}.get(req.state)"/>
+        <html lang="es">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Aprobación de crédito</title>
+                <style>
+                    body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f6;margin:0;color:#1a1a1a;}
+                    .wrap{max-width:640px;margin:48px auto;padding:0 16px;}
+                    .card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+                    .card-h{background:#2b2b3a;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+                    .card-b{padding:20px;}
+                    table{width:100%;border-collapse:collapse;margin-bottom:12px;}
+                    td{padding:4px 0;vertical-align:top;}
+                    td.k{color:#777;width:40%;}
+                    .badge{font-size:12px;background:#f0c040;color:#3a2e00;padding:2px 10px;border-radius:12px;}
+                    .alert{padding:10px 14px;border-radius:6px;margin:10px 0;}
+                    .a-ok{background:#e4f6e8;color:#157347;}
+                    .a-bad{background:#fbe4e6;color:#b02a37;}
+                    .a-sec{background:#ececed;color:#555;}
+                    .a-warn{background:#fff4d6;border-left:4px solid #e0a800;color:#1a1a1a;}
+                    textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;}
+                    .btn{border:none;padding:10px 24px;border-radius:6px;color:#fff;font-size:15px;cursor:pointer;}
+                    .btn-ok{background:#157347;}
+                    .btn-bad{background:#b02a37;}
+                    label{display:block;margin:4px 0 6px;font-weight:bold;}
+                </style>
+            </head>
+            <body>
+                <div class="wrap">
+                    <div class="card">
+                        <div class="card-h">
+                            <strong>Aprobación de crédito</strong>
+                            <span class="badge" t-esc="state_label"/>
+                        </div>
+                        <div class="card-b">
+                            <t t-set="reasons" t-value="req._get_reason_lines()"/>
+                            <div t-if="reasons" class="alert a-warn">
+                                <t t-if="len(reasons) == 1">
+                                    <strong>Motivo:</strong> <t t-esc="reasons[0]"/>
+                                </t>
+                                <t t-else="">
+                                    <strong>Motivos:</strong>
+                                    <ul style="margin:4px 0 0 18px;padding:0;">
+                                        <li t-foreach="reasons" t-as="reason" t-esc="reason"/>
+                                    </ul>
+                                </t>
+                            </div>
+                            <table>
+                                <tr><td class="k">Cliente</td>
+                                    <td><t t-esc="req.partner_id.name"/><t t-if="req.partner_id.vat"> · RUC <t t-esc="req.partner_id.vat"/></t></td></tr>
+                                <tr><td class="k">Cotización</td>
+                                    <td><t t-esc="req.order_id.name"/> · <t t-esc="req.name"/></td></tr>
+                                <tr><td class="k">Vendedor</td>
+                                    <td><t t-esc="req.user_id.name"/></td></tr>
+                                <tr><td class="k">Esta venta</td>
+                                    <td><strong t-esc="req.currency_id.format(req.amount_pen)"/></td></tr>
+                                <tr><td class="k">Crédito disponible</td>
+                                    <td><t t-esc="req._get_available_text()"/></td></tr>
+                                <tr><td class="k">Vence</td>
+                                    <td><t t-esc="req._format_expiry()"/></td></tr>
+                            </table>
+
+                            <t t-if="error">
+                                <div class="alert a-bad" t-esc="error"/>
+                            </t>
+
+                            <!-- Resultado -->
+                            <t t-if="done">
+                                <t t-if="already">
+                                    <div class="alert a-sec">Esta solicitud ya no está vigente. Estado actual:
+                                        <strong t-esc="state_label"/>.</div>
+                                </t>
+                                <t t-else="">
+                                    <t t-if="req.state == 'approved'">
+                                        <div class="alert a-ok">Aprobación registrada. Ya puede cerrar esta ventana.</div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="alert a-bad">Rechazo registrado. Ya puede cerrar esta ventana.</div>
+                                    </t>
+                                </t>
+                            </t>
+
+                            <!-- Formulario de decisión -->
+                            <t t-if="not done and req.state == 'pending'">
+                                <form t-attf-action="/credit/solicitud/#{req.name.replace('/', '-')}/do" method="post">
+                                    <input type="hidden" name="token" t-att-value="req.token"/>
+                                    <input type="hidden" name="action" t-att-value="action"/>
+                                    <t t-if="action == 'reject'">
+                                        <label>Motivo del rechazo *</label>
+                                        <textarea name="rejection_reason" rows="3" required="required"/>
+                                        <p><button type="submit" class="btn btn-bad">Confirmar rechazo</button></p>
+                                    </t>
+                                    <t t-else="">
+                                        <button type="submit" class="btn btn-ok">Confirmar aprobación</button>
+                                    </t>
+                                </form>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </body>
+        </html>
+    </template>
+</odoo>

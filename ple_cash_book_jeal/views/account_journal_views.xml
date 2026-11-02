@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">account.journal.form.ple_cash_book_jeal</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="bank_account_id" position="after">
+                <field name="l10n_pe_payment_means_id" options="{'no_create': True}"
+                       invisible="type not in ('bank', 'cash')"/>
+            </field>
+            <xpath expr="//field[@name='inbound_payment_method_line_ids']/list/field[@name='payment_account_id']" position="after">
+                <field name="l10n_pe_payment_means_id" optional="show" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='outbound_payment_method_line_ids']/list/field[@name='payment_account_id']" position="after">
+                <field name="l10n_pe_payment_means_id" optional="show" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

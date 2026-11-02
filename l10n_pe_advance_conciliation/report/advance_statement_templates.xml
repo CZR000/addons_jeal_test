@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tabla de movimientos de un documento (se reutiliza en el estado de
+         cuenta por documento y en el estado de cuenta por socio). -->
+    <template id="report_advance_statement_table">
+        <table class="table table-sm o_main_table mt-2">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Movimiento</th>
+                    <th>Asiento</th>
+                    <th>Factura aplicada</th>
+                    <th class="text-end">Ingreso</th>
+                    <th class="text-end">Aplicacion</th>
+                    <th class="text-end">Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-if="st['opening']">
+                    <td colspan="6"><em>Saldo inicial</em></td>
+                    <td class="text-end">
+                        <span t-out="st['opening']"
+                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                    </td>
+                </tr>
+                <tr t-foreach="st['rows']" t-as="row">
+                    <td><span t-out="row['date']" t-options='{"widget": "date"}'/></td>
+                    <td><span t-out="row['movement']"/></td>
+                    <td><span t-out="row['move'].name or ''"/></td>
+                    <td><span t-out="row['invoice'].name or ''"/></td>
+                    <td class="text-end">
+                        <t t-if="row['income']">
+                            <span t-out="row['income']"
+                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                        </t>
+                    </td>
+                    <td class="text-end">
+                        <t t-if="row['applied']">
+                            <span t-out="row['applied']"
+                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                        </t>
+                    </td>
+                    <td class="text-end">
+                        <span t-out="row['balance']"
+                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4" class="text-end">Totales / saldo</th>
+                    <th class="text-end">
+                        <span t-out="st['income']"
+                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                    </th>
+                    <th class="text-end">
+                        <span t-out="st['applied']"
+                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                    </th>
+                    <th class="text-end">
+                        <span t-out="st['closing']"
+                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </template>
+
+    <!-- Estado de cuenta de un documento (boton en el ANTC / REV) -->
+    <template id="report_advance_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <t t-set="st" t-value="doc._l10n_pe_statement_rows()"/>
+                    <div class="page">
+                        <h2>
+                            Estado de cuenta ·
+                            <span t-field="doc.name"/>
+                        </h2>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>Socio:</strong>
+                                <span t-field="doc.partner_id"/><br/>
+                                <strong>Tipo:</strong>
+                                <span t-field="doc.advance_type"/><br/>
+                                <t t-if="doc.advance_type != 'revolving'">
+                                    <strong>Contrato:</strong>
+                                    <span t-field="doc.contract_ref"/>
+                                </t>
+                            </div>
+                            <div class="col-6">
+                                <strong>Moneda:</strong>
+                                <span t-field="doc.currency_id"/><br/>
+                                <strong t-if="doc.advance_type == 'revolving'">Fecha del deposito:</strong>
+                                <strong t-else="">Fecha:</strong>
+                                <span t-field="doc.date"/><br/>
+                                <strong>Cuenta de control:</strong>
+                                <span t-field="doc.control_account_id"/>
+                            </div>
+                        </div>
+                        <t t-call="l10n_pe_advance_conciliation.report_advance_statement_table"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

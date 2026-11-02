@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+
+    <record id="stock_kardex_product_report_creation_date" model="account.report">
+        <field name="name">Kardex by Products (Creation Date)</field>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_hide_0_lines">never</field>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="load_more_limit" eval="20"/>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_stock_kardex_product_report_handler"/>
+        <field name="column_ids">
+            <record id="kardex_report_product_creation_date_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+                <field name="figure_type">date</field>
+                <field name="sequence">10</field>
+            </record>
+            <record id="kardex_report_product_creation_date_origin" model="account.report.column">
+                <field name="name">Origin</field>
+                <field name="expression_label">origin</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">20</field>
+            </record>
+            <record id="kardex_report_product_creation_date_move_type" model="account.report.column">
+                <field name="name">Move Type</field>
+                <field name="expression_label">move_type</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">30</field>
+            </record>
+            <record id="kardex_report_product_creation_date_uom" model="account.report.column">
+                <field name="name">UoM</field>
+                <field name="expression_label">uom</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">40</field>
+            </record>
+            <record id="kardex_report_product_creation_date_qty_in" model="account.report.column">
+                <field name="name">Qty In</field>
+                <field name="expression_label">qty_in</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">50</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_unit_cost_in" model="account.report.column">
+                <field name="name">Unit Cost In</field>
+                <field name="expression_label">unit_cost_in</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">60</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_value_in" model="account.report.column">
+                <field name="name">Total In</field>
+                <field name="expression_label">value_in</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">70</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_qty_out" model="account.report.column">
+                <field name="name">Qty Out</field>
+                <field name="expression_label">qty_out</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">80</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_unit_cost_out" model="account.report.column">
+                <field name="name">Unit Cost Out</field>
+                <field name="expression_label">unit_cost_out</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">90</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_value_out" model="account.report.column">
+                <field name="name">Total Out</field>
+                <field name="expression_label">value_out</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">100</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_qty_balance" model="account.report.column">
+                <field name="name">Qty Balance</field>
+                <field name="expression_label">qty_balance</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">110</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_unit_cost_balance" model="account.report.column">
+                <field name="name">Unit Cost</field>
+                <field name="expression_label">unit_cost_balance</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">120</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_creation_date_value_balance" model="account.report.column">
+                <field name="name">Total Balance</field>
+                <field name="expression_label">value_balance</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">130</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+        </field>
+    </record>
+
+    <record id="stock_kardex_product_report_accounting_date" model="account.report">
+        <field name="name">Kardex by Products (Accounting Date)</field>
+        <field name="root_report_id" ref="stock_kardex_product_report_creation_date"/>
+        <field name="kardex_use_accounting_date" eval="True"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_hide_0_lines">never</field>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="load_more_limit" eval="20"/>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_stock_kardex_product_report_handler"/>
+        <field name="column_ids">
+            <record id="kardex_report_product_accounting_date_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+                <field name="figure_type">date</field>
+                <field name="sequence">10</field>
+            </record>
+            <record id="kardex_report_product_accounting_date_origin" model="account.report.column">
+                <field name="name">Origin</field>
+                <field name="expression_label">origin</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">20</field>
+            </record>
+            <record id="kardex_report_product_accounting_date_move_type" model="account.report.column">
+                <field name="name">Move Type</field>
+                <field name="expression_label">move_type</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">30</field>
+            </record>
+            <record id="kardex_report_product_accounting_date_uom" model="account.report.column">
+                <field name="name">UoM</field>
+                <field name="expression_label">uom</field>
+                <field name="figure_type">string</field>
+                <field name="sequence">40</field>
+            </record>
+            <record id="kardex_report_product_accounting_date_qty_in" model="account.report.column">
+                <field name="name">Qty In</field>
+                <field name="expression_label">qty_in</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">50</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_unit_cost_in" model="account.report.column">
+                <field name="name">Unit Cost In</field>
+                <field name="expression_label">unit_cost_in</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">60</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_value_in" model="account.report.column">
+                <field name="name">Total In</field>
+                <field name="expression_label">value_in</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">70</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_qty_out" model="account.report.column">
+                <field name="name">Qty Out</field>
+                <field name="expression_label">qty_out</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">80</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_unit_cost_out" model="account.report.column">
+                <field name="name">Unit Cost Out</field>
+                <field name="expression_label">unit_cost_out</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">90</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_value_out" model="account.report.column">
+                <field name="name">Total Out</field>
+                <field name="expression_label">value_out</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">100</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_qty_balance" model="account.report.column">
+                <field name="name">Qty Balance</field>
+                <field name="expression_label">qty_balance</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">110</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_unit_cost_balance" model="account.report.column">
+                <field name="name">Unit Cost</field>
+                <field name="expression_label">unit_cost_balance</field>
+                <field name="figure_type">float</field>
+                <field name="sequence">120</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+            <record id="kardex_report_product_accounting_date_value_balance" model="account.report.column">
+                <field name="name">Total Balance</field>
+                <field name="expression_label">value_balance</field>
+                <field name="figure_type">monetary</field>
+                <field name="sequence">130</field>
+                <field name="blank_if_zero" eval="False"/>
+            </record>
+        </field>
+    </record>
+
+</odoo>

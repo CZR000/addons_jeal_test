@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_advance" model="ir.module.category">
+        <field name="name">Anticipos y Revolventes</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="group_advance_user" model="res.groups">
+        <field name="name">Anticipos / Usuario</field>
+        <field name="category_id" ref="module_category_advance"/>
+        <field name="comment">Ve los documentos y aplica anticipos/revolventes en facturas.</field>
+    </record>
+
+    <record id="group_advance_manager" model="res.groups">
+        <field name="name">Anticipos / Responsable</field>
+        <field name="category_id" ref="module_category_advance"/>
+        <field name="implied_ids" eval="[(4, ref('group_advance_user'))]"/>
+        <field name="comment">Configura y cierra saldos. Incluye los permisos del usuario.</field>
+    </record>
+
+    <record id="advance_company_rule" model="ir.rule">
+        <field name="name">Anticipos: multi-compania</field>
+        <field name="model_id" ref="model_l10n_pe_advance"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+</odoo>

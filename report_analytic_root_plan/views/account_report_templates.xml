@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Reemplazamos el bloque foreach de column_headers para poder intercalar
+        las filas de plan raíz y subplan entre el nivel 0 (fecha) y el
+        nivel 1 (cuentas analíticas).
+    -->
+    <template id="pdf_export_main_table_header_root_plan"
+              inherit_id="account_reports.pdf_export_main_table_header">
+        <xpath expr="//t[@t-foreach=&quot;options['column_headers']&quot;]" position="replace">
+            <!-- Nivel 0 (fecha) -->
+            <t t-set="date_level" t-value="options['column_headers'][0]"/>
+            <tr>
+                <th/>
+                <t t-foreach="date_level * column_headers_render_data['level_repetitions'][0]" t-as="header">
+                    <th t-att-colspan="header.get('colspan', column_headers_render_data['level_colspan'][0]) + (1 if options.get('show_horizontal_group_total') else 0)"
+                        class="o_overflow_name">
+                        <t t-out="header.get('name')"/>
+                    </th>
+                </t>
+                <th t-if="options.get('column_percent_comparison') == 'growth'">%</th>
+            </tr>
+            <!-- Fila extra: plan raíz -->
+            <tr t-if="column_headers_render_data.get('root_plan_row')"
+                class="root_plan_header">
+                <th/>
+                <t t-foreach="column_headers_render_data['root_plan_row']" t-as="cell">
+                    <th t-att-colspan="cell.get('colspan', 1)"
+                        class="text-center o_overflow_name"
+                        style="background-color: #f0f4f8; font-weight: bold; border-top: 1px solid #ccc;">
+                        <t t-out="cell.get('name')"/>
+                    </th>
+                </t>
+                <th t-if="options.get('column_percent_comparison') == 'growth'"/>
+            </tr>
+            <!-- Fila extra: subplan -->
+            <tr t-if="column_headers_render_data.get('subplan_row')"
+                class="subplan_header">
+                <th/>
+                <t t-foreach="column_headers_render_data['subplan_row']" t-as="cell">
+                    <th t-att-colspan="cell.get('colspan', 1)"
+                        class="text-center o_overflow_name"
+                        style="background-color: #f7f9fc; font-weight: 600;">
+                        <t t-out="cell.get('name')"/>
+                    </th>
+                </t>
+                <th t-if="options.get('column_percent_comparison') == 'growth'"/>
+            </tr>
+            <!-- Niveles restantes (cuentas analíticas y más allá) -->
+            <t t-foreach="options['column_headers'][1:]" t-as="column_header">
+                <t t-set="real_index" t-value="column_header_index + 1"/>
+                <tr>
+                    <th/>
+                    <t t-foreach="column_header * column_headers_render_data['level_repetitions'][real_index]" t-as="header">
+                        <th t-att-colspan="header.get('colspan', column_headers_render_data['level_colspan'][real_index])"
+                            class="o_overflow_name">
+                            <t t-out="header.get('name')"/>
+                        </th>
+                    </t>
+                    <th t-if="options.get('column_percent_comparison') == 'analytic_coverage' and real_index == 1">
+                        Analytic coverage
+                    </th>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>

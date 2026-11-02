@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="mail_act_sale_discount_approval" model="mail.activity.type">
+        <field name="name">Aprobación de Descuento en Ventas</field>
+        <field name="summary">Descuento pendiente de aprobación</field>
+        <field name="icon">fa-percent</field>
+        <field name="delay_count">1</field>
+        <field name="delay_unit">days</field>
+        <field name="res_model">sale.order</field>
+    </record>
+
+</odoo>

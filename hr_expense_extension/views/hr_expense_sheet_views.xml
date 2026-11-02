@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_expense_sheet_form_sunat" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.sunat</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id"
+               ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="has_only_sunat_expenses" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_sheet_move_post']"
+                   position="attributes">
+                <attribute name="invisible">has_only_sunat_expenses</attribute>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Facturas generadas"
+                      name="generated_bills"
+                      invisible="not account_move_ids">
+                    <field name="account_move_ids"
+                           readonly="1"
+                           context="{'create': False}">
+                        <list>
+                            <field name="name"/>
+                            <field name="invoice_date"/>
+                            <field name="partner_id"/>
+                            <field name="l10n_latam_document_number"
+                                   optional="show"/>
+                            <field name="amount_total"
+                                   widget="monetary"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="state"/>
+                            <field name="payment_state" optional="show"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

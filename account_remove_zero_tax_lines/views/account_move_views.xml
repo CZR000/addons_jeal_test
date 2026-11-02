@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_zero_tax_banner" model="ir.ui.view">
+        <field name="name">account.move.form.zero.tax.banner</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="not has_zero_tax_lines or state != 'draft'">
+                    <i class="fa fa-exclamation-triangle me-2" title="Advertencia"/>
+                    <strong>Aviso:</strong> Esta factura tiene líneas de impuesto con importe cero que se eliminarán automáticamente al confirmar.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="has_zero_tax_lines" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

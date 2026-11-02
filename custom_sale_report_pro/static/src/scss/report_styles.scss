@@ -1,0 +1,130 @@
+/* =========================================
+   VARIABLES Y CONFIGURACIÓN GENERAL
+   ========================================= */
+$color-primary: #f29206;
+$color-text: black;
+$border-radius: 40px;
+
+.custom-report-container {
+  font-family: "Myriad Pro", "Segoe UI", "Helvetica", "Arial", sans-serif;
+  color: $color-text;
+  font-size: 18px;
+  line-height: 1.4; 
+
+  .watermark-bg {
+    position: absolute;
+    top: 25%;
+    left: 10%;
+    width: 80%;
+    height: 50%;
+    opacity: 0.12;
+    z-index: -1;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
+  /* =========================================
+    TABLA DE PRODUCTOS (Estilo Personalizado)
+    ========================================= */
+  .table-cargamax {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: thin solid black;
+    border-radius: $border-radius;
+    overflow: hidden;
+    margin-bottom: 40px;
+    background-color: transparent;
+
+    thead tr {
+      height: 40px;
+    }
+
+    thead th {
+      background-color: $color-primary;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 200;
+      border-right: thin solid black;
+      font-size: 15px;
+    }
+
+    /* Redondeo de esquinas superiores */
+    thead th:first-child {
+      border-top-left-radius: $border-radius;
+      border-left: thin solid black;
+    }
+    thead th:last-child {
+      border-top-right-radius: $border-radius;
+      border: none;
+    }
+
+    tbody td {
+      padding: 10px;
+      border-right: thin solid black;
+      border-top: thin solid black;
+      font-size: 14px;
+      color: black;
+    }
+
+    thead td:first-child {
+      border-bottom-left-radius: $border-radius;
+      border-left: thin solid black;
+    }
+
+    thead td:last-child {
+      border-bottom-right-radius: $border-radius;
+      border-right: thin solid black;
+    }
+
+    /* Asegura que la imagen no rompa la tabla */
+    .product-img-container img {
+      height: auto;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  /* =========================================
+    SECCIÓN DE TOTALES (Estilo Bloque)
+    ========================================= */
+  .total-container {
+    margin-bottom: 100px;
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: thin solid black;
+      border-radius: 20px;
+      overflow: hidden;
+      background-color: transparent;
+
+      td {
+        padding-left: 20px;
+        padding-right: 40px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 18px;
+        font-weight: 200;      
+        border-left: none !important; 
+      }
+
+      /* Fila de Total Final (Negra) */
+      .total-row-black {
+        background-color: #000000;
+        color: #ffffff;
+
+        td:last-child {
+          border-bottom-right-radius: 20px;
+        }
+
+        td:first-child {
+          border-left: 0;
+          border-bottom-left-radius: 20px;
+        }
+      }
+    }
+  }
+}

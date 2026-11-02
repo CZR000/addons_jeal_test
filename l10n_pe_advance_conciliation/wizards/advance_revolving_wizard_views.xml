@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_advance_revolving_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_pe.advance.revolving.wizard.form</field>
+        <field name="model">l10n_pe.advance.revolving.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Aplicar revolvente">
+                <group>
+                    <group>
+                        <field name="move_id" readonly="1" force_save="1"/>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="invoice_residual" readonly="1" force_save="1"/>
+                        <field name="journal_id" readonly="1" force_save="1"/>
+                    </group>
+                    <group>
+                        <field name="date"/>
+                        <field name="amount_to_compensate"/>
+                        <field name="available_total" readonly="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <p class="text-muted mb-1">
+                    Distribucion FIFO: primero el deposito mas antiguo. Puedes
+                    cambiar el monto de cada linea.
+                </p>
+                <field name="line_ids">
+                    <list editable="bottom" create="false" delete="false">
+                        <field name="advance_id" readonly="1" force_save="1"/>
+                        <field name="origin_move_id" readonly="1"/>
+                        <field name="advance_date" readonly="1"/>
+                        <field name="deposit_amount" readonly="1"/>
+                        <field name="saldo" readonly="1"/>
+                        <field name="amount_used"/>
+                        <field name="saldo_after" readonly="1"/>
+                        <field name="currency_id" column_invisible="1"/>
+                    </list>
+                </field>
+                <group class="oe_subtotal_footer">
+                    <field name="total_used"/>
+                </group>
+                <p class="text-muted">
+                    Se genera el asiento de compensacion: cuenta de control al
+                    debe (una linea por revolvente) y la cuenta por cobrar al
+                    haber. Luego se concilian ambas automaticamente. El total a
+                    usar debe igualar el importe a compensar. Si el tipo de
+                    cambio del deposito y el de la compensacion son distintos,
+                    Odoo registra la diferencia de cambio al conciliar.
+                </p>
+                <footer>
+                    <button name="action_generate" type="object"
+                            string="Generar compensacion" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

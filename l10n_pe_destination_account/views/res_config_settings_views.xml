@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.l10n_pe_destination_account</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='default_accounts']" position="inside">
+                    <setting id="l10n_pe_destination_journal_setting" string="Cuentas de Destino" help="Activa el diario usado para registrar automáticamente los asientos generados por la distribución de las cuentas destino." invisible="country_code != 'PE'">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="destination_account_journal_id" class="col-lg-4 o_light_label" string="Diario General"/>
+                                <field name="destination_account_journal_id" options="{'no_create': True}" placeholder="Seleccione un diario..."/>
+                            </div>
+
+                            <div class="text-muted mt8">
+                                Solo se permiten diarios de tipo <b>General</b>.
+                            </div>
+                        </div>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

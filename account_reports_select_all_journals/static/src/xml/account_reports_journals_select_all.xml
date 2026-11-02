@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Odoo 18: el contenido del filtro de diarios está en la plantilla
+    `account_reports.AccountReportFilterJournal`. Heredamos esa plantilla en
+    modo `extension` (el equivalente Owl 2 del antiguo `t-extend`) y mediante
+    xpath insertamos un bloque con dos botones (Seleccionar / Deseleccionar)
+    al inicio del slot `content` del Dropdown, justo antes del `t-foreach`
+    que renderiza los diarios.
+
+    Los botones llaman a `selectAllJournals()` / `deselectAllJournals()`,
+    definidos vía `patch()` sobre `AccountReportFilters` en el archivo
+    `account_reports_journals_select_all.js`. Usamos `.stop.prevent` para
+    evitar que el click cierre el Dropdown.
+-->
+<templates xml:space="preserve">
+
+    <t t-name="account_reports_select_all_journals.AccountReportFilterJournal"
+       t-inherit="account_reports.AccountReportFilterJournal"
+       t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='content']/t[1]" position="before">
+            <div class="js_select_all_journals_container px-3 py-2 border-bottom">
+                <div class="d-flex gap-2">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-primary"
+                            t-on-click.stop.prevent="() => this.selectAllJournals()">
+                        <i class="fa fa-check-square-o me-1"/>Seleccionar todos
+                    </button>
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                            t-on-click.stop.prevent="() => this.deselectAllJournals()">
+                        <i class="fa fa-square-o me-1"/>Deseleccionar todos
+                    </button>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

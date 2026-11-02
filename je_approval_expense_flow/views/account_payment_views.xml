@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_je" model="ir.ui.view">
+        <field name="name">account.payment.form.je</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="alert alert-info mb-0" role="alert"
+                     invisible="not approval_request_id or state != 'draft'">
+                    <span>
+                        Por favor revise el proveedor, importe, diario y método de pago antes de confirmar.
+                        Este pago corresponde a la solicitud aprobada
+                    </span>
+                    <field name="approval_request_id" readonly="1"/>
+                    <span>. Al confirmar, se notificará al solicitante por correo.</span>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_approval_request" type="object"
+                        class="oe_stat_button" icon="fa-check-square-o"
+                        invisible="not approval_request_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Solicitud</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Acción guardada (no un dict al vuelo) para abrir el pago generado por una
+         solicitud aprobada, fijando explícitamente la vista nativa de account.payment.
+         hr_expense_cust define su propia vista standalone de account.payment
+         ("Solicitud de desembolso", sin inherit_id) que Odoo termina usando como
+         vista por defecto del modelo cuando no hay una vista explícita indicada -
+         un dict de acción con view_id explícito evita eso en la primera navegación,
+         pero no sobrevive un refresco de página (Odoo vuelve a resolver "la vista
+         por defecto" desde cero). Una acción guardada con view_ids fijos sí. -->
+    <record id="action_view_payment_from_request" model="ir.actions.act_window">
+        <field name="name">Pago</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">form</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('account.view_account_payment_form')}),
+        ]"/>
+    </record>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_credit" model="ir.ui.view">
+        <field name="name">sale.order.form.sca.credit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Botones de cabecera: siempre uno solo según el estado -->
+            <xpath expr="//header" position="inside">
+                <field name="sca_requires_approval" invisible="1"/>
+                <field name="sca_approval_state" invisible="1"/>
+                <field name="sca_approval_valid" invisible="1"/>
+                <button name="action_sca_open_send_wizard" type="object"
+                        string="Enviar solicitud al aprobador" class="btn-primary"
+                        invisible="state not in ('draft','sent') or sca_sale_type != 'credit' or not sca_requires_approval or sca_approval_state in ('pending','rejected','expired') or sca_approval_valid"/>
+                <button name="action_sca_resend_request" type="object"
+                        string="Reenviar solicitud" class="btn-primary"
+                        invisible="state not in ('draft','sent') or sca_sale_type != 'credit' or not sca_requires_approval or sca_approval_state not in ('rejected','expired')"/>
+            </xpath>
+
+            <!-- Botón estadístico de solicitudes -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_sca_view_requests" type="object"
+                        class="oe_stat_button" icon="fa-envelope"
+                        invisible="sca_request_count == 0">
+                    <field name="sca_request_count" widget="statinfo" string="Solicitudes"/>
+                </button>
+            </xpath>
+
+            <!-- Cinta de estado -->
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <widget name="web_ribbon" title="Pendiente de aprobación" bg_color="text-bg-warning"
+                        invisible="sca_approval_state != 'pending'"/>
+                <widget name="web_ribbon" title="Crédito aprobado" bg_color="text-bg-success"
+                        invisible="not sca_approval_valid"/>
+                <widget name="web_ribbon" title="Aprobación desactualizada" bg_color="text-bg-warning"
+                        invisible="sca_approval_state != 'approved' or sca_approval_valid or state not in ('draft','sent')"/>
+                <widget name="web_ribbon" title="Crédito rechazado" bg_color="text-bg-danger"
+                        invisible="sca_approval_state != 'rejected'"/>
+                <widget name="web_ribbon" title="Solicitud vencida" bg_color="text-bg-secondary"
+                        invisible="sca_approval_state != 'expired'"/>
+            </xpath>
+
+            <!-- Campo Tipo de venta -->
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="sca_sale_type" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+
+            <!-- Recuadro de línea de crédito -->
+            <xpath expr="//notebook" position="before">
+                <div invisible="sca_sale_type != 'credit'">
+                    <field name="sca_company_currency_id" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state not in ('draft','sent') or not sca_requires_approval or sca_approval_valid or sca_approval_state != 'none'">
+                        <strong>Requiere aprobación de crédito.</strong>
+                        Use «Enviar solicitud al aprobador» antes de confirmar.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state not in ('draft','sent') or not sca_requires_approval or sca_approval_state != 'approved' or sca_approval_valid">
+                        <strong>La aprobación ya no cubre esta cotización.</strong>
+                        Cambió el cliente o la moneda, o el importe subió. Envíe una nueva solicitud.
+                    </div>
+                    <div class="alert alert-success" role="alert"
+                         invisible="state not in ('draft','sent') or not sca_approval_valid">
+                        Crédito aprobado. Puede confirmar la cotización.
+                    </div>
+                    <group string="Línea de crédito del cliente">
+                        <group>
+                            <field name="sca_credit_limit"/>
+                            <field name="sca_debt_total"/>
+                            <field name="sca_credit_available"/>
+                        </group>
+                        <group>
+                            <field name="sca_debt_overdue"/>
+                            <field name="sca_amount_pen"/>
+                        </group>
+                    </group>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

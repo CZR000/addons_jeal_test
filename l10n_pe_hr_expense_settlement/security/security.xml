@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_advance_block_override" model="res.groups">
+        <field name="name">Autorizar desembolsos con rendición pendiente</field>
+        <field name="category_id" ref="base.module_category_human_resources_expenses"/>
+        <field name="comment">Puede aprobar o pagar una entrega a rendir o caja chica a un empleado que tiene otra sin
+            rendir, indicando el motivo (queda en el historial).</field>
+    </record>
+
+</odoo>

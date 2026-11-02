@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_form_ext" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.recruitment.ext</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart button: opens the linked approval request directly -->
+            <div name="button_box" position="inside">
+                <button name="action_open_approval_request"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-check-square-o"
+                        invisible="not x_approval_request_id">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Aprobación</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Campos Perfil, Departamento y Tipo de Solicitud en el grupo principal (columna izquierda) -->
+            <field name="tag_ids" position="after">
+                <field name="x_perfil_id"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+                <field name="x_departamento_id"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+                <field name="x_approval_category_id"
+                       options="{'no_create': True, 'no_create_edit': True}"/>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>

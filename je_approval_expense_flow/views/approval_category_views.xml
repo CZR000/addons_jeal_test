@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_category_view_form_je" model="ir.ui.view">
+        <field name="name">approval.category.view.form.je</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Hacer visible el tipo de aprobación (oculto en el módulo stock) -->
+            <xpath expr="//field[@name='approval_type']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+
+            <!-- Correlativo: dígitos configurables junto al código de secuencia -->
+            <xpath expr="//field[@name='sequence_code']" position="after">
+                <field name="sequence_padding" invisible="not automated_sequence"/>
+            </xpath>
+
+            <!-- Diario / método de pago por defecto cuando la categoría crea un pago -->
+            <xpath expr="//field[@name='approval_type']" position="after">
+                <field name="default_payment_journal_id" invisible="approval_type != 'payment'"/>
+                <field name="default_payment_method_line_id" invisible="approval_type != 'payment'"/>
+                <field name="default_means_payment_id" invisible="approval_type != 'payment'"/>
+            </xpath>
+
+            <!-- Checkbox: la categoría aparece en el menú "Solicitudes" de Gastos -->
+            <xpath expr="//group[@name='option_settings']" position="inside">
+                <field name="is_expense_category"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

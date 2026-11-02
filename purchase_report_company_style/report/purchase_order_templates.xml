@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!--
+            Plantilla custom equivalente a `account.document_tax_totals_template`
+            con estilos custom (border-dark, bg-white, text-dark).
+
+            Importante v18: la estructura de `tax_totals` cambió en Odoo 17. Los
+            valores ya no vienen pre-formateados (`formatted_*`) sino crudos, y
+            se formatean en plantilla con el widget monetary indicando la
+            moneda (variable `currency` que debe estar en el contexto del t-call).
+
+            Estructura nueva:
+              tax_totals['subtotals']                -> list[dict]
+                subtotal['name']                     -> str
+                subtotal['base_amount_currency']     -> float
+                subtotal['tax_groups']               -> list[dict]
+                  tax_group['group_name']            -> str
+                  tax_group['tax_amount_currency']   -> float
+                  tax_group['display_base_amount_currency'] -> float | False
+              tax_totals['same_tax_base']            -> bool
+              tax_totals['total_amount_currency']    -> float
+              tax_totals['cash_rounding_base_amount_currency'] -> float (opcional)
+        -->
+        <template id="document_tax_totals_inherit_style">
+            <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
+            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                <tr class="border border-dark">
+                    <td class="bg-white text-dark text-start">
+                        <span t-out="subtotal['name']">Untaxed Amount</span>
+                    </td>
+                    <td class="bg-white text-dark text-end">
+                        <span class="text-nowrap"
+                              t-att-class="oe_subtotal_footer_separator"
+                              t-out="subtotal['base_amount_currency']"
+                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </td>
+                </tr>
+
+                <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
+                    <tr class="border border-dark">
+                        <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is False">
+                            <td class="bg-white text-dark text-start">
+                                <span t-out="tax_group['group_name']"/>
+                            </td>
+                            <td class="bg-white text-dark text-end">
+                                <span class="text-nowrap"
+                                      t-out="tax_group['tax_amount_currency']"
+                                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </t>
+                        <t t-else="">
+                            <td class="bg-white text-dark text-start">
+                                <span t-out="tax_group['group_name']"/>
+                                <span> on </span>
+                                <span class="text-nowrap"
+                                      t-out="tax_group['display_base_amount_currency']"
+                                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                            <td class="bg-white text-dark text-end">
+                                <span class="text-nowrap"
+                                      t-out="tax_group['tax_amount_currency']"
+                                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </t>
+                    </tr>
+                </t>
+            </t>
+
+            <tr t-if="'cash_rounding_base_amount_currency' in tax_totals" class="border border-dark">
+                <td class="bg-white text-dark text-start">
+                    <span>Rounding</span>
+                </td>
+                <td class="bg-white text-dark text-end">
+                    <span t-out="tax_totals['cash_rounding_base_amount_currency']"
+                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
+            </tr>
+
+            <tr class="border border-dark">
+                <td class="bg-white text-dark text-start">
+                    <strong>Total</strong>
+                </td>
+                <td class="bg-white text-dark text-end">
+                    <strong t-out="tax_totals['total_amount_currency']"
+                            t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
+            </tr>
+        </template>
+
+        <template id="report_purchaseorder_document_inherit_style"
+                  inherit_id="purchase.report_purchaseorder_document">
+
+            <!--
+                Estilo del número de pedido.
+                v18: el título ya no está en <h2> sino dentro de
+                `<t t-set="layout_document_title">` con 3 ramas t-if por
+                state. Reemplazamos el bloque completo y envolvemos los spans
+                con el estilo custom cuando la company lo activa.
+            -->
+            <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+                <t t-set="layout_document_title">
+                    <t t-if="o.company_id.custom_po_report_style">
+                        <t t-if="o.state in ['draft', 'sent', 'to approve']">
+                            Request for Quotation #<span t-field="o.name"
+                                style="font-size:35px; color:black; font-weight:700;"/>
+                        </t>
+                        <t t-if="o.state in ['purchase', 'done']">
+                            Purchase Order #<span t-field="o.name"
+                                style="font-size:35px; color:black; font-weight:700;"/>
+                        </t>
+                        <t t-if="o.state == 'cancel'">
+                            Cancelled Purchase Order #<span t-field="o.name"
+                                style="font-size:35px; color:black; font-weight:700;"/>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <t t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></t>
+                        <t t-if="o.state in ['purchase', 'done']">Purchase Order #<span t-field="o.name"/></t>
+                        <t t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></t>
+                    </t>
+                </t>
+            </xpath>
+
+            <!--
+                Bloque de totales.
+                v18: div#total invoca `purchase.document_tax_totals` y pasa
+                tanto `tax_totals` como `currency`. Mantenemos la rama default
+                idéntica a v18 nativa y agregamos la rama custom con la
+                plantilla con estilos border-dark / bg-white / text-dark.
+            -->
+            <xpath expr="//div[@id='total']" position="replace">
+                <t t-if="o.company_id and o.company_id.custom_po_report_style">
+                    <div id="total" class="row justify-content-end mt-n3">
+                        <div class="col-4">
+                            <table class="o_total_table table table-borderless">
+                                <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                <t t-set="currency" t-value="o.currency_id"/>
+                                <t t-call="purchase_report_company_style.document_tax_totals_inherit_style"/>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div id="total" class="row justify-content-end mt-n3">
+                        <div class="col-4">
+                            <table class="o_total_table table table-borderless">
+                                <t t-call="purchase.document_tax_totals">
+                                    <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                    <t t-set="currency" t-value="o.currency_id"/>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

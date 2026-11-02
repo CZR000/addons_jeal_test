@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <menuitem id="menu_cost_center_report" 
+            name     = "Reportes de Centros de Costos" 
+            action   = "report_ejemplo.action_cost_center_report_wizard" 
+            parent   = "account.menu_finance_reports" 
+            sequence = "100" />
+    </data>
+</odoo>

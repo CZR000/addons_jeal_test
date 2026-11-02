@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_product_view_form_variant_custom_desc" model="ir.ui.view">
+        <field name="name">product.product.view.form.variant.custom.desc</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+
+            <!-- 1. Ocultar la descripción base estándar -->
+            <xpath expr="//group[@name='description']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- 2. Reemplazo UI para la Gestión de Contenido de Ventas (Bootstrap 5) -->
+            <xpath expr="//group[@name='sale']" position="after">
+                <separator string="Gestión de Contenido de Ventas" class="mt-4 mb-4"/>
+
+                <!-- Alerta informativa integrando el toggle boolean para mejor UX -->
+                <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+                    <i class="fa fa-info-circle fa-2x me-3" title="Información"/>
+                    <div class="flex-grow-1">
+                        <strong>Configure los textos técnicos y comerciales.</strong><br/>
+                        <span class="small">
+                            Si habilita la siguiente opción, la <b>Descripción Final</b> en el PDF será la combinación del Nivel Plantilla + Nivel Variante.
+                        </span>
+                    </div>
+                    <div class="ms-3">
+                        <field name="include_template_description" widget="boolean_toggle" nolabel="1"/>
+                    </div>
+                </div>
+
+                <!-- Layout de 2 columnas (BS5) -->
+                <div class="row">
+                    <!-- Columna Izquierda: Nivel Plantilla -->
+                    <div class="col-md-6 pe-md-4 border-end pb-3">
+                        <div class="d-flex align-items-center mb-2 text-primary">
+                            <i class="fa fa-globe me-2" title="Plantilla de producto"/>
+                            <h5 class="mb-0 fw-bold">Nivel Plantilla (General)</h5>
+                        </div>
+                        <div class="text-muted small mb-3">
+                            Texto base compartido por todas las variantes de este producto.
+                        </div>
+                        <field name="description_sale" class="border rounded p-2 w-100" placeholder="Ej: Especificaciones generales, marca, modelo base..."/>
+                    </div>
+
+                    <!-- Columna Derecha: Nivel Variante -->
+                    <div class="col-md-6 ps-md-4 pb-3">
+                        <div class="d-flex align-items-center mb-2 text-success">
+                            <i class="fa fa-tag me-2" title="Variante de producto"/>
+                            <h5 class="mb-0 fw-bold">Nivel Variante (Específico)</h5>
+                        </div>
+                        <div class="text-muted small mb-3">
+                            Detalles únicos para esta variante específica.
+                        </div>
+                        <field name="variant_description_sale"
+                               widget="html"
+                               class="border rounded p-2 w-100"
+                               placeholder="Ej: Color Rojo, Voltaje 220V, Talla XL..."
+                               options="{'height': 200, 'collaborative': true}"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- 3. Inyección del Notebook Page para la Garantía -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Términos y Garantía" name="warranty_terms">
+                    <div class="row mt-3 mb-3">
+                        <!-- Instrucciones -->
+                        <div class="col-12 col-md-8">
+                            <p class="text-muted mb-0">
+                                Modifique los términos y condiciones de garantía específicos para este producto.
+                                Por defecto, se heredan de la configuración general de la compañía.
+                            </p>
+                        </div>
+                        <!-- Botón de Acción -->
+                        <div class="col-12 col-md-4 text-end">
+                            <button name="action_reset_warranty_terms"
+                                    type="object"
+                                    class="btn btn-outline-secondary btn-sm"
+                                    string=" Restaurar Plantilla de la Empresa"
+                                    icon="fa-refresh"
+                                    help="Sobrescribe el contenido actual con el estándar de la compañía."/>
+                        </div>
+                    </div>
+
+                    <!-- Campo HTML a pantalla completa -->
+                    <field name="custom_warranty_terms"
+                           widget="html"
+                           placeholder="Escriba aquí las condiciones de garantía específicas para este producto..."
+                           options="{'height': 300, 'collaborative': true}"/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

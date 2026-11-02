@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Categoría propia del módulo -->
+    <record id="module_category_account_compensation" model="ir.module.category">
+        <field name="name">Compensación de Cuentas</field>
+        <field name="description">Permite aplicar compensación entre facturas de cliente y proveedor del mismo socio.</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- Grupo único: puede aplicar compensación -->
+    <record id="group_compensation_user" model="res.groups">
+        <field name="name">Aplicar Compensación</field>
+        <field name="category_id" ref="module_category_account_compensation"/>
+        <field name="comment">Usuarios que pueden ejecutar la compensación de cuentas entre facturas de cliente y proveedor del mismo socio.</field>
+    </record>
+
+</odoo>

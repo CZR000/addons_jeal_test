@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Los filtros personalizados (Excluir ctas. / Excluir sin grupo) se implementan
+        en v18 como componentes OWL en static/src/components/trial_balance_custom/.
+    -->
+</odoo>

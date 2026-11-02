@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_liquidation_web">
+        <t t-call="web.basic_layout">
+            <t t-foreach="report_docs" t-as="r">
+                <t t-set="doc" t-value="r['doc']"/>
+                <t t-set="currency" t-value="r['currency']"/>
+
+                <div class="o_mrp_report">
+                    <div class="mb-3">
+                        <h1 class="o_mrp_header o_mrp_header1">Liquidación</h1>
+                        <p class="o_mrp_header o_mrp_header_light mb-1">
+                            <strong>Documento:</strong>
+                            <span t-esc="doc.name"/>
+                        </p>
+                        <p class="o_mrp_header o_mrp_header_light mb-1" t-if="doc.date">
+                            <strong>Fecha:</strong>
+                            <span t-esc="doc.date"/>
+                        </p>
+                        <p class="o_mrp_header o_mrp_header_light mb-0" t-if="doc.partner_id">
+                            <strong>Cliente:</strong>
+                            <a class="o_mrp_reports_web_action"
+                               t-att-href="'/web#id=%s&amp;model=res.partner&amp;view_type=form' % doc.partner_id.id"
+                               t-esc="doc.partner_id.display_name"/>
+                        </p>
+                    </div>
+
+                    <!-- Section 1: Costos de Transporte (NEGATIVE) -->
+                    <h3 class="o_mrp_header o_mrp_table_header">Costos de Transporte</h3>
+                    <table class="table table-sm o_mrp_report_table">
+                        <thead>
+                            <tr class="o_mrp_report_header">
+                                <th class="o_mrp_report_line_header"><span>Comprobante</span></th>
+                                <th class="text-end o_mrp_report_line_header"><span>Importe</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="r['transport_lines']">
+                                <tr t-foreach="r['transport_lines']" t-as="l" class="text-muted">
+                                    <td>
+                                        <t t-if="l['move_id']">
+                                            <a class="o_mrp_reports_web_action"
+                                               t-att-href="'/web#id=%s&amp;model=account.move&amp;view_type=form' % l['move_id']"
+                                               t-esc="l['move_name']"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="l['move_name']"/>
+                                        </t>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="-(l['total_company'] or 0.0)"
+                                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-else="">
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">No hay costos de transporte.</td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="text-end"><strong>Subtotal Costos de Transporte</strong></td>
+                                <td class="text-end">
+                                    <strong t-esc="r['transport_subtotal']"
+                                            t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Section 2: Costos de Proceso (NEGATIVE) -->
+                    <h3 class="o_mrp_header o_mrp_table_header">Costos de Proceso</h3>
+                    <table class="table table-sm o_mrp_report_table">
+                        <thead>
+                            <tr class="o_mrp_report_header">
+                                <th class="o_mrp_report_line_header"><span>Factura</span></th>
+                                <th class="text-end o_mrp_report_line_header"><span>Importe</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="r['process_lines']">
+                                <tr t-foreach="r['process_lines']" t-as="l" class="text-muted">
+                                    <td>
+                                        <t t-if="l['move_id']">
+                                            <a class="o_mrp_reports_web_action"
+                                               t-att-href="'/web#id=%s&amp;model=account.move&amp;view_type=form' % l['move_id']"
+                                               t-esc="l['move_name']"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="l['move_name']"/>
+                                        </t>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="-(l['total_company'] or 0.0)"
+                                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-else="">
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">No hay costos de proceso.</td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="text-end"><strong>Subtotal Costos de Proceso</strong></td>
+                                <td class="text-end">
+                                    <strong t-esc="r['process_subtotal']"
+                                            t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Section 3: Facturado al Cliente (POSITIVE) -->
+                    <h3 class="o_mrp_header o_mrp_table_header">Facturado al Cliente</h3>
+                    <table class="table table-sm o_mrp_report_table">
+                        <thead>
+                            <tr class="o_mrp_report_header">
+                                <th class="o_mrp_report_line_header"><span>Factura</span></th>
+                                <th class="text-end o_mrp_report_line_header"><span>Importe</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="r['invoiced_lines']">
+                                <tr t-foreach="r['invoiced_lines']" t-as="l" class="text-muted">
+                                    <td>
+                                        <t t-if="l['move_id']">
+                                            <a class="o_mrp_reports_web_action"
+                                               t-att-href="'/web#id=%s&amp;model=account.move&amp;view_type=form' % l['move_id']"
+                                               t-esc="l['move_name']"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="l['move_name']"/>
+                                        </t>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="(l['total_company'] or 0.0)"
+                                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-else="">
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">No hay facturas al cliente.</td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="text-end"><strong>Subtotal Facturado al Cliente</strong></td>
+                                <td class="text-end">
+                                    <strong t-esc="r['invoiced_subtotal']"
+                                            t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Total -->
+                    <div class="mt-3">
+                        <table class="table table-sm o_mrp_report_table">
+                            <tbody>
+                                <tr>
+                                    <td class="text-end">
+                                        <strong>Total General</strong>
+                                    </td>
+                                    <td class="text-end" style="width: 1%; white-space: nowrap;">
+                                        <strong t-esc="r['grand_total']"
+                                                t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

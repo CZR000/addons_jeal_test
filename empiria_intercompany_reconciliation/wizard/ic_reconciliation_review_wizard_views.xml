@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ic_reconciliation_review_wizard_form" model="ir.ui.view">
+        <field name="name">ic.reconciliation.review.wizard.form</field>
+        <field name="model">ic.reconciliation.review.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Marcar como revisado">
+                <field name="currency_id" invisible="1"/>
+                <group>
+                    <field name="line_count" string="Líneas"/>
+                    <field name="amount_pen"/>
+                </group>
+                <field name="line_ids" readonly="1">
+                    <list>
+                        <field name="currency_id" column_invisible="1"/>
+                        <field name="company_id"/>
+                        <field name="move_name"/>
+                        <field name="category"/>
+                        <field name="line_currency_id"/>
+                        <field name="amount_currency"/>
+                        <field name="amount_pen"/>
+                    </list>
+                </field>
+                <group>
+                    <field name="comment" placeholder="Motivo de la revisión, por ejemplo: devolución confirmada con tesorería; se regulariza en el mes de ..."/>
+                </group>
+                <div class="text-muted">
+                    La línea pasa a Revisado y deja de contar como pendiente. Su importe sigue en la diferencia del
+                    par. No crea ningún asiento. Si el importe del documento cambia, vuelve a Pendiente.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object" string="Marcar revisado" class="btn-primary"/>
+                    <button special="cancel" string="Cancelar"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

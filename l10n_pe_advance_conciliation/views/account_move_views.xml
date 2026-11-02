@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_advance" model="ir.ui.view">
+        <field name="name">account.move.form.advance</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Campos computados usados en modificadores -->
+            <xpath expr="//header" position="inside">
+                <field name="advance_available_amount" invisible="1"/>
+                <field name="revolving_available_amount" invisible="1"/>
+                <field name="revolving_available_count" invisible="1"/>
+                <field name="advance_generated_count" invisible="1"/>
+                <field name="advance_application_count" invisible="1"/>
+                <field name="revolving_application_count" invisible="1"/>
+                <field name="compensation_revolving_count" invisible="1"/>
+                <field name="l10n_pe_compensated_invoice_id" invisible="1"/>
+            </xpath>
+
+            <!-- Botones en la cabecera -->
+            <xpath expr="//header" position="inside">
+                <button name="action_open_advance_apply_wizard" type="object"
+                        string="Aplicar anticipos" class="btn-primary"
+                        groups="l10n_pe_advance_conciliation.group_advance_user"
+                        invisible="state != 'draft' or advance_available_amount &lt;= 0
+                                   or move_type not in ('out_invoice','out_refund','in_invoice','in_refund')"/>
+                <button name="action_open_revolving_wizard" type="object"
+                        string="Aplicar revolvente" class="btn-primary"
+                        groups="l10n_pe_advance_conciliation.group_advance_user"
+                        invisible="state != 'posted' or revolving_available_amount &lt;= 0
+                                   or amount_residual &lt;= 0
+                                   or move_type != 'out_invoice'"/>
+            </xpath>
+
+            <!-- Avisos -->
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info" role="alert"
+                     invisible="state != 'draft' or advance_available_amount &lt;= 0">
+                    El cliente/proveedor tiene
+                    <field name="advance_available_amount" nolabel="1" class="oe_inline"/>
+                    en anticipos por aplicar.
+                </div>
+                <div class="alert alert-info" role="alert"
+                     invisible="state != 'posted' or move_type != 'out_invoice'
+                                or revolving_available_amount &lt;= 0 or amount_residual &lt;= 0">
+                    El cliente tiene
+                    <field name="revolving_available_amount" nolabel="1" class="oe_inline"/>
+                    de revolvente disponible
+                    (<field name="revolving_available_count" nolabel="1" class="oe_inline"/>
+                    deposito(s)).
+                </div>
+                <div class="alert alert-success" role="alert"
+                     invisible="not l10n_pe_compensated_invoice_id or state != 'posted'">
+                    Compensacion de revolvente de la factura
+                    <field name="l10n_pe_compensated_invoice_id" nolabel="1"
+                           class="oe_inline" readonly="1"/>.
+                </div>
+            </xpath>
+
+            <!-- Botones de estadistica -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_generated_advances" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="advance_generated_count == 0">
+                    <field name="advance_generated_count" widget="statinfo"
+                           string="Anticipos gen."/>
+                </button>
+                <!-- En el asiento de compensacion: REV usados y factura -->
+                <button name="action_view_compensated_revolvings" type="object"
+                        class="oe_stat_button" icon="fa-refresh"
+                        invisible="compensation_revolving_count == 0">
+                    <field name="compensation_revolving_count" widget="statinfo"
+                           string="Revolventes"/>
+                </button>
+                <button name="action_open_compensated_invoice" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        invisible="not l10n_pe_compensated_invoice_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Factura</span>
+                        <span class="o_stat_text">compensada</span>
+                    </div>
+                </button>
+            </xpath>
+
+            <!-- Columna con el documento enlazado en los apuntes -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='account_id']"
+                   position="after">
+                <field name="l10n_pe_advance_id" optional="show"
+                       string="Anticipo / Revolvente" readonly="1"/>
+            </xpath>
+
+            <!-- Pestanas -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Anticipos aplicados" name="advance_applications"
+                      invisible="advance_application_count == 0">
+                    <field name="advance_applied_base" readonly="1"/>
+                    <field name="advance_application_ids" readonly="1">
+                        <list>
+                            <field name="advance_id"/>
+                            <field name="application_type"/>
+                            <field name="invoice_id"/>
+                            <field name="amount_base"/>
+                            <field name="amount_total"/>
+                            <field name="reconcile_state"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Revolventes aplicados" name="revolving_applications"
+                      invisible="revolving_application_count == 0 or move_type != 'out_invoice'">
+                    <field name="revolving_application_ids" readonly="1">
+                        <list>
+                            <field name="date"/>
+                            <field name="advance_id"/>
+                            <field name="move_id" string="Asiento de compensacion"/>
+                            <field name="amount_base" string="Monto"/>
+                            <field name="amount_company_currency"/>
+                            <field name="reconcile_state"/>
+                            <field name="move_state"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="company_currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_candidate_form_inherit_create_employee" model="ir.ui.view">
+        <field name="name">hr.candidate.form.inherit.can.create.employee</field>
+        <field name="model">hr.candidate</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_candidate_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="current_user_can_create_employee" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='create_employee_from_candidate']" position="replace">
+                <button string="CREAR EMPLEADO" name="create_employee_from_candidate" type="object" data-hotkey="q" groups="hr.group_hr_user" class="o_create_employee" invisible="employee_id or not active or not current_user_can_create_employee"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

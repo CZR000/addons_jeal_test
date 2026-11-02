@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add "Gerente de Ventas" field to the Access Rights page of the user form -->
+    <record id="view_users_form_sale_manager_field" model="ir.ui.view">
+        <field name="name">res.users.form.sale.discount.approval</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- Use xpath on the access_rights page to append the field at the end -->
+            <xpath expr="//page[@name='access_rights']" position="inside">
+                <separator string="Ventas — Descuentos"/>
+                <group>
+                    <group>
+                        <field name="is_sales_manager"/>
+                    </group>
+                    <group>
+                        <div invisible="not is_sales_manager">
+                            <span class="badge bg-success">
+                                Puede modificar listas de precios y aprobar descuentos
+                            </span>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

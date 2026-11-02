@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ple_report_stock_valued_inventory_view_form" model="ir.ui.view">
+        <field name="name">ple.report.stock.valued.inventory.form</field>
+        <field name="model">ple.report.stock.valued.inventory</field>
+        <field name="arch" type="xml">
+            <form string="Inventario Valorizado 13.1">
+                <header>
+                    <button name="action_generate_report" type="object"
+                            string="Generar Excel" class="oe_highlight"
+                            invisible="state == 'confirmed'"/>
+                    <button name="action_generate_pdf" type="object"
+                            string="Generar PDF"
+                            invisible="state == 'confirmed'"/>
+                    <button name="action_confirm" type="object"
+                            string="Confirmar" class="oe_highlight"
+                            invisible="state == 'confirmed' or not file"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Volver a Borrador"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="period" placeholder="YYYY-MM"
+                                   readonly="state == 'confirmed'"/>
+                            <field name="company_id" groups="base.group_multi_company"
+                                   readonly="state == 'confirmed'"/>
+                        </group>
+                        <group>
+                            <field name="date_start" readonly="1"/>
+                            <field name="date_end" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Archivo generado" invisible="not file and not pdf_file">
+                        <field name="filename" invisible="1"/>
+                        <field name="file" filename="filename" readonly="1"
+                               string="Reporte Excel"/>
+                        <field name="pdf_filename" invisible="1"/>
+                        <field name="pdf_file" filename="pdf_filename" readonly="1"
+                               string="Reporte PDF"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ple_report_stock_valued_inventory_view_list" model="ir.ui.view">
+        <field name="name">ple.report.stock.valued.inventory.list</field>
+        <field name="model">ple.report.stock.valued.inventory</field>
+        <field name="arch" type="xml">
+            <list string="Inventario Valorizado 13.1">
+                <field name="period"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ple_report_stock_valued_inventory_action" model="ir.actions.act_window">
+        <field name="name">Registro Inventario Valorizado 13.1</field>
+        <field name="res_model">ple.report.stock.valued.inventory</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_ple_report_stock_valued_inventory"
+              name="Registro Inventario 13.1"
+              parent="ple_sale_book.menu_ple_physical_books"
+              action="ple_report_stock_valued_inventory_action"
+              sequence="16"/>
+
+</odoo>
